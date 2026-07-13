@@ -150,7 +150,7 @@ export function Layout() {
                  <div className="flex items-center space-x-3">
                     <Link
                       to="/login"
-                      className="neomorph-btn bg-primary text-white hover:bg-primary-dark border-primary/20 text-xs font-bold px-4 py-2"
+                      className="neomorph-btn bg-primary text-white hover:bg-primary-dark border-primary/20 text-xs font-bold px-8 py-2 rounded-full whitespace-nowrap"
                     >
                       Get Started
                     </Link>
@@ -231,7 +231,7 @@ export function Layout() {
                       <Link
                         to="/login"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block w-full text-center px-4 py-2.5 rounded-2xl text-white font-semibold bg-primary"
+                        className="block w-full text-center px-4 py-2.5 rounded-full text-white font-semibold bg-primary"
                       >
                         Get Started
                       </Link>
@@ -313,7 +313,7 @@ export function Layout() {
           </div>
           <div className="mt-8 pt-6 border-t border-slate-200/50 text-center">
             <p className="text-xs font-medium text-slate-500">
-              &copy; {new Date().getFullYear()} {siteConfig.name} Platform. All rights reserved.
+              &copy; {new Date().getFullYear()} {siteConfig.name} Platform | Part of <a href="https://www.akyin.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">Akyin Ventures</a>. All rights reserved.
             </p>
           </div>
         </div>

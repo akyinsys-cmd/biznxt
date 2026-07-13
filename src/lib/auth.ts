@@ -176,17 +176,8 @@ export const emailSignUp = async (
   displayName: string, 
   role: 
     | 'customer' 
-    | 'bsm' 
-    | 'researcher' 
-    | 'consultant' 
-    | 'ca' 
-    | 'lawyer' 
-    | 'manufacturer' 
-    | 'marketing' 
-    | 'websiteteam' 
-    | 'finance' 
-    | 'admin' 
-    | 'superadmin' = 'customer'
+    | 'manager' 
+    | 'super_admin' = 'customer'
 ): Promise<User> => {
   try {
     isSigningIn = true;

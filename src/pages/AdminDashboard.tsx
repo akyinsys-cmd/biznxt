@@ -1,18 +1,25 @@
 import { useState } from 'react';
-import { LayoutDashboard, Users, Grid, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, Grid, Settings, Shield, DollarSign, Megaphone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AdminOverview } from './admin/AdminOverview';
 import { AdminUsers } from './admin/AdminUsers';
+import { AdminManagers } from './admin/AdminManagers';
 import { AdminServices } from './admin/AdminServices';
+import { AdminPricing } from './admin/AdminPricing';
+import { AdminSystem } from './admin/AdminSystem';
+import { AdminAds } from './admin/AdminAds';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
-    { id: 'overview', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'users', label: 'Users & Roles', icon: Users },
-    { id: 'services', label: 'Service Catalog', icon: Grid },
-    // { id: 'settings', label: 'Platform Settings', icon: Settings },
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'managers', label: 'Managers', icon: Shield },
+    { id: 'users', label: 'Customers', icon: Users },
+    { id: 'services', label: 'Services', icon: Grid },
+    { id: 'pricing', label: 'Pricing', icon: DollarSign },
+    { id: 'ads', label: 'Ad Management', icon: Megaphone },
+    { id: 'system', label: 'System', icon: Settings },
   ];
 
   return (
@@ -59,8 +66,12 @@ export default function AdminDashboard() {
               className="h-full"
             >
               {activeTab === 'overview' && <AdminOverview />}
+              {activeTab === 'managers' && <AdminManagers />}
               {activeTab === 'users' && <AdminUsers />}
               {activeTab === 'services' && <AdminServices />}
+              {activeTab === 'pricing' && <AdminPricing />}
+              {activeTab === 'ads' && <AdminAds />}
+              {activeTab === 'system' && <AdminSystem />}
             </motion.div>
           </AnimatePresence>
         </div>

@@ -16,6 +16,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { 
   emailSignIn, 
   emailSignUp, 
@@ -69,9 +71,22 @@ export default function Login() {
         if (!email || !password) {
           throw new Error('Please enter both email and password.');
         }
-        await emailSignIn(email, password);
+        const user = await emailSignIn(email, password);
         success('Logged in successfully!');
-        navigate('/dashboard');
+        
+        // Fetch role to redirect correctly
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data();
+        const userRole = userData?.role;
+
+        if (userRole === 'super_admin') {
+          navigate('/admin');
+        } else if (userRole === 'manager') {
+          navigate('/bsm');
+        } else {
+          navigate('/dashboard');
+        }
       } else {
         // Sign Up Validation
         if (!email || !password || !displayName) {
@@ -111,9 +126,22 @@ export default function Login() {
     setLoading(true);
     setAuthError(null);
     try {
-      await signInWithGoogle();
+      const user = await signInWithGoogle();
       success('Logged in successfully with Google!');
-      navigate('/dashboard');
+      
+      // Fetch role to redirect correctly
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+      const userRole = userData?.role;
+
+      if (userRole === 'super_admin') {
+        navigate('/admin');
+      } else if (userRole === 'manager') {
+        navigate('/bsm');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       console.error('Google Auth failed', err);
       const msg = err.message || 'Failed to log in with Google.';
@@ -176,9 +204,22 @@ export default function Login() {
     setLoading(true);
     setAuthError(null);
     try {
-      await simulateVerifyOtp(phoneNumber, otpCode);
+      const user = await simulateVerifyOtp(phoneNumber, otpCode);
       success('Mobile verified! Signed in successfully.');
-      navigate('/dashboard');
+      
+      // Fetch role to redirect correctly
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+      const userRole = userData?.role;
+
+      if (userRole === 'super_admin') {
+        navigate('/admin');
+      } else if (userRole === 'manager') {
+        navigate('/bsm');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       const msg = err.message || 'Verification failed.';
       setAuthError(msg);

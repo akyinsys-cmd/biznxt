@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Lock, ArrowRight, ShieldAlert, Eye, EyeOff, ShieldCheck, KeyRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 import { emailSignIn, signInWithGoogle, resetPassword } from '../lib/auth';
 import { useToast } from '../context/ToastContext';
 
@@ -27,9 +29,24 @@ export default function AdminLogin() {
         setIsForgotPassword(false);
       } else {
         if (!email || !password) throw new Error('Please enter both email and password.');
-        await emailSignIn(email, password);
-        success('Admin authorized successfully!');
-        navigate('/admin');
+        const user = await emailSignIn(email, password);
+        
+        // Fetch role directly to verify before redirecting
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data();
+        const userRole = userData?.role;
+
+        if (userRole === 'super_admin') {
+          success('Super Admin authorized successfully!');
+          navigate('/admin');
+        } else if (userRole === 'manager') {
+          success('Manager authorized successfully!');
+          navigate('/bsm');
+        } else {
+          setAuthError('Unauthorized access. This portal is for Administrators only.');
+          showToastError('Unauthorized access.');
+        }
       }
     } catch (err: any) {
       console.error('Admin Auth failed', err);
@@ -48,9 +65,24 @@ export default function AdminLogin() {
     setLoading(true);
     setAuthError(null);
     try {
-      await signInWithGoogle();
-      success('Admin authorized via Google!');
-      navigate('/admin');
+      const user = await signInWithGoogle();
+      
+      // Fetch role directly to verify before redirecting
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+      const userRole = userData?.role;
+
+      if (userRole === 'super_admin') {
+        success('Super Admin authorized via Google!');
+        navigate('/admin');
+      } else if (userRole === 'manager') {
+        success('Manager authorized via Google!');
+        navigate('/bsm');
+      } else {
+        setAuthError('Unauthorized access. This portal is for Administrators only.');
+        showToastError('Unauthorized access.');
+      }
     } catch (err: any) {
       setAuthError(err.message || 'Google Auth failed');
       showToastError(err.message || 'Google Auth failed');

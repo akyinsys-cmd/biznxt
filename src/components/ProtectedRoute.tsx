@@ -61,21 +61,16 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   }
 
   if (allowedRoles && !allowedRoles.includes(role || '')) {
-    // If we require client and they are customer, let them through
-    if (allowedRoles.includes('client') && role === 'customer') {
-      // allow
+    // Prevent infinite redirect loops by checking current path
+    const currentPath = location.pathname;
+    
+    if (role === 'super_admin') {
+      return currentPath.startsWith('/admin') ? <Navigate to="/" replace /> : <Navigate to="/admin" replace />;
+    } else if (role === 'manager') {
+      return currentPath.startsWith('/bsm') ? <Navigate to="/" replace /> : <Navigate to="/bsm" replace />;
     } else {
-      // Prevent infinite redirect loops by checking current path
-      const currentPath = location.pathname;
-      if (role === 'admin' || role === 'superadmin') {
-        return currentPath === '/admin' ? <Navigate to="/" replace /> : <Navigate to="/admin" replace />;
-      } else if (role === 'bsm') {
-        return currentPath === '/bsm' ? <Navigate to="/" replace /> : <Navigate to="/bsm" replace />;
-      } else if (role === 'researcher') {
-        return currentPath === '/premium-research-executive' ? <Navigate to="/" replace /> : <Navigate to="/premium-research-executive" replace />;
-      } else {
-        return currentPath === '/dashboard' ? <Navigate to="/" replace /> : <Navigate to="/dashboard" replace />;
-      }
+      // Default for customers or anyone else
+      return currentPath === '/dashboard' ? <Navigate to="/" replace /> : <Navigate to="/dashboard" replace />;
     }
   }
 

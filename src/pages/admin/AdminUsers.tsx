@@ -13,7 +13,7 @@ export function AdminUsers() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
   useEffect(() => {
-    const q = query(collection(db, 'user_profiles'));
+    const q = query(collection(db, 'users'));
     const unsub = onSnapshot(q, (snap) => {
       setUsers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
@@ -21,26 +21,21 @@ export function AdminUsers() {
   }, []);
 
   const roles = [
-    { id: 'superadmin', label: 'Super Admin' },
-    { id: 'admin', label: 'Admin' },
-    { id: 'bsm', label: 'Business Success Manager' },
-    { id: 'researcher', label: 'Research Executive' },
-    { id: 'content', label: 'Content Manager' },
-    { id: 'finance', label: 'Finance Manager' },
-    { id: 'support', label: 'Customer Support' },
+    { id: 'super_admin', label: 'Super Admin' },
+    { id: 'manager', label: 'Manager' },
     { id: 'customer', label: 'Customer' }
   ];
 
   const filteredUsers = users.filter(u => {
     const matchesSearch = (u.displayName || u.name || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
                           (u.email || '').toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'all' || u.role === roleFilter;
+    const matchesRole = roleFilter === 'all' ? u.role !== 'super_admin' : u.role === roleFilter;
     return matchesSearch && matchesRole;
   });
 
   const handleRoleChange = async (userId: string, newRole: string) => {
     try {
-      await updateDoc(doc(db, 'user_profiles', userId), { role: newRole });
+      await updateDoc(doc(db, 'users', userId), { role: newRole });
       success('User role updated successfully');
     } catch (err: any) {
       error(err.message || 'Failed to update role');
@@ -50,7 +45,7 @@ export function AdminUsers() {
   const handleStatusToggle = async (userId: string, currentStatus: string) => {
     try {
       const newStatus = currentStatus === 'suspended' ? 'active' : 'suspended';
-      await updateDoc(doc(db, 'user_profiles', userId), { status: newStatus });
+      await updateDoc(doc(db, 'users', userId), { status: newStatus });
       success(`User account ${newStatus}`);
     } catch (err: any) {
       error(err.message || 'Failed to update status');
@@ -60,7 +55,7 @@ export function AdminUsers() {
   const handleDelete = async (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This cannot be undone.')) {
       try {
-        await deleteDoc(doc(db, 'user_profiles', userId));
+        await deleteDoc(doc(db, 'users', userId));
         success('User deleted permanently');
       } catch (err: any) {
         error(err.message || 'Failed to delete user');

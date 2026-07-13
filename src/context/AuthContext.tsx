@@ -6,17 +6,17 @@ import { db } from '../lib/firebase';
 
 export type UserRole = 
   | 'customer' 
-  | 'bsm' 
-  | 'researcher' 
-  | 'consultant' 
-  | 'ca' 
-  | 'lawyer' 
-  | 'manufacturer' 
-  | 'marketing' 
-  | 'websiteteam' 
-  | 'finance' 
-  | 'admin' 
-  | 'superadmin' 
+  | 'manager' 
+  | 'super_admin' 
+  | 'bsm'
+  | 'researcher'
+  | 'consultant'
+  | 'ca'
+  | 'lawyer'
+  | 'manufacturer'
+  | 'marketing'
+  | 'websiteteam'
+  | 'finance'
   | null;
 
 interface AuthContextType {

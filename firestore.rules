@@ -18,18 +18,20 @@ service cloud.firestore {
 
     function isAdmin() {
       return isSignedIn() && (
-        request.auth.token.role in ['admin', 'superadmin'] ||
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'superadmin'] ||
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        request.auth.token.role == 'super_admin' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin'
       );
     }
 
-    function isBSM() {
-      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'bsm';
+    function isManager() {
+      return isSignedIn() && (
+        request.auth.token.role == 'manager' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager'
+      );
     }
 
-    function isResearcher() {
-      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'researcher';
+    function isStaff() {
+      return isAdmin() || isManager();
     }
 
     function isValidId(id) {
@@ -48,7 +50,7 @@ service cloud.firestore {
     function isValidUser(data) {
       return data.email is string && data.email.size() <= 256
         && data.displayName is string && data.displayName.size() <= 256
-        && data.role is string && data.role in ['customer', 'researcher', 'consultant', 'partner', 'admin', 'superadmin', 'bsm'];
+        && data.role is string && data.role in ['customer', 'manager', 'super_admin'];
     }
 
     function isValidReport(data) {
@@ -111,36 +113,36 @@ service cloud.firestore {
 
     match /client_projects/{projectId} {
       allow read: if isSignedIn() && (resource.data.clientEmail == request.auth.token.email || resource.data.bsmId == request.auth.uid || isAdmin());
-      allow create: if isAdmin() || isBSM();
-      allow update: if isAdmin() || isBSM();
+      allow create: if isAdmin() || isManager();
+      allow update: if isAdmin() || isManager();
     }
 
     match /project_tasks/{taskId} {
-      allow read: if isSignedIn() && (resource.data.assignedTo == request.auth.uid || isAdmin() || isBSM() || (exists(/databases/$(database)/documents/client_projects/$(resource.data.projectId)) && get(/databases/$(database)/documents/client_projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email));
-      allow write: if isAdmin() || isBSM();
+      allow read: if isSignedIn() && (resource.data.assignedTo == request.auth.uid || isAdmin() || isManager() || (exists(/databases/$(database)/documents/client_projects/$(resource.data.projectId)) && get(/databases/$(database)/documents/client_projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email));
+      allow write: if isAdmin() || isManager();
     }
 
     match /project_meetings/{meetingId} {
       allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || resource.data.bsmId == request.auth.uid || isAdmin());
-      allow write: if isAdmin() || isBSM();
+      allow write: if isAdmin() || isManager();
     }
 
     match /project_notes/{noteId} {
-      allow read, write: if isSignedIn() && (isAdmin() || isBSM());
+      allow read, write: if isSignedIn() && (isAdmin() || isManager());
     }
 
     match /project_timeline/{timelineId} {
       allow read: if isSignedIn();
-      allow write: if isAdmin() || isBSM();
+      allow write: if isStaff();
     }
 
     match /project_activities/{activityId} {
-      allow read: if isSignedIn() && (isAdmin() || isBSM() || (exists(/databases/$(database)/documents/client_projects/$(resource.data.projectId)) && get(/databases/$(database)/documents/client_projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email));
+      allow read: if isSignedIn() && (isStaff() || (exists(/databases/$(database)/documents/client_projects/$(resource.data.projectId)) && get(/databases/$(database)/documents/client_projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email));
       allow create: if isSignedIn();
     }
 
     match /risk_alerts/{alertId} {
-      allow read, write: if isAdmin() || isBSM();
+      allow read, write: if isStaff();
     }
 
     // ============================================================================
@@ -148,21 +150,21 @@ service cloud.firestore {
     // ============================================================================
 
     match /project_quotations/{quotationId} {
-      allow read: if isSignedIn() && (resource.data.customerId == request.auth.uid || isAdmin() || isBSM());
-      allow create: if isAdmin() || isBSM();
-      allow update: if isAdmin() || isBSM() || (isSignedIn() && existing().customerId == request.auth.uid && incoming().status in ['Accepted', 'Rejected']);
+      allow read: if isSignedIn() && (resource.data.customerId == request.auth.uid || isStaff());
+      allow create: if isStaff();
+      allow update: if isStaff() || (isSignedIn() && existing().customerId == request.auth.uid && incoming().status in ['Accepted', 'Rejected']);
     }
 
     match /customer_documents/{docId} {
-      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isStaff());
       allow create: if isSignedIn();
-      allow update: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin() || isBSM());
+      allow update: if isSignedIn() && (resource.data.clientId == request.auth.uid || isStaff());
     }
 
     match /document_orders/{orderId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isStaff());
       allow create: if isSignedIn();
-      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isBSM());
+      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isStaff());
     }
 
     // ============================================================================
@@ -170,42 +172,42 @@ service cloud.firestore {
     // ============================================================================
 
     match /business_profiles/{profileId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isStaff());
     }
 
     match /business_goals/{goalId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isStaff());
     }
 
     match /business_health/{healthId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isAdmin() || isBSM();
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isStaff();
     }
 
     match /business_projects/{projectId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isStaff());
     }
 
     match /business_tasks/{taskId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isStaff());
     }
 
     match /business_documents/{docId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isStaff());
     }
 
     match /business_calendar/{eventId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
-      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isStaff());
     }
 
     match /business_activity/{activityId} {
-      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isStaff());
       allow create: if isSignedIn();
     }
 
@@ -214,20 +216,20 @@ service cloud.firestore {
     // ============================================================================
 
     match /crm_leads/{leadId} {
-      allow read: if isAdmin() || isBSM() || (isSignedIn() && existing().assignedTo == request.auth.uid);
-      allow write: if isAdmin() || isBSM();
+      allow read: if isStaff() || (isSignedIn() && existing().assignedTo == request.auth.uid);
+      allow write: if isStaff();
     }
 
     match /crm_pipeline/{pipelineId} {
-      allow read, write: if isAdmin() || isBSM();
+      allow read, write: if isStaff();
     }
 
     match /crm_contacts/{contactId} {
-      allow read, write: if isAdmin() || isBSM();
+      allow read, write: if isStaff();
     }
 
     match /crm_proposals/{proposalId} {
-      allow read, write: if isAdmin() || isBSM();
+      allow read, write: if isStaff();
     }
 
     match /crm_automation_logs/{logId} {
@@ -266,36 +268,36 @@ service cloud.firestore {
     }
 
     match /research_orders/{orderId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isStaff());
       allow create: if isSignedIn() && incoming().userId == request.auth.uid;
-      allow update: if isResearcher() || isAdmin();
+      allow update: if isStaff();
     }
 
     match /research_documents/{documentId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
-      allow create: if isSignedIn() && (incoming().userId == request.auth.uid || isResearcher() || isAdmin());
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isStaff());
+      allow create: if isSignedIn() && (incoming().userId == request.auth.uid || isStaff());
     }
 
     match /research_tickets/{ticketId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isStaff());
       allow create: if isSignedIn();
-      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isStaff());
       allow delete: if isAdmin();
     }
 
     match /research_notes/{noteId} {
       allow read: if isSignedIn();
-      allow write: if isResearcher() || isAdmin();
+      allow write: if isStaff();
     }
 
     match /research_sources/{sourceId} {
       allow read: if isSignedIn();
-      allow write: if isResearcher() || isAdmin();
+      allow write: if isStaff();
     }
 
     match /research_tasks/{taskId} {
       allow read: if isSignedIn();
-      allow write: if isResearcher() || isAdmin();
+      allow write: if isStaff();
     }
 
     match /research_activity/{activityId} {
@@ -305,17 +307,17 @@ service cloud.firestore {
 
     match /research_versions/{versionId} {
       allow read: if isSignedIn();
-      allow create: if isResearcher() || isAdmin();
+      allow create: if isStaff();
     }
 
     match /research_quality/{qualityId} {
       allow read: if isSignedIn();
-      allow write: if isResearcher() || isAdmin();
+      allow write: if isStaff();
     }
 
     match /research_qa/{qaId} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn() && (isResearcher() || isAdmin());
+      allow create: if isSignedIn() && (isStaff());
       allow update, delete: if isAdmin();
     }
 
@@ -329,9 +331,9 @@ service cloud.firestore {
     }
 
     match /service_orders/{orderId} {
-      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isBSM());
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isManager());
       allow create: if isSignedIn();
-      allow update: if isAdmin() || isBSM();
+      allow update: if isAdmin() || isManager();
     }
 
     // ============================================================================

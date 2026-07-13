@@ -81,24 +81,24 @@ export default function App() {
                   <Route path="documents" element={<ProtectedRoute><DocumentCenter /></ProtectedRoute>} />
                   <Route path="documents/build/:templateId" element={<ProtectedRoute><DocumentBuilder /></ProtectedRoute>} />
                   <Route path="documents/edit/:documentId" element={<ProtectedRoute><DocumentBuilder /></ProtectedRoute>} />
-                  <Route path="documents/admin" element={<ProtectedRoute allowedRoles={['admin', 'superadmin']}><AdminDocumentCenter /></ProtectedRoute>} />
+                  <Route path="documents/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'manager']}><AdminDocumentCenter /></ProtectedRoute>} />
                   <Route path="about" element={<AboutUs />} />
                   <Route path="contact" element={<ContactUs />} />
                   <Route path="privacy" element={<PrivacyPolicy />} />
                   <Route path="terms" element={<TermsOfService />} />
                   <Route path="careers" element={<Careers />} />
                   <Route path="command-center" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <CEOCommandCenter />
                     </ProtectedRoute>
                   } />
                   <Route path="intelligence" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <MarketIntelligence />
                     </ProtectedRoute>
                   } />
                   <Route path="analytics" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <AnalyticsPlatform />
                     </ProtectedRoute>
                   } />
@@ -112,22 +112,22 @@ export default function App() {
                       <SupportCenter />
                     </ProtectedRoute>
                   } />
-                  <Route path="projects" element={<ProtectedRoute allowedRoles={['customer', 'client', 'admin', 'superadmin']} />}>
+                  <Route path="projects" element={<ProtectedRoute allowedRoles={['customer', 'manager', 'super_admin']} />}>
                     <Route index element={<ProjectList />} />
                     <Route path=":id" element={<ProjectDashboard />} />
                   </Route>
                   <Route path="bsm" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin', 'bsm']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <BSMDashboard />
                     </ProtectedRoute>
                   } />
                   <Route path="admin" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                    <ProtectedRoute allowedRoles={['super_admin']}>
                       <AdminDashboard />
                     </ProtectedRoute>
                   } />
                   <Route path="dashboard" element={
-                    <ProtectedRoute allowedRoles={['customer', 'client', 'admin', 'superadmin']}>
+                    <ProtectedRoute allowedRoles={['customer']}>
                       <Dashboard />
                     </ProtectedRoute>
                   } />
@@ -137,7 +137,7 @@ export default function App() {
                     </ProtectedRoute>
                   } />
                   <Route path="crm" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <CRM />
                     </ProtectedRoute>
                   } />
@@ -153,7 +153,7 @@ export default function App() {
                     </ProtectedRoute>
                   } />
                   <Route path="premium-research-executive" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin', 'researcher']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <ResearchExecutiveDashboard />
                     </ProtectedRoute>
                   } />
@@ -164,7 +164,7 @@ export default function App() {
                     <Route path="saved" element={<SavedIdeas />} />
                     <Route path="compare" element={<CompareIdeas />} />
                     <Route path="admin" element={
-                      <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                      <ProtectedRoute allowedRoles={['super_admin']}>
                         <AdminDiscovery />
                       </ProtectedRoute>
                     } />
@@ -189,7 +189,7 @@ export default function App() {
                     <Route path="manufacturer/:id" element={<ManufacturerDetails />} />
                   </Route>
                   <Route path="global" element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin', 'bsm', 'consultant']}>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <GlobalDashboard />
                     </ProtectedRoute>
                   }>

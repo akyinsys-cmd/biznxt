@@ -25,8 +25,8 @@ export default function BSMDashboard() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-2xl blur-[100px] -mr-32 -mt-32" />
         <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-display font-bold tracking-tight">Business Success Manager</h1>
-            <p className="text-slate-400 text-sm mt-1">Manage your clients from research to launch</p>
+            <h1 className="text-3xl font-display font-bold tracking-tight">Manager Dashboard</h1>
+            <p className="text-slate-400 text-sm mt-1">Operational control center for clients and projects</p>
           </div>
         </div>
       </div>
