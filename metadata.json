@@ -1,0 +1,6 @@
+{
+  "name": "BizNxt",
+  "description": "Comprehensive Entrepreneur Operating System for business scaling, compliance, and growth analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

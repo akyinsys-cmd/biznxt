@@ -1,0 +1,262 @@
+242:    <div className="flex-1 w-full relative min-h-screen">
+244:      <div className="fixed inset-0 -z-10 bg-background overflow-hidden">
+263:      </div>
+265:      <div className="w-full relative pt-12 pb-24">
+327:          <div className="max-w-[1400px] mx-auto">
+328:            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+343:                  <div className="flex justify-between items-start mb-6">
+346:                  </div>
+350:            </div>
+351:          </div>
+362:            <div className="glass-card neomorph-flat p-4 sm:p-6 text-left border border-white/50 shadow-2xl relative overflow-hidden">
+365:              <div className="flex justify-between items-center pb-4 border-b border-slate-200/50 mb-4">
+366:                <div className="flex items-center gap-2">
+371:                </div>
+372:                <div className="flex gap-2">
+391:                </div>
+392:              </div>
+404:                    <div className="col-span-2 bg-[#F3F5F9]/80 p-4 rounded-2xl border border-white/60 space-y-3">
+405:                      <div className="flex justify-between items-center">
+410:                      </div>
+411:                      <div className="space-y-1.5 text-xs text-slate-700">
+414:                      </div>
+415:                      <div className="grid grid-cols-2 gap-2.5 pt-2">
+416:                        <div className="neomorph-pressed p-2 text-center">
+419:                        </div>
+420:                        <div className="neomorph-pressed p-2 text-center">
+423:                        </div>
+424:                      </div>
+425:                    </div>
+426:                    <div className="bg-[#EDF1F7] p-4 rounded-2xl border border-white/60 flex flex-col justify-between">
+427:                      <div>
+429:                        <div className="space-y-2 mt-3">
+430:                          <div className="flex items-center gap-2 text-[11px] text-slate-600 font-bold">
+432:                          </div>
+433:                          <div className="flex items-center gap-2 text-[11px] text-slate-600 font-bold">
+435:                          </div>
+436:                          <div className="flex items-center gap-2 text-[11px] text-slate-600 font-bold">
+438:                          </div>
+439:                        </div>
+440:                      </div>
+447:                    </div>
+459:                    <div className="bg-[#F3F5F9]/80 p-4 rounded-2xl border border-white/60 flex flex-col justify-between">
+460:                      <div>
+461:                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+463:                        </div>
+465:                      </div>
+466:                      <div className="mt-4 p-3 border-2 border-dashed border-slate-300 rounded-xl text-center text-[10px] font-bold text-slate-400">
+468:                      </div>
+469:                    </div>
+470:                    <div className="col-span-2 bg-[#F3F5F9]/80 p-4 rounded-2xl border border-white/60 space-y-3">
+471:                      <div className="flex justify-between items-center">
+474:                      </div>
+475:                      <div className="space-y-2">
+476:                        <div className="flex items-center justify-between p-2 bg-[#EDF1F7] rounded-xl border border-white/40">
+479:                        </div>
+480:                        <div className="flex items-center justify-between p-2 bg-[#EDF1F7] rounded-xl border border-white/40">
+483:                        </div>
+484:                        <div className="flex items-center justify-between p-2 bg-[#EDF1F7] rounded-xl border border-white/40">
+487:                        </div>
+488:                      </div>
+489:                    </div>
+501:                    <div className="col-span-2 bg-[#F3F5F9]/80 p-4 rounded-2xl border border-white/60 space-y-3">
+502:                      <div className="flex justify-between items-center">
+507:                      </div>
+508:                      <div className="grid grid-cols-3 gap-2">
+509:                        <div className="neomorph-pressed p-2 text-center">
+512:                        </div>
+513:                        <div className="neomorph-pressed p-2 text-center">
+516:                        </div>
+517:                        <div className="neomorph-pressed p-2 text-center">
+520:                        </div>
+521:                      </div>
+523:                    </div>
+524:                    <div className="bg-[#EDF1F7] p-4 rounded-2xl border border-white/60 flex flex-col justify-between">
+525:                      <div>
+529:                      </div>
+536:                    </div>
+540:            </div>
+543:            <div className="absolute inset-x-8 bottom-0 h-4 bg-black/10 blur-md rounded-full -z-10" />
+545:        </div>
+551:          <div className="max-w-7xl mx-auto px-4">
+552:            <div className="text-center mb-10">
+555:            </div>
+558:            <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
+580:            </div>
+583:            <div className="mt-14 p-4 glass-card border border-white/50 backdrop-blur-md overflow-hidden">
+584:              <div className="text-center mb-4">
+586:              </div>
+587:              <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300">
+593:              </div>
+594:            </div>
+595:          </div>
+602:          <div className="max-w-7xl mx-auto px-4">
+603:            <div className="text-center max-w-2xl mx-auto mb-16">
+607:            </div>
+609:            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+628:                  <div>
+629:                    <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+631:                    </div>
+634:                  </div>
+644:            </div>
+645:          </div>
+652:          <div className="max-w-7xl mx-auto px-4">
+654:            <div className="text-center max-w-2xl mx-auto mb-16">
+658:            </div>
+661:            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-10">
+672:            </div>
+686:                <div className="md:col-span-2 space-y-4">
+697:                  <div className="pt-4 flex gap-4">
+710:                  </div>
+711:                </div>
+714:                <div className="bg-[#EDF1F7] p-6 rounded-3xl border border-white/60 space-y-4 text-center">
+715:                  <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-2 animate-bounce-slow">
+717:                  </div>
+719:                  <div className="space-y-1 text-xs font-bold text-slate-700">
+723:                  </div>
+724:                  <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden relative p-0.5">
+730:                  </div>
+731:                </div>
+735:          </div>
+742:          <div className="max-w-7xl mx-auto px-4">
+744:            <div className="text-center max-w-2xl mx-auto mb-12">
+748:            </div>
+751:            <div className="flex flex-wrap justify-center gap-3 mb-10">
+761:            </div>
+764:            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+776:                    <div>
+777:                      <div className="flex justify-between items-start mb-4">
+778:                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+780:                        </div>
+784:                      </div>
+787:                    </div>
+798:            </div>
+800:          </div>
+807:          <div className="max-w-7xl mx-auto px-4">
+809:            <div className="text-center max-w-2xl mx-auto mb-16">
+813:            </div>
+816:            <div className="relative max-w-4xl mx-auto">
+828:                  <div className="md:col-span-2 space-y-4">
+838:                    <div className="flex gap-1">
+842:                    </div>
+843:                  </div>
+846:                  <div className="md:col-span-3 space-y-4 text-left">
+849:                    <div className="space-y-3">
+850:                      <div className="p-3.5 bg-red-500/5 rounded-2xl border border-red-500/10">
+853:                      </div>
+854:                      <div className="p-3.5 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
+857:                      </div>
+858:                    </div>
+860:                    <div className="pt-2 flex justify-between items-center border-t border-slate-200/50">
+861:                      <div>
+864:                      </div>
+865:                    </div>
+866:                  </div>
+872:              <div className="flex justify-center gap-3 mt-6">
+885:              </div>
+886:            </div>
+888:          </div>
+895:          <div className="max-w-7xl mx-auto px-4">
+897:            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+898:              <div>
+902:              </div>
+903:              <div className="flex flex-wrap gap-2">
+916:              </div>
+917:            </div>
+920:            <div className="relative overflow-hidden py-4 px-2">
+921:              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+928:                    <div>
+929:                      <div className="flex justify-between items-start mb-4">
+933:                        <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500">
+935:                        </div>
+936:                      </div>
+939:                    </div>
+941:                    <div className="flex justify-between items-center pt-4 border-t border-slate-200/50">
+942:                      <div>
+945:                      </div>
+952:                    </div>
+955:              </div>
+956:            </div>
+958:          </div>
+965:          <div className="max-w-7xl mx-auto px-4">
+967:            <div className="text-center max-w-2xl mx-auto mb-12">
+973:              <div className="inline-flex items-center gap-3 bg-[#EDF1F7] p-1 rounded-xl border border-white/40 mt-8">
+986:              </div>
+987:            </div>
+990:            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+993:              <div className="neomorph-flat p-8 border-none flex flex-col justify-between min-h-[500px]">
+994:                <div className="space-y-4 text-left">
+999:                  <div className="py-2">
+1002:                  </div>
+1021:                </div>
+1029:              </div>
+1032:              <div className="neomorph-flat p-8 border-none flex flex-col justify-between min-h-[500px] relative bg-white ring-2 ring-primary/20">
+1033:                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-white text-[9px] font-extrabold uppercase tracking-[0.25em] px-4 py-1.5 rounded-full border border-primary/20">
+1035:                </div>
+1037:                <div className="space-y-4 text-left">
+1042:                  <div className="py-2">
+1047:                  </div>
+1066:                </div>
+1074:              </div>
+1077:              <div className="neomorph-flat p-8 border-none flex flex-col justify-between min-h-[500px]">
+1078:                <div className="space-y-4 text-left">
+1083:                  <div className="py-2">
+1086:                  </div>
+1105:                </div>
+1113:              </div>
+1115:            </div>
+1116:          </div>
+1123:          <div className="max-w-4xl mx-auto px-4">
+1125:            <div className="text-center max-w-2xl mx-auto mb-12">
+1129:            </div>
+1132:            <div className="space-y-4 mb-10">
+1140:              <div className="flex flex-wrap gap-2 justify-center">
+1150:              </div>
+1151:            </div>
+1154:            <div className="space-y-4">
+1156:                <div key={i} className="neomorph-flat p-5 border-none">
+1157:                  <div className="flex gap-3 justify-between items-start text-left">
+1159:                    <div className="flex-1">
+1162:                    </div>
+1163:                  </div>
+1164:                </div>
+1166:                <div className="text-center py-10 text-xs font-bold text-slate-400">
+1168:                </div>
+1170:            </div>
+1172:          </div>
+1179:          <div className="max-w-7xl mx-auto px-4">
+1181:            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+1182:              <div>
+1186:              </div>
+1193:            </div>
+1196:            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+1198:                <div key={i} className="glass-card glass-card-hover p-6 border-none flex flex-col justify-between min-h-[300px]">
+1199:                  <div className="space-y-3 text-left">
+1200:                    <div className="flex justify-between items-center text-[9px] font-extrabold uppercase tracking-widest text-slate-400">
+1203:                    </div>
+1210:                  </div>
+1212:                  <div className="pt-4 border-t border-slate-200/50 flex justify-between items-center">
+1213:                    <div>
+1216:                    </div>
+1218:                  </div>
+1219:                </div>
+1221:            </div>
+1223:          </div>
+1228:          <div className="fixed inset-0 z-[10000] bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4">
+1236:              <div className="flex justify-between items-start pb-4 border-b border-slate-200/50">
+1237:                <div>
+1240:                </div>
+1247:              </div>
+1250:              <div className="bg-[#EDF1F7] p-5 rounded-3xl border border-white/60 space-y-6">
+1252:                <div className="flex justify-between items-center bg-white p-3.5 rounded-2xl border border-white/60">
+1255:                </div>
+1257:                <div className="space-y-3">
+1265:                    <div 
+1276:                    </div>
+1278:                </div>
+1283:              </div>
+1285:              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200/50">
+1298:              </div>
+1300:          </div>
+1303:    </div>
+1304:  </div>

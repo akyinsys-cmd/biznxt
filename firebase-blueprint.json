@@ -1,0 +1,152 @@
+{
+  "entities": {
+    "ResearchOrder": {
+      "title": "ResearchOrder",
+      "description": "Represents a research purchase order by a client.",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "description": "Unique purchase order ID" },
+        "userId": { "type": "string", "description": "UID of the client who ordered" },
+        "userEmail": { "type": "string", "description": "Email address of the client" },
+        "userName": { "type": "string", "description": "Name of the client" },
+        "packageId": { "type": "string", "description": "Selected research package tier" },
+        "packageName": { "type": "string", "description": "Name of the research package tier" },
+        "amount": { "type": "number", "description": "Paid amount in INR" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of order placement" }
+      },
+      "required": ["orderId", "userId", "userEmail", "userName", "packageId", "packageName", "amount"]
+    },
+    "ResearchTicket": {
+      "title": "ResearchTicket",
+      "description": "Represents an active research ticket handled by executives.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique firestore document ID" },
+        "ticketNumber": { "type": "string", "description": "Formated human-readable ID like TKT-XXXX" },
+        "orderId": { "type": "string", "description": "Associated research purchase order ID" },
+        "userId": { "type": "string", "description": "UID of the client" },
+        "userEmail": { "type": "string", "description": "Email of the client" },
+        "userName": { "type": "string", "description": "Name of the client" },
+        "packageId": { "type": "string", "description": "Selected research package tier" },
+        "packageName": { "type": "string", "description": "Name of the research package tier" },
+        "businessCategory": { "type": "string", "description": "Selected industry or category" },
+        "businessType": { "type": "string", "description": "Specific business model type" },
+        "investment": { "type": "string", "description": "Projected range of investment" },
+        "location": { "type": "string", "description": "Target geographic location of business" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" },
+        "dueDate": { "type": "string", "description": "Deadline date string in YYYY-MM-DD" },
+        "status": { "type": "string", "description": "Active status of report process" },
+        "priority": { "type": "string", "enum": ["High", "Medium", "Low"], "description": "Priority tier of report" },
+        "assignedExecutive": { "type": "string", "description": "Assigned executive expert name" },
+        "assignedQALead": { "type": "string", "description": "Assigned senior auditor name" },
+        "internalNotes": { "type": "string", "description": "Private notes used by internal analysts" },
+        "projectTimeline": {
+          "type": "array",
+          "description": "Milestone progression timeline of the ticket"
+        },
+        "comments": {
+          "type": "array",
+          "description": "Conversation threads between analyst and user"
+        },
+        "findings": {
+          "type": "object",
+          "properties": {
+            "marketSize": { "type": "string" },
+            "competitors": { "type": "string" },
+            "financialEstimates": { "type": "string" },
+            "swotAnalysis": { "type": "string" },
+            "roadmap": { "type": "string" },
+            "locationAnalysis": { "type": "string" },
+            "customAnswers": { "type": "string" }
+          }
+        }
+      },
+      "required": ["ticketNumber", "orderId", "userId", "userEmail", "userName", "packageId", "packageName", "businessCategory", "status", "priority", "assignedExecutive", "projectTimeline"]
+    },
+    "ResearchPayment": {
+      "title": "ResearchPayment",
+      "description": "Represents payment transactions of clients.",
+      "type": "object",
+      "properties": {
+        "paymentId": { "type": "string", "description": "Unique transaction ID" },
+        "userId": { "type": "string", "description": "Client UID" },
+        "amount": { "type": "number", "description": "Total payment in INR" },
+        "status": { "type": "string", "description": "Status of the payment transaction" },
+        "packageId": { "type": "string", "description": "Purchased package ID" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Transaction server timestamp" }
+      },
+      "required": ["paymentId", "userId", "amount", "status", "packageId"]
+    },
+    "ResearchDocument": {
+      "title": "ResearchDocument",
+      "description": "Backup reference materials uploaded during research.",
+      "type": "object",
+      "properties": {
+        "docId": { "type": "string", "description": "Document unique ID" },
+        "ticketId": { "type": "string", "description": "ID of associated research ticket" },
+        "name": { "type": "string", "description": "Filename of backup" },
+        "size": { "type": "string", "description": "File size formatted string" },
+        "category": { "type": "string", "description": "Uploaded category" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Upload server timestamp" }
+      },
+      "required": ["docId", "ticketId", "name", "size", "category"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Notification records triggered upon workflow changes.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Target recipient UID" },
+        "title": { "type": "string", "description": "Title of notification" },
+        "message": { "type": "string", "description": "Body description" },
+        "read": { "type": "boolean", "description": "Read receipt" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Sent timestamp" }
+      },
+      "required": ["userId", "title", "message", "read"]
+    },
+    "ResearchQA": {
+      "title": "ResearchQA",
+      "description": "Represents quality assurance feedback, revision notes, and change requests on research tickets.",
+      "type": "object",
+      "properties": {
+        "qaId": { "type": "string", "description": "Unique QA record ID" },
+        "ticketId": { "type": "string", "description": "ID of associated research ticket" },
+        "ticketNumber": { "type": "string", "description": "Human-readable ticket number" },
+        "qaLeadId": { "type": "string", "description": "UID of the QA lead providing feedback" },
+        "qaLeadName": { "type": "string", "description": "Name of the QA lead" },
+        "revisionNotes": { "type": "string", "description": "Detailed notes on areas needing revision" },
+        "changeRequests": { "type": "string", "description": "Specific requests for changes" },
+        "status": { "type": "string", "description": "Status of the QA feedback (e.g., pending_revision, major_overhaul)" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Feedback timestamp" }
+      },
+      "required": ["ticketId", "ticketNumber", "qaLeadName", "revisionNotes", "changeRequests", "status"]
+    }
+  },
+  "firestore": {
+    "research_orders/{orderId}": {
+      "schema": "ResearchOrder",
+      "description": "Purchase orders for premium business research"
+    },
+    "research_tickets/{ticketId}": {
+      "schema": "ResearchTicket",
+      "description": "Interactive workspace research tickets"
+    },
+    "research_payments/{paymentId}": {
+      "schema": "ResearchPayment",
+      "description": "Client payment records"
+    },
+    "research_documents/{docId}": {
+      "schema": "ResearchDocument",
+      "description": "Uploaded dossier attachments"
+    },
+    "notifications/{notifId}": {
+      "schema": "Notification",
+      "description": "User notifications"
+    },
+    "research_qa/{qaId}": {
+      "schema": "ResearchQA",
+      "description": "Quality assurance feedback logs"
+    }
+  }
+}

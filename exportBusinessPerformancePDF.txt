@@ -1,0 +1,75 @@
+  // EXPORT BUSINESS PERFORMANCE DATA PDF
+  const generatePerformancePDF = () => {
+    showToast("Compiling Business Performance Data PDF...", "info");
+    const doc = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+
+    // Header
+    doc.setFillColor(15, 23, 42); // slate-900
+    doc.rect(0, 0, pageWidth, 40, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.text("Business Performance Overview", margin, 25);
+    
+    // Subtitle
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(148, 163, 184); // slate-400
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, pageWidth - margin - 60, 25);
+
+    // Simulated Metrics
+    const metrics = [
+      { label: "Total Active Projects", value: "24", growth: "+12%" },
+      { label: "Quarterly Revenue", value: "$1.2M", growth: "+8.5%" },
+      { label: "Customer Satisfaction", value: "98%", growth: "+2.1%" },
+      { label: "Reports Generated", value: "156", growth: "+45%" }
+    ];
+
+    let yPos = 60;
+    const cardWidth = (pageWidth - (margin * 2) - 30) / 4;
+    
+    metrics.forEach((metric, idx) => {
+      const xPos = margin + (idx * (cardWidth + 10));
+      
+      // Card Background
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(xPos, yPos, cardWidth, 40, 3, 3, 'FD');
+      
+      // Label
+      doc.setTextColor(100, 116, 139);
+      doc.setFontSize(10);
+      doc.text(metric.label, xPos + 5, yPos + 10);
+      
+      // Value
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text(metric.value, xPos + 5, yPos + 25);
+      
+      // Growth
+      doc.setTextColor(16, 185, 129); // emerald-500
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${metric.growth} vs last quarter`, xPos + 5, yPos + 35);
+    });
+
+    // Chart Area Mock
+    yPos += 60;
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(margin, yPos, pageWidth - (margin * 2), 70, 3, 3, 'FD');
+    doc.setTextColor(100, 116, 139);
+    doc.setFontSize(14);
+    doc.text("[Performance Trend Chart - Simulated Area]", margin + (pageWidth/2) - 60, yPos + 35);
+
+    doc.save('business_performance_data.pdf');
+    showToast("Performance Data PDF downloaded successfully.", "success");
+  };

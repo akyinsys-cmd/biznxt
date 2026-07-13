@@ -1,0 +1,360 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Catch-all Default Deny Security Gate
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global reusable security primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.role in ['admin', 'superadmin'] ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'superadmin'] ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isBSM() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'bsm';
+    }
+
+    function isResearcher() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'researcher';
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Entity-Specific Structural Validation Helpers
+    function isValidUser(data) {
+      return data.email is string && data.email.size() <= 256
+        && data.displayName is string && data.displayName.size() <= 256
+        && data.role is string && data.role in ['customer', 'researcher', 'consultant', 'partner', 'admin', 'superadmin', 'bsm'];
+    }
+
+    function isValidReport(data) {
+      return data.title is string && data.title.size() <= 256
+        && data.industry is string && data.industry.size() <= 256
+        && data.status is string && data.status in ['Pending Ingest', 'In Progress', 'Report Designing', 'SME Review', 'Completed']
+        && data.ownerId is string && data.ownerId.size() <= 128;
+    }
+
+    function isValidTask(data) {
+      return data.title is string && data.title.size() <= 256
+        && data.status is string && data.status in ['pending', 'completed']
+        && data.ownerId is string && data.ownerId.size() <= 128;
+    }
+
+    function isValidConsultation(data) {
+      return data.summary is string && data.summary.size() <= 256
+        && data.ownerId is string && data.ownerId.size() <= 128
+        && data.status is string && data.status in ['scheduled', 'cancelled'];
+    }
+
+    // ============================================================================
+    // CORE COLLECTIONS
+    // ============================================================================
+
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming());
+      allow update: if isSignedIn() && (isOwner(userId) || isAdmin()) && isValidUser(incoming())
+        && (incoming().role == existing().role || isAdmin());
+    }
+
+    match /analytics_events/{eventId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /finance_metrics/{metricId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /project_approvals/{approvalId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // ============================================================================
+    // BSM & PROJECT EXECUTION
+    // ============================================================================
+
+    match /business_success_managers/{bsmId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || isOwner(bsmId);
+    }
+
+    match /client_projects/{projectId} {
+      allow read: if isSignedIn() && (resource.data.clientEmail == request.auth.token.email || resource.data.bsmId == request.auth.uid || isAdmin());
+      allow create: if isAdmin() || isBSM();
+      allow update: if isAdmin() || isBSM();
+    }
+
+    match /project_tasks/{taskId} {
+      allow read: if isSignedIn() && (resource.data.assignedTo == request.auth.uid || isAdmin() || isBSM() || (exists(/databases/$(database)/documents/client_projects/$(resource.data.projectId)) && get(/databases/$(database)/documents/client_projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email));
+      allow write: if isAdmin() || isBSM();
+    }
+
+    match /project_meetings/{meetingId} {
+      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || resource.data.bsmId == request.auth.uid || isAdmin());
+      allow write: if isAdmin() || isBSM();
+    }
+
+    match /project_notes/{noteId} {
+      allow read, write: if isSignedIn() && (isAdmin() || isBSM());
+    }
+
+    match /project_timeline/{timelineId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || isBSM();
+    }
+
+    match /project_activities/{activityId} {
+      allow read: if isSignedIn() && (isAdmin() || isBSM() || (exists(/databases/$(database)/documents/client_projects/$(resource.data.projectId)) && get(/databases/$(database)/documents/client_projects/$(resource.data.projectId)).data.clientEmail == request.auth.token.email));
+      allow create: if isSignedIn();
+    }
+
+    match /risk_alerts/{alertId} {
+      allow read, write: if isAdmin() || isBSM();
+    }
+
+    // ============================================================================
+    // PHASE 3: BUSINESS LAUNCH SYSTEM
+    // ============================================================================
+
+    match /project_quotations/{quotationId} {
+      allow read: if isSignedIn() && (resource.data.customerId == request.auth.uid || isAdmin() || isBSM());
+      allow create: if isAdmin() || isBSM();
+      allow update: if isAdmin() || isBSM() || (isSignedIn() && existing().customerId == request.auth.uid && incoming().status in ['Accepted', 'Rejected']);
+    }
+
+    match /customer_documents/{docId} {
+      allow read: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin() || isBSM());
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (resource.data.clientId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /document_orders/{orderId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isBSM());
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    // ============================================================================
+    // BUSINESS OS COLLECTIONS
+    // ============================================================================
+
+    match /business_profiles/{profileId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /business_goals/{goalId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /business_health/{healthId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isAdmin() || isBSM();
+    }
+
+    match /business_projects/{projectId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /business_tasks/{taskId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /business_documents/{docId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /business_calendar/{eventId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow write: if isSignedIn() && (request.resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+    }
+
+    match /business_activity/{activityId} {
+      allow read: if isSignedIn() && (resource.data.ownerId == request.auth.uid || isAdmin() || isBSM());
+      allow create: if isSignedIn();
+    }
+
+    // ============================================================================
+    // CRM & SALES PIPELINE
+    // ============================================================================
+
+    match /crm_leads/{leadId} {
+      allow read: if isAdmin() || isBSM() || (isSignedIn() && existing().assignedTo == request.auth.uid);
+      allow write: if isAdmin() || isBSM();
+    }
+
+    match /crm_pipeline/{pipelineId} {
+      allow read, write: if isAdmin() || isBSM();
+    }
+
+    match /crm_contacts/{contactId} {
+      allow read, write: if isAdmin() || isBSM();
+    }
+
+    match /crm_proposals/{proposalId} {
+      allow read, write: if isAdmin() || isBSM();
+    }
+
+    match /crm_automation_logs/{logId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ============================================================================
+    // SENSITIVE FINANCIAL RECORDS (Admin & Superadmin Restricted)
+    // ============================================================================
+
+    match /business_finance/{financeId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /research_payments/{paymentId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /partner_payments/{paymentId} {
+      allow read, write: if isAdmin();
+    }
+
+    // ============================================================================
+    // RESEARCH & INTELLIGENCE
+    // ============================================================================
+
+    match /reports/{reportId} {
+      allow get: if isSignedIn() && (existing().ownerId == request.auth.uid || request.auth.uid == existing().researcherId || isAdmin());
+      allow list: if isSignedIn() && (resource.data.ownerId == request.auth.uid || resource.data.researcherId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().ownerId == request.auth.uid && isValidReport(incoming());
+      allow update: if isSignedIn() && (
+        (existing().ownerId == request.auth.uid && incoming().ownerId == existing().ownerId && isValidReport(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'industry', 'location', 'budget']))
+        || (request.auth.uid == existing().researcherId && incoming().ownerId == existing().ownerId && isValidReport(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['status']))
+        || isAdmin()
+      );
+    }
+
+    match /research_orders/{orderId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow update: if isResearcher() || isAdmin();
+    }
+
+    match /research_documents/{documentId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow create: if isSignedIn() && (incoming().userId == request.auth.uid || isResearcher() || isAdmin());
+    }
+
+    match /research_tickets/{ticketId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isResearcher() || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /research_notes/{noteId} {
+      allow read: if isSignedIn();
+      allow write: if isResearcher() || isAdmin();
+    }
+
+    match /research_sources/{sourceId} {
+      allow read: if isSignedIn();
+      allow write: if isResearcher() || isAdmin();
+    }
+
+    match /research_tasks/{taskId} {
+      allow read: if isSignedIn();
+      allow write: if isResearcher() || isAdmin();
+    }
+
+    match /research_activity/{activityId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+
+    match /research_versions/{versionId} {
+      allow read: if isSignedIn();
+      allow create: if isResearcher() || isAdmin();
+    }
+
+    match /research_quality/{qualityId} {
+      allow read: if isSignedIn();
+      allow write: if isResearcher() || isAdmin();
+    }
+
+    match /research_qa/{qaId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (isResearcher() || isAdmin());
+      allow update, delete: if isAdmin();
+    }
+
+    // ============================================================================
+    // MARKETPLACE & SERVICES
+    // ============================================================================
+
+    match /service_catalog/{serviceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /service_orders/{orderId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin() || isBSM());
+      allow create: if isSignedIn();
+      allow update: if isAdmin() || isBSM();
+    }
+
+    // ============================================================================
+    // PARTNERS
+    // ============================================================================
+
+    match /partners/{partnerId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() || (isSignedIn() && request.auth.uid == partnerId);
+    }
+
+    // ============================================================================
+    // AI REPORT ENGINE
+    // ============================================================================
+
+    match /report_templates/{templateId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /report_history/{historyId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn();
+    }
+  }
+}
