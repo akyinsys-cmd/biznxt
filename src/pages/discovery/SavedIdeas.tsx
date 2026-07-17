@@ -70,7 +70,7 @@ export default function SavedIdeas() {
         </div>
         <button 
           onClick={() => navigate('/discovery/wizard')}
-          className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-colors flex items-center shadow-lg"
+          className="px-6 py-3 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-colors flex items-center shadow-lg"
         >
           <Search className="w-4 h-4 mr-2" />
           New Discovery
@@ -86,7 +86,7 @@ export default function SavedIdeas() {
           <p className="text-slate-500 mb-8 max-w-md mx-auto">Run the AI Discovery Engine to generate tailored business opportunities and save your favorites here.</p>
           <button 
             onClick={() => navigate('/discovery/wizard')}
-            className="px-8 py-3 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/30"
+            className="px-8 py-3 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/30"
           >
             Start Discovery Engine
           </button>
@@ -106,7 +106,7 @@ export default function SavedIdeas() {
                   <div className="flex items-start justify-between mb-4">
                     <h3 className="text-xl font-bold text-slate-900 pr-4">{idea.title}</h3>
                     <div className="flex items-center space-x-2 shrink-0">
-                      <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-2xl text-xs font-bold border border-emerald-100">
+                      <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-100">
                         Score {idea.opportunityScore}
                       </span>
                     </div>

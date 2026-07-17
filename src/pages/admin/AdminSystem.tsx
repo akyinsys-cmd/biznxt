@@ -1,18 +1,26 @@
 import { useState, useEffect } from 'react';
 import { Settings, Shield, Zap, RefreshCw, AlertCircle, Terminal, HardDrive, Cpu } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
+import { logAdminActivity } from '../../utils/adminLogger';
 
 export function AdminSystem() {
   const { success } = useToast();
   const [uptime, setUptime] = useState('99.98%');
   const [logs, setLogs] = useState([
     { id: '1', event: 'Database Backup', status: 'Success', time: '2 hours ago' },
-    { id: '2', event: 'Google Auth Sync', status: 'Active', time: 'Just now' },
+    { id: '2', event: 'Google Account Verification', status: 'Active', time: 'Just now' },
     { id: '3', event: 'Security Audit', status: 'Completed', time: 'Yesterday' },
     { id: '4', event: 'New Manager Onboarded', status: 'Info', time: '5 hours ago' },
   ]);
 
   const handleMaintenance = () => {
+    logAdminActivity(
+      'akyinsys@gmail.com',
+      'super_admin',
+      'Toggled Maintenance Mode',
+      'Administrative override toggled BizNxt server maintenance flag.',
+      'System'
+    );
     success('System maintenance mode toggled');
   };
 

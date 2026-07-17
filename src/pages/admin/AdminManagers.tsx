@@ -3,6 +3,7 @@ import { Search, Shield, UserPlus, Trash2, CheckCircle, XCircle, MoreVertical } 
 import { collection, onSnapshot, query, where, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
+import { EmptyUsersIllustration } from '../../components/EmptyStates';
 
 export function AdminManagers() {
   const [managers, setManagers] = useState<any[]>([]);
@@ -28,7 +29,7 @@ export function AdminManagers() {
       await updateDoc(doc(db, 'users', userId), { status: newStatus });
       success(`Manager account ${newStatus}`);
     } catch (err: any) {
-      error(err.message || 'Failed to update status');
+      error('Failed to update status');
     }
   };
 
@@ -38,7 +39,7 @@ export function AdminManagers() {
         await updateDoc(doc(db, 'users', userId), { role: 'customer' });
         success('User demoted to customer');
       } catch (err: any) {
-        error(err.message || 'Failed to demote user');
+        error('Failed to demote user');
       }
     }
   };
@@ -63,7 +64,7 @@ export function AdminManagers() {
             />
           </div>
           
-          <button className="bg-slate-900 text-white px-4 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 hover:bg-slate-800 transition-colors">
+          <button className="bg-slate-900 text-white px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-800 transition-colors">
             <UserPlus size={16} />
             Invite Manager
           </button>
@@ -85,7 +86,7 @@ export function AdminManagers() {
               <tr key={manager.id} className="hover:bg-slate-50/50 transition-colors group">
                 <td className="px-8 py-5 text-left">
                   <div className="flex items-center gap-4">
-                    <img src={manager.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${manager.displayName || manager.email}`} alt="" className="w-10 h-10 rounded-2xl bg-slate-200" />
+                    <img src={manager.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${manager.displayName || manager.email}`} alt="" className="w-10 h-10 rounded-full bg-slate-200" />
                     <div>
                       <h4 className="text-sm font-black text-slate-900">{manager.displayName || manager.name || 'Unknown'}</h4>
                       <p className="text-[10px] font-bold text-slate-500">{manager.email}</p>

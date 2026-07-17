@@ -96,11 +96,11 @@ export default function ManufacturerDetails() {
           <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 text-white flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <div className="flex items-center space-x-3 mb-3">
-                <span className="px-3 py-1 bg-primary text-white rounded-2xl text-xs font-bold uppercase tracking-wider">
+                <span className="px-3 py-1 bg-primary text-white rounded-full text-xs font-bold uppercase tracking-wider">
                   {manufacturer.type}
                 </span>
                 {manufacturer.verified && (
-                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center backdrop-blur-md">
+                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-xs font-bold uppercase tracking-wider flex items-center backdrop-blur-md">
                     <ShieldCheck className="w-3 h-3 mr-1" /> Verified
                   </span>
                 )}
@@ -110,7 +110,7 @@ export default function ManufacturerDetails() {
               </h1>
             </div>
             
-            <div className="flex items-center space-x-4 bg-slate-900/50 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 shrink-0">
+            <div className="flex items-center space-x-4 bg-slate-900/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shrink-0">
               <div className="text-center">
                 <div className="flex items-center justify-center text-amber-400 font-bold text-lg">
                   {manufacturer.rating} <Star className="w-4 h-4 ml-1 fill-amber-400" />
@@ -147,7 +147,7 @@ export default function ManufacturerDetails() {
               <h2 className="text-xl font-bold text-slate-900 mb-4">Certifications & Compliance</h2>
               <div className="flex flex-wrap gap-2">
                 {manufacturer.certifications.map((cert, i) => (
-                  <span key={i} className="px-4 py-2 bg-slate-100 text-slate-700 rounded-2xl text-sm font-bold border border-slate-200">
+                  <span key={i} className="px-4 py-2 bg-slate-100 text-slate-700 rounded-full text-sm font-bold border border-slate-200">
                     {cert}
                   </span>
                 ))}

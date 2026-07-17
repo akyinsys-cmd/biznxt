@@ -50,7 +50,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
     fetchQuotation();
   }, [projectId]);
 
-  const handleAction = async (status: 'accepted' | 'rejected') => {
+  const handleAction = async (status: 'Accepted' | 'Rejected') => {
     if (!quotation) return;
     try {
       setProcessing(true);
@@ -59,7 +59,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
         updatedAt: serverTimestamp()
       });
 
-      if (status === 'accepted') {
+      if (status === 'Accepted') {
         // Also update project status
         await updateDoc(doc(db, 'client_projects', projectId), {
           status: 'Active',
@@ -93,7 +93,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
     );
   }
 
-  const isPending = quotation.status === 'draft' || quotation.status === 'sent';
+  const isPending = quotation.status === 'Draft' || quotation.status === 'Sent';
 
   return (
     <div className="space-y-8">
@@ -102,8 +102,8 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
           <div className="flex items-center gap-3 mb-2">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">{quotation.title}</h2>
             <span className={`px-3 py-1 rounded-2xl text-[10px] font-black uppercase tracking-widest ${
-              quotation.status === 'accepted' ? 'bg-emerald-500 text-white' :
-              quotation.status === 'rejected' ? 'bg-rose-500 text-white' :
+              quotation.status === 'Accepted' ? 'bg-emerald-500 text-white' :
+              quotation.status === 'Rejected' ? 'bg-rose-500 text-white' :
               'bg-amber-500 text-white'
             }`}>
               {quotation.status}
@@ -114,7 +114,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-900 font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-all">
+          <button className="px-6 py-3 rounded-full bg-white border border-slate-200 text-slate-900 font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-all">
             <Download className="w-4 h-4" /> Export PDF
           </button>
         </div>
@@ -136,7 +136,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
                     <span className="text-[10px] text-slate-400 font-bold">SAC: 998311 • GST {item.gst}%</span>
                   </div>
                   <div className="text-center">
-                    <span className="px-3 py-1 bg-slate-100 rounded-2xl text-[10px] font-bold text-slate-600 uppercase tracking-widest">{item.timeline}</span>
+                    <span className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-600 uppercase tracking-widest">{item.timeline}</span>
                   </div>
                   <div className="text-right font-mono font-bold text-slate-900">
                     ₹{item.price.toLocaleString()}
@@ -147,7 +147,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
           </div>
 
           <div className="p-8 bg-amber-50 rounded-[2rem] border border-amber-200 flex gap-6">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-amber-600 shadow-sm shrink-0">
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-amber-600 shadow-sm shrink-0">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
@@ -182,7 +182,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
             {isPending && (
               <div className="space-y-4">
                 <button 
-                  onClick={() => handleAction('accepted')}
+                  onClick={() => handleAction('Accepted')}
                   disabled={processing}
                   className="w-full py-4 bg-primary text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                 >
@@ -190,7 +190,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
                   Accept & Initialize
                 </button>
                 <button 
-                  onClick={() => handleAction('rejected')}
+                  onClick={() => handleAction('Rejected')}
                   disabled={processing}
                   className="w-full py-4 bg-white/5 text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] hover:bg-white/10 transition-all flex items-center justify-center gap-2 border border-white/5"
                 >
@@ -200,9 +200,9 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
               </div>
             )}
 
-            {quotation.status === 'accepted' && (
+            {quotation.status === 'Accepted' && (
               <div className="p-6 bg-emerald-500/10 rounded-2xl border border-emerald-500/20 text-center">
-                <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ShieldCheck className="w-6 h-6 text-white" />
                 </div>
                 <h4 className="font-bold text-emerald-400">Payment Verified</h4>
@@ -211,7 +211,7 @@ export default function QuotationView({ projectId, onAccepted }: QuotationViewPr
             )}
           </div>
 
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100">
+          <div className="bg-white shadow-xl shadow-slate-200/50 p-8 rounded-[2.5rem] border border-slate-100">
             <h4 className="text-sm font-bold text-slate-900 mb-6 uppercase tracking-widest">Next Execution Steps</h4>
             <div className="space-y-6">
               {[

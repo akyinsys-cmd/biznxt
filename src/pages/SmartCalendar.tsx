@@ -50,7 +50,7 @@ export default function SmartCalendar() {
     if (!user) return;
 
     let qProjects;
-    if (role === 'admin' || role === 'superadmin') {
+    if ((role as string) === "super_admin") {
       qProjects = query(collection(db, 'client_projects'));
     } else if (role === 'bsm') {
       qProjects = query(collection(db, 'client_projects'), where('bsmId', '==', user.uid));
@@ -123,15 +123,24 @@ export default function SmartCalendar() {
         const cloneDay = day;
         const { dayTasks, dayMeetings, dayMilestones } = getEventsForDate(cloneDay);
         const hasEvents = dayTasks.length > 0 || dayMeetings.length > 0 || dayMilestones.length > 0;
+        const totalEvents = dayTasks.length + dayMeetings.length + dayMilestones.length;
+        
+        let intensityClass = 'bg-white';
+        if (isSameMonth(day, monthStart)) {
+          if (totalEvents > 5) intensityClass = 'bg-rose-100 border-rose-200';
+          else if (totalEvents > 3) intensityClass = 'bg-orange-100 border-orange-200';
+          else if (totalEvents > 1) intensityClass = 'bg-amber-50 border-amber-100';
+          else if (totalEvents === 1) intensityClass = 'bg-yellow-50 border-yellow-50';
+        }
 
         days.push(
           <div
             className={`min-h-[100px] border border-slate-100 p-2 cursor-pointer transition-all ${
               !isSameMonth(day, monthStart)
-                ? "bg-slate-50 text-slate-400"
+                ? "bg-slate-50/50 text-slate-400"
                 : isSameDay(day, selectedDate)
-                ? "bg-blue-50 border-blue-200"
-                : "bg-white hover:bg-slate-50"
+                ? "bg-blue-50 border-blue-300 ring-2 ring-blue-500/20"
+                : `${intensityClass} hover:opacity-80`
             }`}
             key={day.toString()}
             onClick={() => onDateClick(cloneDay)}
@@ -208,9 +217,18 @@ export default function SmartCalendar() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-black text-slate-900 tracking-tighter">Smart Calendar</h1>
-              <p className="text-sm font-medium text-slate-500 mt-1">Syncs with your projects, milestones, and tasks</p>
+              <p className="text-sm font-medium text-slate-500 mt-1">Integrates seamlessly with your projects, milestones, and tasks</p>
             </div>
             
+            <div className="hidden lg:flex items-center gap-2 mr-auto ml-10">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Intensity</span>
+              <div className="w-4 h-4 rounded bg-white border border-slate-200" title="0 events"></div>
+              <div className="w-4 h-4 rounded bg-yellow-50 border border-yellow-100" title="1 event"></div>
+              <div className="w-4 h-4 rounded bg-amber-50 border border-amber-100" title="2-3 events"></div>
+              <div className="w-4 h-4 rounded bg-orange-100 border border-orange-200" title="4-5 events"></div>
+              <div className="w-4 h-4 rounded bg-rose-100 border border-rose-200" title="6+ events"></div>
+            </div>
+
             <div className="flex items-center space-x-6">
               <div className="flex items-center bg-white rounded-2xl p-1 border border-slate-200 shadow-sm">
                 <button onClick={prevMonth} className="p-2 hover:bg-slate-100 rounded-2xl transition-colors">
@@ -225,7 +243,7 @@ export default function SmartCalendar() {
               </div>
               <button 
                 onClick={() => setIsScheduleModalOpen(true)}
-                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-2xl font-bold shadow-lg shadow-blue-600/20 transition-all"
+                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-bold shadow-lg shadow-blue-600/20 transition-all"
               >
                 <Plus className="w-5 h-5" />
                 <span>Schedule Meeting</span>

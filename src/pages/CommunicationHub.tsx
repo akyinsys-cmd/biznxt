@@ -15,11 +15,15 @@ import {
   Filter,
   AtSign,
   Star,
-  FileText,
+  FileText, Mic,
   Image as ImageIcon,
   ChevronLeft
 } from 'lucide-react';
+import { PenTool } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { QuickMeetingNotesModal } from '../components/communication/QuickMeetingNotesModal';
+import { AIMeetingAssistantModal } from '../components/communication/AIMeetingAssistantModal';
+import { DigitalWhiteboard } from '../components/communication/DigitalWhiteboard';
 import { CHAT_ROOMS } from '../data/communicationData';
 import { ChatRoom, ChatMessage } from '../types/communication';
 import { db } from '../lib/firebase';
@@ -45,6 +49,9 @@ export default function CommunicationHub() {
   const [rooms, setRooms] = useState<ChatRoom[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<ChatRoom | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+  const [isWhiteboardOpen, setIsWhiteboardOpen] = useState(false);
+  const [isAudioMeetingOpen, setIsAudioMeetingOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -170,7 +177,7 @@ export default function CommunicationHub() {
         <div className="p-8 border-b border-slate-100">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-2xl font-black text-slate-900 tracking-tighter">Inbox</h1>
-            <button className="w-10 h-10 bg-primary/10 text-primary rounded-2xl hover:bg-primary/20 transition-all flex items-center justify-center">
+            <button className="w-10 h-10 bg-primary/10 text-primary rounded-full hover:bg-primary/20 transition-all flex items-center justify-center">
               <Plus size={20} />
             </button>
           </div>
@@ -228,7 +235,7 @@ export default function CommunicationHub() {
                     {room.lastMessage ? room.lastMessage.content : 'No secure logs initialized'}
                   </p>
                   {room.unreadCount > 0 && (
-                    <span className="bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded-2xl shadow-lg shadow-primary/20">
+                    <span className="bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-primary/20">
                       {room.unreadCount}
                     </span>
                   )}
@@ -254,7 +261,7 @@ export default function CommunicationHub() {
                   <ChevronLeft size={20} />
                 </button>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                  <div className="w-12 h-12 bg-slate-100 rounded-full overflow-hidden shadow-sm">
                     <img src={selectedRoom.participants[0].avatar} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div>
@@ -269,13 +276,34 @@ export default function CommunicationHub() {
               </div>
 
               <div className="flex items-center gap-3">
-                <button className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-2xl transition-all border border-transparent hover:border-primary/10">
+                <button className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-full transition-all border border-transparent hover:border-primary/10">
                   <Phone size={20} />
                 </button>
-                <button className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-2xl transition-all border border-transparent hover:border-primary/10">
+                <button className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-full transition-all border border-transparent hover:border-primary/10">
                   <Video size={20} />
                 </button>
-                <button className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-2xl transition-all border border-transparent hover:border-primary/10">
+                <button 
+                  onClick={() => setIsAudioMeetingOpen(true)}
+                  title="Audio Meeting Assistant"
+                  className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-indigo-500 hover:bg-indigo-50 rounded-full transition-all border border-transparent hover:border-indigo-100"
+                >
+                  <Mic size={20} />
+                </button>
+                <button 
+                  onClick={() => setIsNotesModalOpen(true)}
+                  title="Chat AI Notes"
+                  className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-full transition-all border border-transparent hover:border-primary/10"
+                >
+                  <FileText size={20} />
+                </button>
+                <button 
+                  onClick={() => setIsWhiteboardOpen(true)}
+                  title="Whiteboard"
+                  className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-full transition-all border border-transparent hover:border-primary/10"
+                >
+                  <PenTool size={20} />
+                </button>
+                <button className="w-12 h-12 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/5 rounded-full transition-all border border-transparent hover:border-primary/10">
                   <MoreVertical size={20} />
                 </button>
               </div>
@@ -361,10 +389,10 @@ export default function CommunicationHub() {
                     }}
                   />
                   <div className="absolute right-4 bottom-3 flex gap-1">
-                    <button type="button" className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-primary transition-all rounded-2xl hover:bg-slate-100">
+                    <button type="button" className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-primary transition-all rounded-full hover:bg-slate-100">
                       <ImageIcon size={20} />
                     </button>
-                    <button type="button" className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-primary transition-all rounded-2xl hover:bg-slate-100">
+                    <button type="button" className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-primary transition-all rounded-full hover:bg-slate-100">
                       <Paperclip size={20} />
                     </button>
                   </div>
@@ -411,9 +439,9 @@ export default function CommunicationHub() {
             <h3 className="text-2xl font-black text-slate-900 tracking-tight relative z-10">{selectedRoom.name}</h3>
             <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6 relative z-10">{selectedRoom.type}</p>
             <div className="flex gap-3 justify-center relative z-10">
-              <button className="w-12 h-12 bg-slate-50 text-slate-500 rounded-2xl hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center border border-slate-100"><AtSign size={20} /></button>
-              <button className="w-12 h-12 bg-slate-50 text-slate-500 rounded-2xl hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center border border-slate-100"><Star size={20} /></button>
-              <button className="w-12 h-12 bg-slate-50 text-slate-500 rounded-2xl hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center border border-slate-100"><Search size={20} /></button>
+              <button className="w-12 h-12 bg-slate-50 text-slate-500 rounded-full hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center border border-slate-100"><AtSign size={20} /></button>
+              <button className="w-12 h-12 bg-slate-50 text-slate-500 rounded-full hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center border border-slate-100"><Star size={20} /></button>
+              <button className="w-12 h-12 bg-slate-50 text-slate-500 rounded-full hover:text-primary hover:bg-primary/5 transition-all flex items-center justify-center border border-slate-100"><Search size={20} /></button>
             </div>
           </div>
 
@@ -423,7 +451,7 @@ export default function CommunicationHub() {
               <div className="space-y-5">
                 {selectedRoom.participants.map(p => (
                   <div key={p.id} className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-10 h-10 rounded-2xl overflow-hidden shadow-sm group-hover:scale-105 transition-transform">
+                    <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm group-hover:scale-105 transition-transform">
                       <img src={p.avatar} alt="" className="w-full h-full object-cover" />
                     </div>
                     <div>
@@ -450,6 +478,16 @@ export default function CommunicationHub() {
             </div>
           </div>
         </div>
+      )}
+      {isAudioMeetingOpen && selectedRoom && (
+        <AIMeetingAssistantModal
+          isOpen={isAudioMeetingOpen}
+          onClose={() => setIsAudioMeetingOpen(false)}
+          roomName={selectedRoom.name}
+        />
+      )}
+      {isWhiteboardOpen && selectedRoom && (
+        <DigitalWhiteboard roomId={selectedRoom.id} onClose={() => setIsWhiteboardOpen(false)} />
       )}
     </div>
   );

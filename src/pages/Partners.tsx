@@ -387,7 +387,7 @@ export default function Partners() {
         createdAt: new Date().toISOString(),
         rating: 5.0,
         commissionRate: 10,
-        city: onboardingForm.citiesSelected?.[0] || 'National',
+        city: onboardingForm.serviceAreas?.[0] || 'National',
         country: 'India',
         email: onboardingForm.email,
         phone: onboardingForm.phone
@@ -654,7 +654,7 @@ export default function Partners() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center space-x-2 px-3.5 py-1.5 bg-primary/10 border border-rose-500/30 rounded-2xl text-rose-400 text-xs font-bold uppercase tracking-wider mb-6"
+            className="inline-flex items-center space-x-2 px-3.5 py-1.5 bg-primary/10 border border-rose-500/30 rounded-full text-rose-400 text-xs font-bold uppercase tracking-wider mb-6"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Enterprise Service Ecosystem</span>
@@ -724,7 +724,7 @@ export default function Partners() {
 
                 <div className="flex flex-wrap gap-3 items-center w-full lg:w-auto">
                   <select 
-                    className="bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-xs font-semibold text-slate-400 focus:outline-none"
+                    className="bg-slate-900 border border-slate-800 rounded-full px-4 py-3 text-xs font-semibold text-slate-400 focus:outline-none"
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
                   >
@@ -733,7 +733,7 @@ export default function Partners() {
                   </select>
 
                   <select 
-                    className="bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3 text-xs font-semibold text-slate-400 focus:outline-none"
+                    className="bg-slate-900 border border-slate-800 rounded-full px-4 py-3 text-xs font-semibold text-slate-400 focus:outline-none"
                     value={filterCity}
                     onChange={(e) => setFilterCity(e.target.value)}
                   >
@@ -762,7 +762,7 @@ export default function Partners() {
                     className="bg-slate-950 border border-slate-800/80 rounded-3xl p-6 hover:border-slate-700 transition-all flex flex-col justify-between relative group shadow-sm"
                   >
                     {p.status === 'Verified' && (
-                      <div className="absolute top-4 right-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-2xl flex items-center space-x-1">
+                      <div className="absolute top-4 right-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center space-x-1">
                         <ShieldCheck className="w-3 h-3" />
                         <span>VERIFIED</span>
                       </div>
@@ -770,7 +770,7 @@ export default function Partners() {
 
                     <div className="space-y-4">
                       <div>
-                        <span className="text-[10px] bg-primary/10 text-rose-400 font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">
+                        <span className="text-[10px] bg-primary/10 text-rose-400 font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
                           {p.businessType}
                         </span>
                         <h3 className="text-xl font-display font-bold text-white mt-3 group-hover:text-rose-400 transition-colors">
@@ -848,7 +848,7 @@ export default function Partners() {
                     <h2 className="text-2xl font-display font-bold text-white">SME & Service Partner Onboarding</h2>
                     <p className="text-xs text-slate-500 mt-1">Submit registration credentials to unlock assigned leads and project boards.</p>
                   </div>
-                  <div className="text-xs font-mono font-bold bg-primary/10 text-rose-400 px-3 py-1 rounded-md">
+                  <div className="text-xs font-mono font-bold bg-primary/10 text-rose-400 px-3 py-1 rounded-full">
                     STEP {onboardingStep} OF 3
                   </div>
                 </div>
@@ -946,7 +946,7 @@ export default function Partners() {
                         <button 
                           type="button" 
                           onClick={() => setOnboardingStep(2)}
-                          className="flex items-center space-x-1.5 bg-primary-dark hover:bg-rose-700 text-white font-bold px-6 py-3 rounded-2xl text-xs transition-all"
+                          className="flex items-center space-x-1.5 bg-primary-dark hover:bg-rose-700 text-white font-bold px-6 py-3 rounded-full text-xs transition-all"
                         >
                           <span>Save & Continue</span>
                           <ArrowRight className="w-4 h-4" />
@@ -1030,7 +1030,7 @@ export default function Partners() {
                         <button 
                           type="button" 
                           onClick={() => setOnboardingStep(3)}
-                          className="flex items-center space-x-1.5 bg-primary-dark hover:bg-rose-700 text-white font-bold px-6 py-3 rounded-2xl text-xs transition-all"
+                          className="flex items-center space-x-1.5 bg-primary-dark hover:bg-rose-700 text-white font-bold px-6 py-3 rounded-full text-xs transition-all"
                         >
                           <span>Save & Continue</span>
                           <ArrowRight className="w-4 h-4" />
@@ -1083,7 +1083,7 @@ export default function Partners() {
                         </button>
                         <button 
                           type="submit"
-                          className="flex items-center space-x-1.5 bg-gradient-to-r from-primary to-amber-500 text-white font-bold px-8 py-3.5 rounded-2xl text-xs transition-all shadow-md"
+                          className="flex items-center space-x-1.5 bg-gradient-to-r from-primary to-amber-500 text-white font-bold px-8 py-3.5 rounded-full text-xs transition-all shadow-md"
                         >
                           <CheckCircle className="w-4 h-4" />
                           <span>Submit Onboarding Application</span>
@@ -1231,7 +1231,7 @@ export default function Partners() {
                                 <>
                                   <button 
                                     onClick={() => updateLeadStatus(lead.id, 'Accepted')}
-                                    className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 py-1.5 rounded-2xl text-[10px] transition-colors"
+                                    className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 py-1.5 rounded-full text-[10px] transition-colors"
                                   >
                                     Accept Lead
                                   </button>
@@ -1255,7 +1255,7 @@ export default function Partners() {
                                       terms: '50% advance, 50% on project delivery.'
                                     });
                                   }}
-                                  className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-2xl text-[10px] transition-colors flex items-center space-x-1"
+                                  className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-3 py-1.5 rounded-full text-[10px] transition-colors flex items-center space-x-1"
                                 >
                                   <Plus className="w-3.5 h-3.5" />
                                   <span>Prepare Quotation</span>
@@ -1267,7 +1267,7 @@ export default function Partners() {
                                   <span className="font-semibold text-slate-500 block">₹{associatedQuote.amount.toLocaleString('en-IN')} Quote</span>
                                   <button 
                                     onClick={() => simulateCustomerApproval(associatedQuote.id, lead.id)}
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-2xl text-[10px] transition-colors flex items-center space-x-1"
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-full text-[10px] transition-colors flex items-center space-x-1"
                                   >
                                     <Check className="w-3.5 h-3.5" />
                                     <span>Simulate Client Approval</span>
@@ -1345,7 +1345,7 @@ export default function Partners() {
                         <div className="col-span-2 flex justify-end">
                           <button 
                             type="submit"
-                            className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-5 py-2.5 rounded-2xl transition-all"
+                            className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-5 py-2.5 rounded-full transition-all"
                           >
                             Dispatch Quote proposal
                           </button>
@@ -1468,13 +1468,13 @@ export default function Partners() {
                           type="text" 
                           required
                           placeholder="e.g. Environmental CTE NOC filed"
-                          className="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-3 py-2 text-white focus:outline-none"
+                          className="flex-1 bg-slate-900 border border-slate-800 rounded-full px-3 py-2 text-white focus:outline-none"
                           value={newTaskTitle}
                           onChange={(e) => setNewTaskTitle(e.target.value)}
                         />
                         <button 
                           type="submit"
-                          className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-2xl transition-all shrink-0"
+                          className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-full transition-all shrink-0"
                         >
                           Add
                         </button>
@@ -1615,7 +1615,7 @@ export default function Partners() {
                   <div className="flex justify-end pt-4">
                     <button 
                       onClick={handleMatchEngine}
-                      className="bg-gradient-to-r from-primary to-amber-500 text-white font-bold px-6 py-3 rounded-2xl text-xs transition-all flex items-center space-x-1.5 shadow-md"
+                      className="bg-gradient-to-r from-primary to-amber-500 text-white font-bold px-6 py-3 rounded-full text-xs transition-all flex items-center space-x-1.5 shadow-md"
                     >
                       <Sparkles className="w-4.5 h-4.5" />
                       <span>Run AI Matching Shards</span>
@@ -1646,7 +1646,7 @@ export default function Partners() {
                               requirements: matchForm.requiredServices || `AI Match generated inquiry regarding ${partner.businessType}.`
                             });
                           }}
-                          className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-2xl text-[11px] transition-colors self-end sm:self-center"
+                          className="bg-primary-dark hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-full text-[11px] transition-colors self-end sm:self-center"
                         >
                           Select & Inquire
                         </button>

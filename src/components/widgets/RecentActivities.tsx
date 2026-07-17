@@ -53,7 +53,7 @@ export function RecentActivities() {
   };
 
   return (
-    <div className="glass-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+    <div className="glass-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
       <div>
         <h3 className="font-bold text-slate-900 text-base">Recent Activities</h3>
         <p className="text-xs text-slate-500 mt-0.5">Chronological audit ledger of active business processes.</p>

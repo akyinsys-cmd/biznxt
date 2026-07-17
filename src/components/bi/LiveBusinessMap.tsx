@@ -15,7 +15,7 @@ export function LiveBusinessMap() {
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {GEO_DATA.map((city, i) => (
-              <span key={i} className="px-3 py-1 bg-white rounded-2xl text-[10px] font-bold text-slate-500 border border-slate-200 shadow-sm">
+              <span key={i} className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-slate-500 border border-slate-200 shadow-sm">
                 {city.city}: {city.value}
               </span>
             ))}

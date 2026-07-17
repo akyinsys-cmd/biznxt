@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, AlertCircle, Info, X, HelpCircle } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-type ToastType = 'success' | 'error' | 'info' | 'warning';
+type ToastType = 'success' | 'error' | 'info' | 'warning' | 'progress';
 
 interface Toast {
   id: string;
   type: ToastType;
   message: string;
+  progress?: number;
+  persistent?: boolean;
 }
 
 interface ConfirmOptions {
@@ -21,7 +23,9 @@ interface ConfirmOptions {
 }
 
 interface ToastContextType {
-  toast: (type: ToastType, message: string) => void;
+  toast: (type: ToastType, message: string, options?: { persistent?: boolean; progress?: number; id?: string }) => string;
+  updateToast: (id: string, updates: Partial<Toast>) => void;
+  removeToast: (id: string) => void;
   success: (message: string) => void;
   error: (message: string) => void;
   info: (message: string) => void;
@@ -36,13 +40,26 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [confirmDialog, setConfirmDialog] = useState<ConfirmOptions | null>(null);
 
-  const addToast = useCallback((type: ToastType, message: string) => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, type, message }]);
+  const addToast = useCallback((type: ToastType, message: string, options?: { persistent?: boolean; progress?: number; id?: string }) => {
+    const id = options?.id || Math.random().toString(36).substring(2, 9);
+    setToasts((prev) => {
+      const exists = prev.find(t => t.id === id);
+      if (exists) {
+        return prev.map(t => t.id === id ? { ...t, type, message, ...options } : t);
+      }
+      return [...prev, { id, type, message, ...options }];
+    });
+    
+    if (!options?.persistent) {
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, 5000);
+    }
+    return id;
+  }, []);
 
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 5000);
+  const updateToast = useCallback((id: string, updates: Partial<Toast>) => {
+    setToasts(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
   }, []);
 
   const success = useCallback((message: string) => addToast('success', message), [addToast]);
@@ -76,7 +93,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ToastContext.Provider value={{ toast: addToast, success, error, info, warning, showToast, confirm }}>
+    <ToastContext.Provider value={{ toast: addToast, updateToast, removeToast, success, error, info, warning, showToast, confirm }}>
       {children}
       <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2">
         <AnimatePresence>
@@ -99,8 +116,18 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 {t.type === 'error' && <AlertCircle className="w-5 h-5 text-red-500" />}
                 {t.type === 'info' && <Info className="w-5 h-5 text-blue-500" />}
                 {t.type === 'warning' && <AlertCircle className="w-5 h-5 text-yellow-500" />}
+                {t.type === 'progress' && (
+                  <div className="w-5 h-5 rounded-full border-2 border-blue-200 border-t-blue-600 animate-spin" />
+                )}
               </div>
-              <p className="text-sm font-medium text-slate-700 flex-1">{t.message}</p>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-slate-700">{t.message}</p>
+                {typeof t.progress === 'number' && (
+                  <div className="w-full bg-slate-100 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div className="bg-blue-500 h-full transition-all duration-300" style={{ width: `${t.progress}%` }} />
+                  </div>
+                )}
+              </div>
               <button 
                 onClick={() => removeToast(t.id)}
                 className="text-slate-500 hover:text-slate-600 transition-colors"
@@ -123,7 +150,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             >
               <div className="p-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
                     <HelpCircle className="w-5 h-5 text-blue-500" />
                   </div>
                   <h3 className="text-lg font-bold text-slate-900">
@@ -137,13 +164,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end space-x-3">
                 <button
                   onClick={handleCancel}
-                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-2xl transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-200 bg-slate-100 rounded-full transition-colors"
                 >
                   {confirmDialog.cancelText || 'Cancel'}
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-2xl shadow-sm transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary-dark rounded-full shadow-sm transition-colors"
                 >
                   {confirmDialog.confirmText || 'Confirm'}
                 </button>

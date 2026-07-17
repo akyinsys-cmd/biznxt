@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Mail, 
@@ -13,7 +13,8 @@ import {
   EyeOff,
   AlertCircle,
   Clock,
-  Sparkles
+  Sparkles,
+  Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
@@ -24,7 +25,9 @@ import {
   resetPassword, 
   simulatePhoneSignIn, 
   simulateVerifyOtp,
-  signInWithGoogle
+  signInWithGoogle,
+  logout,
+  getRoleFromEmail
 } from '../lib/auth';
 import { useToast } from '../context/ToastContext';
 
@@ -45,11 +48,41 @@ export default function Login() {
   const [otpCode, setOtpCode] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
 
+  // Input refs for autofocus
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const forgotEmailInputRef = useRef<HTMLInputElement>(null);
+
   // OTP Countdown State
   const [countdown, setCountdown] = useState(60);
 
   const navigate = useNavigate();
   const { success, error: showToastError } = useToast();
+
+  // Load remembered credentials on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('login_remembered_email');
+    const savedRemember = localStorage.getItem('login_remember_me') !== 'false';
+    if (savedRemember) {
+      setRememberMe(true);
+      if (savedEmail) {
+        setEmail(savedEmail);
+      }
+    } else {
+      setRememberMe(false);
+    }
+  }, []);
+
+  // Autofocus the first field depending on active sub-screen
+  useEffect(() => {
+    if (screenMode === 'signin' && loginMethod === 'email') {
+      emailInputRef.current?.focus();
+    } else if (screenMode === 'signup') {
+      nameInputRef.current?.focus();
+    } else if (screenMode === 'forgot') {
+      forgotEmailInputRef.current?.focus();
+    }
+  }, [screenMode, loginMethod]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -72,13 +105,33 @@ export default function Login() {
           throw new Error('Please enter both email and password.');
         }
         const user = await emailSignIn(email, password);
+        
+        // Remember credentials if selected
+        if (rememberMe) {
+          localStorage.setItem('login_remembered_email', email);
+          localStorage.setItem('login_remember_me', 'true');
+        } else {
+          localStorage.removeItem('login_remembered_email');
+          localStorage.setItem('login_remember_me', 'false');
+        }
+
         success('Logged in successfully!');
         
         // Fetch role to redirect correctly
         const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        const userData = userSnap.data();
-        const userRole = userData?.role;
+        let userRole: string | undefined = undefined;
+        try {
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            userRole = userSnap.data()?.role;
+          }
+        } catch (err) {
+          console.warn('Firestore fetch failed, relying on email fallback', err);
+        }
+
+        if (!userRole) {
+          userRole = getRoleFromEmail(user.email || email);
+        }
 
         if (userRole === 'super_admin') {
           navigate('/admin');
@@ -131,9 +184,19 @@ export default function Login() {
       
       // Fetch role to redirect correctly
       const userRef = doc(db, 'users', user.uid);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data();
-      const userRole = userData?.role;
+      let userRole: string | undefined = undefined;
+      try {
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          userRole = userSnap.data()?.role;
+        }
+      } catch (err) {
+        console.warn('Firestore fetch failed for Google user, relying on email fallback', err);
+      }
+
+      if (!userRole) {
+        userRole = getRoleFromEmail(user.email || '');
+      }
 
       if (userRole === 'super_admin') {
         navigate('/admin');
@@ -144,7 +207,7 @@ export default function Login() {
       }
     } catch (err: any) {
       console.error('Google Auth failed', err);
-      const msg = err.message || 'Failed to log in with Google.';
+      const msg = 'Failed to log in with Google.';
       setAuthError(msg);
       showToastError(msg);
     } finally {
@@ -165,7 +228,7 @@ export default function Login() {
       success(`Password reset link sent to ${email}. Please check your inbox.`);
       setScreenMode('signin');
     } catch (err: any) {
-      const msg = err.message || 'Failed to send reset email.';
+      const msg = 'Failed to send reset email.';
       setAuthError(msg);
       showToastError(msg);
     } finally {
@@ -187,7 +250,7 @@ export default function Login() {
       setCountdown(60);
       setScreenMode('otp-verify');
     } catch (err: any) {
-      const msg = err.message || 'Failed to send OTP.';
+      const msg = 'Failed to send OTP.';
       setAuthError(msg);
       showToastError(msg);
     } finally {
@@ -221,7 +284,7 @@ export default function Login() {
         navigate('/dashboard');
       }
     } catch (err: any) {
-      const msg = err.message || 'Verification failed.';
+      const msg = 'Verification failed.';
       setAuthError(msg);
       showToastError(msg);
     } finally {
@@ -235,7 +298,7 @@ export default function Login() {
       <div className="hidden lg:flex w-1/2 bg-slate-900 relative flex-col justify-center px-12 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary-dark/40 via-slate-900 to-slate-900" />
         <div className="relative z-10 max-w-lg">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-2xl text-primary-light text-xs font-semibold mb-6">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 rounded-full text-primary-light text-xs font-semibold mb-6">
             <Sparkles className="w-3.5 h-3.5" />
             <span>biznxt.online 3.0 Enterprise Engine</span>
           </div>
@@ -248,7 +311,7 @@ export default function Login() {
           
           <div className="space-y-6">
             <div className="flex items-center space-x-4 text-slate-400">
-              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-6 h-6 text-primary" />
               </div>
               <div>
@@ -257,7 +320,7 @@ export default function Login() {
               </div>
             </div>
             <div className="flex items-center space-x-4 text-slate-400">
-              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                 <UserIcon className="w-6 h-6 text-accent" />
               </div>
               <div>
@@ -394,6 +457,7 @@ export default function Login() {
                           <div className="relative">
                             <Mail className="w-5 h-5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input 
+                              ref={emailInputRef}
                               type="email" 
                               required
                               value={email}
@@ -450,8 +514,8 @@ export default function Login() {
                           disabled={loading}
                           className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed text-sm"
                         >
-                          {loading ? 'Signing in...' : 'Sign In'}
-                          <ArrowRight className="ml-2 w-4 h-4" />
+                          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Sign In'}
+                          {!loading && <ArrowRight className="ml-2 w-4 h-4" />}
                         </button>
                       </form>
                     ) : (
@@ -459,7 +523,7 @@ export default function Login() {
                         <div>
                           <label className="block text-sm font-medium text-slate-700 mb-1">Mobile Number</label>
                           <div className="flex space-x-2">
-                            <span className="inline-flex items-center px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 font-medium text-sm">
+                            <span className="inline-flex items-center px-4 rounded-full border border-slate-200 bg-slate-50 text-slate-500 font-medium text-sm">
                               +91
                             </span>
                             <div className="relative flex-1">
@@ -482,8 +546,8 @@ export default function Login() {
                           disabled={loading}
                           className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-70"
                         >
-                          {loading ? 'Sending OTP...' : 'Send OTP'}
-                          <ArrowRight className="ml-2 w-4 h-4" />
+                          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send OTP'}
+                          {!loading && <ArrowRight className="ml-2 w-4 h-4" />}
                         </button>
                       </form>
                     )}
@@ -501,7 +565,7 @@ export default function Login() {
                       type="button"
                       onClick={handleGoogleSignIn}
                       disabled={loading}
-                      className="mt-6 w-full flex items-center justify-center py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 text-slate-700 text-sm font-medium"
+                      className="mt-6 w-full flex items-center justify-center py-3 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 text-slate-700 text-sm font-medium shadow-sm"
                     >
                       <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                         <path
@@ -521,7 +585,7 @@ export default function Login() {
                           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                         />
                       </svg>
-                      Google
+                      Sign in with Google
                     </button>
 
                   </motion.div>
@@ -541,6 +605,7 @@ export default function Login() {
                         <div className="relative">
                           <UserIcon className="w-5 h-5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                           <input 
+                            ref={nameInputRef}
                             type="text" 
                             required
                             value={displayName}
@@ -593,8 +658,8 @@ export default function Login() {
                         disabled={loading}
                         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-70 text-sm"
                       >
-                        {loading ? 'Creating Account...' : 'Register'}
-                        <ArrowRight className="ml-2 w-4 h-4" />
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Register'}
+                        {!loading && <ArrowRight className="ml-2 w-4 h-4" />}
                       </button>
                     </form>
                   </motion.div>
@@ -615,6 +680,7 @@ export default function Login() {
                         <div className="relative">
                           <Mail className="w-5 h-5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
                           <input 
+                            ref={forgotEmailInputRef}
                             type="email" 
                             required
                             value={email}
@@ -630,8 +696,8 @@ export default function Login() {
                         disabled={loading}
                         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-70 text-sm"
                       >
-                        {loading ? 'Sending link...' : 'Send Recovery Link'}
-                        <ArrowRight className="ml-2 w-4 h-4" />
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Recovery Link'}
+                        {!loading && <ArrowRight className="ml-2 w-4 h-4" />}
                       </button>
 
                       <button
@@ -708,8 +774,8 @@ export default function Login() {
                         disabled={loading}
                         className="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center disabled:opacity-70 text-sm"
                       >
-                        {loading ? 'Verifying...' : 'Verify & Log In'}
-                        <ArrowRight className="ml-2 w-4 h-4" />
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify & Log In'}
+                        {!loading && <ArrowRight className="ml-2 w-4 h-4" />}
                       </button>
                     </form>
                   </motion.div>

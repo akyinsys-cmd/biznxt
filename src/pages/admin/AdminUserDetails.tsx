@@ -14,7 +14,7 @@ export function AdminUserDetails({ user, onClose }: any) {
               <h3 className="text-xl font-black text-slate-900">{user.displayName || user.name || 'Unknown User'}</h3>
               <p className="text-sm font-bold text-slate-500">{user.email}</p>
               <div className="flex gap-2 mt-2">
-                <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-md">{user.role || 'customer'}</span>
+                <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full">{user.role || 'customer'}</span>
                 <span className={`px-2 py-0.5 text-[10px] font-black uppercase tracking-widest rounded-md ${user.status === 'suspended' ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}`}>{user.status === 'suspended' ? 'Suspended' : 'Active'}</span>
               </div>
             </div>

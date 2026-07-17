@@ -28,7 +28,6 @@ import { useNotifications } from '../context/NotificationContext';
 import { LAUNCH_SERVICES } from '../data/services';
 import { useNavigate } from 'react-router-dom';
 import { triggerHapticFeedback } from '../lib/vibration';
-import { formDraftsDB } from '../lib/indexedDB';
 
 const STEPS = [
   { id: 'basics', title: 'Business Info', icon: Building2 },
@@ -51,7 +50,7 @@ export default function LaunchWizard() {
   const [saving, setSaving] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     businessName: '',
     industry: '',
     businessType: 'Pvt Ltd',
@@ -68,16 +67,6 @@ export default function LaunchWizard() {
 
   useEffect(() => {
     async function loadData() {
-      // First try indexedDB
-      try {
-        const draft = await formDraftsDB.getDraft('launch_wizard_draft');
-        if (draft) {
-          setFormData(prev => ({ ...prev, ...draft }));
-          success('Local draft loaded.');
-        }
-      } catch (err) {
-        console.warn('Could not load local draft', err);
-      }
 
       if (!user) return; triggerHapticFeedback('success');
       try {
@@ -104,18 +93,6 @@ export default function LaunchWizard() {
   const formDataRef = React.useRef(formData);
   useEffect(() => {
     formDataRef.current = formData;
-  }, [formData]);
-
-  useEffect(() => {
-    const saveDraft = async () => {
-      try {
-        await formDraftsDB.saveDraft('launch_wizard_draft', formData);
-      } catch (err) {
-        console.warn('Could not save local draft', err);
-      }
-    };
-    const t = setTimeout(saveDraft, 1000);
-    return () => clearTimeout(t);
   }, [formData]);
 
   // Auto-save to Firestore every 30 seconds
@@ -266,7 +243,7 @@ export default function LaunchWizard() {
           <div className="flex items-center gap-3">
             <button 
               onClick={() => handleSave()}
-              className="px-4 py-2 rounded-2xl bg-white border border-slate-200 text-slate-600 font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm"
+              className="px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-600 font-bold text-sm flex items-center gap-2 hover:bg-slate-50 transition-all shadow-sm"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save Progress
@@ -280,7 +257,7 @@ export default function LaunchWizard() {
           <div className="lg:col-span-8 space-y-6">
             
             {/* Horizontal Stepper */}
-            <div className="glass-card bg-white p-6 overflow-x-auto">
+            <div className="glass-card bg-white shadow-xl shadow-slate-200/50 p-6 overflow-x-auto">
               <div className="flex items-center justify-between min-w-[600px] relative">
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-slate-100 z-0"></div>
                 {STEPS.map((step, idx) => {
@@ -306,7 +283,7 @@ export default function LaunchWizard() {
             </div>
 
             {/* FORM CONTENT */}
-            <div className="glass-card bg-white p-8 min-h-[500px] relative overflow-hidden">
+            <div className="glass-card bg-white shadow-xl shadow-slate-200/50 p-8 min-h-[500px] relative overflow-hidden">
               <div className="absolute top-0 right-0 p-8 opacity-5">
                 <StepIcon className="w-64 h-64" />
               </div>
@@ -430,14 +407,14 @@ export default function LaunchWizard() {
                 <button
                   onClick={() => { triggerHapticFeedback('light'); setCurrentStep(c => Math.max(0, c - 1)); }}
                   disabled={currentStep === 0}
-                  className="px-6 py-4 rounded-2xl font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 disabled:opacity-0"
+                  className="px-6 py-4 rounded-full font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2 disabled:opacity-0"
                 >
                   <ChevronLeft className="w-5 h-5" /> Back
                 </button>
                 <button
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="px-8 py-4 rounded-2xl bg-primary text-white font-black text-sm uppercase tracking-widest hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 flex items-center gap-3"
+                  className="px-8 py-4 rounded-full bg-primary text-white font-black text-sm uppercase tracking-widest hover:bg-primary-dark transition-all shadow-xl shadow-primary/20 flex items-center gap-3"
                 >
                   {isSubmitting ? (
                     <>
@@ -460,7 +437,7 @@ export default function LaunchWizard() {
             <div className="glass-card bg-slate-900 text-white p-8 space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center text-primary">
+                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
@@ -515,7 +492,7 @@ export default function LaunchWizard() {
                   </div>
                   <button 
                     onClick={handleApplyCoupon}
-                    className="px-4 py-3 bg-white text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-colors"
+                    className="px-4 py-3 bg-white text-slate-900 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-colors"
                   >
                     Apply
                   </button>
@@ -558,7 +535,7 @@ export default function LaunchWizard() {
               </div>
             </div>
 
-            <div className="glass-card bg-white p-6">
+            <div className="glass-card bg-white shadow-xl shadow-slate-200/50 p-6">
               <h4 className="text-sm font-bold text-slate-900 mb-4">Why choose BizNxt?</h4>
               <ul className="space-y-4">
                 {[

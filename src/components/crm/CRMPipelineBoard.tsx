@@ -69,7 +69,7 @@ export default function CRMPipelineBoard({
       {/* Board Controls */}
       <div className="bg-white/80 backdrop-blur-[30px] p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
             <Target size={24} />
           </div>
           <div>
@@ -89,13 +89,13 @@ export default function CRMPipelineBoard({
           </div>
           <button
             onClick={() => setShowConfig(!showConfig)}
-            className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-2xl text-slate-500 hover:text-primary transition-all shadow-sm active:scale-95"
+            className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-500 hover:text-primary transition-all shadow-sm active:scale-95"
           >
             <Settings size={18} />
           </button>
           <button
             onClick={onAddLead}
-            className="px-6 py-3.5 bg-slate-900 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest hover:bg-primary transition-all shadow-lg active:scale-95 flex items-center gap-2"
+            className="px-6 py-3.5 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest hover:bg-primary transition-all shadow-lg active:scale-95 flex items-center gap-2"
           >
             <Plus size={14} />
             <span>New Target</span>
@@ -125,11 +125,11 @@ export default function CRMPipelineBoard({
                 placeholder="New workflow node name..." 
                 value={newStageName}
                 onChange={(e) => setNewStageName(e.target.value)}
-                className="flex-1 bg-white border border-slate-200 rounded-2xl px-6 py-3 text-[11px] font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
+                className="flex-1 bg-white border border-slate-200 rounded-full px-6 py-3 text-[11px] font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
               />
               <button
                 onClick={handleAddStage}
-                className="px-6 py-3 bg-primary text-white text-[10px] font-black rounded-2xl uppercase tracking-widest hover:bg-primary/90 transition-all"
+                className="px-6 py-3 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest hover:bg-primary/90 transition-all"
               >
                 Insert Node
               </button>
@@ -140,7 +140,7 @@ export default function CRMPipelineBoard({
                 <motion.div 
                   layout
                   key={stage} 
-                  className="bg-white border border-slate-200 rounded-2xl px-4 py-2 flex items-center gap-3 shadow-sm group"
+                  className="bg-white border border-slate-200 rounded-full px-4 py-2 flex items-center gap-3 shadow-sm group"
                 >
                   {editingStageIndex === idx ? (
                     <div className="flex items-center gap-2">
@@ -197,7 +197,7 @@ export default function CRMPipelineBoard({
                   <div className="w-2.5 h-2.5 rounded-2xl bg-primary shadow-[0_0_10px_rgba(37,99,235,0.5)]" />
                   <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-[0.2em]">{stage}</h4>
                 </div>
-                <div className="px-3 py-1 bg-slate-100 rounded-2xl">
+                <div className="px-3 py-1 bg-slate-100 rounded-full">
                   <span className="text-[10px] font-black text-slate-500">{stageLeads.length}</span>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export default function CRMPipelineBoard({
                 <AnimatePresence mode="popLayout">
                   {stageLeads.length === 0 ? (
                     <div className="flex-1 border-2 border-dashed border-slate-200 rounded-[2rem] flex flex-col items-center justify-center text-center p-8">
-                      <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-slate-200 mb-4 shadow-sm">
+                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-200 mb-4 shadow-sm">
                         <FolderMinus size={24} />
                       </div>
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">Stage Node Empty</p>
@@ -255,21 +255,21 @@ export default function CRMPipelineBoard({
                           {stages.indexOf(stage) > 0 && (
                             <button
                               onClick={() => onUpdateStage(lead.id, stages[stages.indexOf(stage) - 1])}
-                              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-500 hover:text-slate-900 transition-all flex items-center justify-center"
+                              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-500 hover:text-slate-900 transition-all flex items-center justify-center"
                             >
                               <ArrowLeft size={12} />
                             </button>
                           )}
                           <button
                             onClick={() => onSelectLead(lead)}
-                            className="flex-1 py-2 bg-primary/5 hover:bg-primary/10 rounded-2xl text-primary transition-all flex items-center justify-center"
+                            className="flex-1 py-2 bg-primary/5 hover:bg-primary/10 rounded-full text-primary transition-all flex items-center justify-center"
                           >
                             <Eye size={12} />
                           </button>
                           {stages.indexOf(stage) < stages.length - 1 && (
                             <button
                               onClick={() => onUpdateStage(lead.id, stages[stages.indexOf(stage) + 1])}
-                              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 rounded-2xl text-slate-500 hover:text-slate-900 transition-all flex items-center justify-center"
+                              className="flex-1 py-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-500 hover:text-slate-900 transition-all flex items-center justify-center"
                             >
                               <ArrowRight size={12} />
                             </button>

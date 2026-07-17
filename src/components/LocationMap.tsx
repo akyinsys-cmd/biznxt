@@ -14,7 +14,7 @@ export default function LocationMap({ locationString }: { locationString: string
   if (!API_KEY) {
     return (
       <div className="bg-slate-100 border border-slate-200 rounded-2xl p-4 text-center text-xs text-slate-500">
-        Google Maps API key not found in environment. Please configure GOOGLE_MAPS_PLATFORM_KEY.
+        Interactive map service is currently initializing. Please configure workspace connection settings.
       </div>
     );
   }

@@ -157,7 +157,7 @@ export function AIOverviewWidget({
           </div>
           <div className="mt-4">
             <span className="text-xs text-slate-500 font-medium block">Based on selected CapEx</span>
-            <span className="inline-block mt-2 text-[10px] px-2 py-0.5 rounded-2xl bg-slate-100 border border-slate-200 text-slate-600 font-bold">
+            <span className="inline-block mt-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-bold">
               Capital Safe Match
             </span>
           </div>
@@ -174,7 +174,7 @@ export function AIOverviewWidget({
           </div>
           <div className="flex flex-wrap gap-2">
             {(data.suggestedIndustries || []).map((ind, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-2xl bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-100">
+              <span key={i} className="px-3 py-1.5 rounded-full bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-100">
                 {ind}
               </span>
             ))}
@@ -189,7 +189,7 @@ export function AIOverviewWidget({
           </div>
           <div className="flex flex-wrap gap-2">
             {(data.suggestedBusinessTypes || []).map((type, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-2xl bg-success/10 text-success text-xs font-semibold border border-success/20">
+              <span key={i} className="px-3 py-1.5 rounded-full bg-success/10 text-success text-xs font-semibold border border-success/20">
                 {type}
               </span>
             ))}
@@ -278,14 +278,14 @@ export function AIOverviewWidget({
       <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button 
           onClick={onUpgrade}
-          className="flex items-center justify-center gap-2 px-5 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark transition-all shadow-md active:scale-[0.98]"
+          className="flex items-center justify-center gap-2 px-5 py-4 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-all shadow-md active:scale-[0.98]"
         >
           <Award className="w-4 h-4" />
           Upgrade to Premium Research Report
         </button>
         <button 
           onClick={onBook}
-          className="flex items-center justify-center gap-2 px-5 py-4 bg-white text-slate-900 border border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition-all shadow-sm active:scale-[0.98]"
+          className="flex items-center justify-center gap-2 px-5 py-4 bg-white text-slate-900 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-all shadow-sm active:scale-[0.98]"
         >
           <Calendar className="w-4 h-4" />
           Book Business Consultation

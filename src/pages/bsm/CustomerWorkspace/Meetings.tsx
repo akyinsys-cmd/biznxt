@@ -45,7 +45,7 @@ export function Meetings({ project }: { project: Project }) {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="px-6 py-2.5 bg-primary text-white text-[10px] font-black rounded-2xl uppercase tracking-widest flex items-center gap-2"
+          className="px-6 py-2.5 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest flex items-center gap-2"
         >
           <Plus size={16} /> Schedule
         </button>
@@ -55,7 +55,7 @@ export function Meetings({ project }: { project: Project }) {
         {meetings.map(m => (
           <div key={m.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl border border-slate-100 bg-slate-50 hover:border-primary/30 transition-all gap-4">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-primary shadow-sm shrink-0">
+              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm shrink-0">
                 {m.platform.includes('Meet') || m.platform.includes('Zoom') ? <Video size={20} /> : <Phone size={20} />}
               </div>
               <div>
@@ -118,8 +118,8 @@ export function Meetings({ project }: { project: Project }) {
                 <input name="meetingLink" className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2 text-sm font-bold text-slate-700 outline-none focus:border-primary" />
               </div>
               <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-2xl hover:bg-slate-200">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-2xl hover:bg-primary/90">Schedule</button>
+                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-full hover:bg-slate-200">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-full hover:bg-primary/90">Schedule</button>
               </div>
             </form>
           </div>

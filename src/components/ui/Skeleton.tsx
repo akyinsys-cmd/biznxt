@@ -40,7 +40,7 @@ export function DashboardSkeleton({ dark = false }: { dark?: boolean }) {
               <Skeleton className="h-6 w-64" />
               <Skeleton className="h-3 w-48 opacity-50" />
             </div>
-            <Skeleton className="h-10 w-32 rounded-2xl" />
+            <Skeleton className="h-10 w-32 rounded-full" />
           </div>
           <Skeleton className="h-[400px] w-full rounded-[2rem]" />
         </div>

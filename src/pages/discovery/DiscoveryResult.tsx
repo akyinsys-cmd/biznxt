@@ -94,7 +94,7 @@ export default function DiscoveryResult() {
       <div className="bg-slate-900 rounded-3xl p-8 sm:p-12 relative overflow-hidden text-white flex flex-col md:flex-row items-center justify-between shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-indigo-500/20 opacity-50"></div>
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-2xl bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-wider mb-6">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-wider mb-6">
             <Trophy className="w-4 h-4 text-emerald-400" />
             <span>Discovery Engine Results</span>
           </div>
@@ -105,11 +105,11 @@ export default function DiscoveryResult() {
         </div>
         
         <div className="relative z-10 mt-8 md:mt-0 flex gap-4">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-center">
+          <div className="bg-white shadow-xl shadow-slate-200/50/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 text-center">
             <div className="text-4xl font-black text-emerald-400 mb-1">{analysis.businessOpportunityScore}</div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Opportunity Score</div>
           </div>
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-center">
+          <div className="bg-white shadow-xl shadow-slate-200/50/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 text-center">
             <div className="text-4xl font-black text-cyan-400 mb-1">{analysis.businessReadinessScore}</div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Readiness Score</div>
           </div>
@@ -118,7 +118,7 @@ export default function DiscoveryResult() {
 
       {/* Analysis Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm col-span-1 lg:col-span-2 space-y-6">
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm col-span-1 lg:col-span-2 space-y-6">
           <h2 className="text-xl font-bold font-display flex items-center">
             <TrendingUp className="w-5 h-5 mr-2 text-primary" />
             Strategic Analysis
@@ -152,7 +152,7 @@ export default function DiscoveryResult() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <h2 className="text-xl font-bold font-display flex items-center">
             <ShieldCheck className="w-5 h-5 mr-2 text-primary" />
             AI Trajectory
@@ -178,7 +178,7 @@ export default function DiscoveryResult() {
               <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Recommended Models</div>
               <div className="flex flex-wrap gap-2">
                 {analysis.recommendedBusinessModels?.map((model: string, i: number) => (
-                  <span key={i} className="px-2.5 py-1 bg-primary/10 text-primary text-xs font-bold rounded-2xl">{model}</span>
+                  <span key={i} className="px-2.5 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">{model}</span>
                 ))}
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function DiscoveryResult() {
           </h2>
           <button 
             onClick={() => navigate('/discovery/compare')}
-            className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-2xl font-bold text-sm hover:bg-indigo-100 transition-colors"
+            className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full font-bold text-sm hover:bg-indigo-100 transition-colors"
           >
             Compare Ideas
           </button>
@@ -212,11 +212,11 @@ export default function DiscoveryResult() {
             >
               <div className="p-6 border-b border-slate-100 flex-1">
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-slate-900 text-white font-black text-lg">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-black text-lg">
                     #{idx + 1}
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-2xl text-xs font-bold border border-emerald-100 flex items-center">
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-100 flex items-center">
                       <TrendingUp className="w-3 h-3 mr-1" />
                       Score {idea.opportunityScore}
                     </span>

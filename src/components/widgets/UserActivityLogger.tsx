@@ -43,7 +43,7 @@ export function UserActivityLogger() {
           <Activity className="w-5 h-5 text-indigo-500" />
           System Activity Log
         </h3>
-        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-2xl">Live</span>
+        <span className="text-xs font-bold text-slate-500 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-full">Live</span>
       </div>
       
       {activities.length === 0 ? (

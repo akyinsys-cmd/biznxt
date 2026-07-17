@@ -97,7 +97,7 @@ export default function MarketplaceHome() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         
         <div className="relative z-10 max-w-3xl space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>Verified Network</span>
           </div>
@@ -121,7 +121,7 @@ export default function MarketplaceHome() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button className="px-8 py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark transition-colors shrink-0">
+            <button className="px-8 py-4 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-colors shrink-0">
               Search
             </button>
           </div>
@@ -162,7 +162,7 @@ export default function MarketplaceHome() {
           { label: 'Categories', value: '45+', icon: Package, color: 'text-indigo-500' },
           { label: 'Global Reach', value: '12 Countries', icon: Globe2, color: 'text-purple-500' },
         ].map((stat, i) => (
-          <div key={i} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-center">
+          <div key={i} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center">
             <div className={`w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mr-4 \${stat.color}`}>
               <stat.icon className="w-6 h-6" />
             </div>
@@ -197,13 +197,13 @@ export default function MarketplaceHome() {
           >
             <div className="h-48 relative overflow-hidden bg-slate-100">
               <img src={mfg.image} alt={mfg.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-2xl flex items-center shadow-sm">
+              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center shadow-sm">
                 <Star className="w-3 h-3 text-amber-500 fill-amber-500 mr-1" />
                 <span className="text-xs font-bold text-slate-900">{mfg.rating}</span>
                 <span className="text-xs text-slate-500 ml-1">({mfg.reviews})</span>
               </div>
               {mfg.verified && (
-                <div className="absolute top-3 left-3 bg-emerald-500 text-white px-2 py-1 rounded-2xl flex items-center shadow-sm">
+                <div className="absolute top-3 left-3 bg-emerald-500 text-white px-2 py-1 rounded-full flex items-center shadow-sm">
                   <ShieldCheck className="w-3 h-3 mr-1" />
                   <span className="text-[10px] font-bold uppercase tracking-wider">Verified</span>
                 </div>
@@ -227,7 +227,7 @@ export default function MarketplaceHome() {
               </div>
               
               <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">{mfg.category}</span>
+                <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{mfg.category}</span>
                 <span className="text-primary group-hover:translate-x-1 transition-transform">
                   <ArrowRight className="w-5 h-5" />
                 </span>

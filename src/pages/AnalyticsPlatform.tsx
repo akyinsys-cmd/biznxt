@@ -111,7 +111,7 @@ const ExecutiveView = memo(({ liveEvents, loading }: { liveEvents: any[], loadin
               <h3 className="text-2xl font-black text-slate-900 tracking-tighter">Strategic Funnel Architecture</h3>
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-1">Cross-domain Conversion Intelligence</p>
             </div>
-            <div className="flex items-center gap-3 px-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black text-slate-900 uppercase tracking-widest shadow-sm">
+            <div className="flex items-center gap-3 px-6 py-3 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest shadow-sm">
               <AlertCircle size={16} className="text-primary" />
               Net Efficiency: {CORE_METRICS.conversionRate}%
             </div>
@@ -159,7 +159,7 @@ const ExecutiveView = memo(({ liveEvents, loading }: { liveEvents: any[], loadin
           <div className="absolute top-0 right-0 w-48 h-48 bg-primary/20 rounded-2xl blur-[100px] -mr-24 -mt-24" />
           
           <div className="flex items-center gap-4 mb-10 relative z-10">
-            <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/30">
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl shadow-primary/30">
               <Database size={24} />
             </div>
             <div>
@@ -249,7 +249,7 @@ export default function AnalyticsPlatform() {
         <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div>
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 bg-primary/10 rounded-2xl text-primary flex items-center justify-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full text-primary flex items-center justify-center">
                 <BarChart3 size={24} />
               </div>
               <div>
@@ -273,10 +273,10 @@ export default function AnalyticsPlatform() {
                 </button>
               ))}
             </div>
-            <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-2xl text-slate-500 hover:text-primary transition-all shadow-sm">
+            <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-500 hover:text-primary transition-all shadow-sm">
               <Download size={20} />
             </button>
-            <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-2xl text-slate-500 hover:text-primary transition-all shadow-sm">
+            <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-500 hover:text-primary transition-all shadow-sm">
               <Share2 size={20} />
             </button>
           </div>
@@ -383,7 +383,7 @@ export default function AnalyticsPlatform() {
                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Target CAC</p>
                       <p className="text-lg font-black text-slate-900 tracking-tight">₹{source.costPerCustomer.toLocaleString()}</p>
                     </div>
-                    <button className="h-10 px-6 bg-slate-900 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest shadow-xl shadow-slate-900/20 hover:scale-105 active:scale-95 transition-all">Audit Performance</button>
+                    <button className="h-10 px-6 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-xl shadow-slate-900/20 hover:scale-105 active:scale-95 transition-all">Audit Performance</button>
                   </div>
                 </motion.div>
               ))}
@@ -547,7 +547,7 @@ export default function AnalyticsPlatform() {
                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Compute Load</p>
                       <p className="text-lg font-black text-slate-200 tracking-tight">{(ai.tokensUsed / 1000000).toFixed(1)}M Tokens</p>
                     </div>
-                    <div className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/10">Usage: ${ai.cost}</div>
+                    <div className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/10">Usage: ${ai.cost}</div>
                   </div>
                 </motion.div>
               ))}
@@ -631,7 +631,7 @@ export default function AnalyticsPlatform() {
         whileTap={{ scale: 0.95 }}
         className="fixed bottom-12 right-12 px-10 py-5 bg-slate-900 text-white rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-50 flex items-center gap-4 group border border-white/10"
       >
-        <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center animate-float shadow-xl shadow-primary/30">
+        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center animate-float shadow-xl shadow-primary/30">
           <Zap size={20} />
         </div>
         <span className="font-black text-[10px] uppercase tracking-[0.2em]">Neural Nexus AI</span>

@@ -6,7 +6,6 @@ import { useToast } from '../../context/ToastContext';
 import { db } from '../../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { triggerHapticFeedback } from '../../lib/vibration';
-import { formDraftsDB } from '../../lib/indexedDB';
 import { 
   ChevronRight, ChevronLeft, Bot, Sparkles, User, Wallet, 
   MapPin, Store, Heart, Target, AlertTriangle, Briefcase, 
@@ -43,33 +42,6 @@ export default function DiscoveryWizard() {
     // Step 8: Additional Information
     currentBusiness: '', availableTeam: '', factory: 'No', warehouse: 'No', office: 'No', vehicle: 'No', licenses: '', otherAssets: ''
   });
-
-  useEffect(() => {
-    const loadDraft = async () => {
-      try {
-        const draft = await formDraftsDB.getDraft('discovery_wizard_draft');
-        if (draft) {
-          setFormData(draft);
-          showSuccess('Draft loaded from local storage.');
-        }
-      } catch (err) {
-        console.warn('Failed to load draft', err);
-      }
-    };
-    loadDraft();
-  }, []);
-
-  useEffect(() => {
-    const saveDraft = async () => {
-      try {
-        await formDraftsDB.saveDraft('discovery_wizard_draft', formData);
-      } catch (err) {
-        console.warn('Failed to save draft', err);
-      }
-    };
-    const t = setTimeout(saveDraft, 1000);
-    return () => clearTimeout(t);
-  }, [formData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -156,7 +128,7 @@ export default function DiscoveryWizard() {
       
     } catch (err: any) {
       console.error(err);
-      showError(err.message || "An error occurred during discovery generation.");
+      showError("An error occurred during discovery generation.");
       setGenerating(false);
     }
   };
@@ -413,7 +385,7 @@ export default function DiscoveryWizard() {
           <button 
             disabled={currentStep === 1 || generating}
             onClick={handlePrev}
-            className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold hover:bg-slate-100 disabled:opacity-50 flex items-center"
+            className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-full font-bold hover:bg-slate-100 disabled:opacity-50 flex items-center"
           >
             <ChevronLeft className="w-4 h-4 mr-2" /> Back
           </button>
@@ -421,7 +393,7 @@ export default function DiscoveryWizard() {
           {currentStep < 8 ? (
             <button 
               onClick={handleNext}
-              className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 flex items-center"
+              className="px-6 py-3 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 flex items-center"
             >
               Continue <ChevronRight className="w-4 h-4 ml-2" />
             </button>
@@ -429,7 +401,7 @@ export default function DiscoveryWizard() {
             <button 
               onClick={handleSubmit}
               disabled={generating}
-              className="px-8 py-3 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark flex items-center shadow-lg shadow-primary/30 disabled:opacity-70"
+              className="px-8 py-3 bg-primary text-white rounded-full font-bold hover:bg-primary-dark flex items-center shadow-lg shadow-primary/30 disabled:opacity-70"
             >
               {generating ? (
                 <>

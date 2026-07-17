@@ -50,7 +50,7 @@ export function Finance({ project }: { project: Project }) {
             {quotations.map(quote => (
               <div key={quote.id} className="flex items-center justify-between p-5 rounded-2xl border border-slate-100 hover:border-primary/30 hover:shadow-sm transition-all group">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
                     <FileText size={20} />
                   </div>
                   <div>

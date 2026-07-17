@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { collection, query, where, orderBy, onSnapshot, limit, updateDoc, doc } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, limit, updateDoc, doc, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuth } from './AuthContext';
 import { useToast } from './ToastContext';
 
 export interface Notification {
+  link?: string;
   id: string;
   type: string;
   title: string;
@@ -63,6 +64,71 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
     let isFirstLoad = true;
 
+    // Automated milestone deadline check
+    const checkDeadlines = async () => {
+      try {
+        const projectsQuery = query(collection(db, 'client_projects'), where('clientEmail', '==', user.email));
+        const projectsSnap = await getDocs(projectsQuery);
+        const projectIds = projectsSnap.docs.map(d => d.id);
+        
+        if (projectIds.length > 0) {
+          const now = new Date();
+          const twentyFourHours = 24 * 60 * 60 * 1000;
+          
+          // Firestore 'in' queries support up to 10 items. Batching for robustness
+          const batches = [];
+          for (let i = 0; i < projectIds.length; i += 10) {
+            batches.push(projectIds.slice(i, i + 10));
+          }
+          
+          for (const batch of batches) {
+            const milestonesQuery = query(collection(db, 'project_milestones'), where('projectId', 'in', batch), where('status', '==', 'Pending'));
+            const milestonesSnap = await getDocs(milestonesQuery);
+            
+            milestonesSnap.forEach(docSnap => {
+              const milestone = docSnap.data();
+              if (milestone.expectedDate) {
+                const expectedDate = new Date(milestone.expectedDate);
+                const timeDiff = expectedDate.getTime() - now.getTime();
+                
+                // If approaching within 24 hours and in the future
+                if (timeDiff > 0 && timeDiff <= twentyFourHours) {
+                   const hoursLeft = Math.ceil(timeDiff / (60 * 60 * 1000));
+                   const notifId = `milestone-alert-${docSnap.id}`;
+                   
+                   // Avoid duplicate notifications in local state
+                   setLocalNotifications(prev => {
+                     if (prev.some(n => n.id === notifId)) return prev;
+                     
+                     const newNotif = {
+                       id: notifId,
+                       type: 'warning',
+                       title: 'Approaching Deadline',
+                       message: `Milestone "${milestone.title}" is due in ${hoursLeft} hours.`,
+                       link: `/projects/${milestone.projectId}`,
+                       read: false,
+                       createdAt: Date.now(),
+                       isLocal: true,
+                     };
+                     
+                     // Use setTimeout to avoid calling showToast during setState
+                     setTimeout(() => showToast(newNotif.message, 'warning'), 0);
+                     return [newNotif, ...prev];
+                   });
+                }
+              }
+            });
+          }
+        }
+      } catch (err) {
+        console.error("Failed to check milestone deadlines:", err);
+      }
+    };
+    
+    // Check initially and then every hour
+    checkDeadlines();
+    const intervalId = setInterval(checkDeadlines, 60 * 60 * 1000);
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
@@ -78,7 +144,10 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       setDbNotifications(notifs);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      clearInterval(intervalId);
+    };
   }, [user, showToast]);
 
   const markAsRead = async (id: string) => {

@@ -172,10 +172,10 @@ export function EnterprisePipeline() {
       title: 'Website Team',
       shortLabel: 'Web Tech',
       icon: Globe,
-      desc: 'Technical developers launching custom web architectures, UPI checkout configurations, and live tracking pages.',
+      desc: 'Technical advisors launching custom web systems, UPI checkout integrations, and live tracking interfaces.',
       deliverable: 'biznxt.online Subdomain Portal',
-      actor: 'Full-Stack Lead Engineer',
-      actionRequired: 'Deploy React workspace, configure custom API pathways, and run sanity logs.',
+      actor: 'Digital Solutions Lead',
+      actionRequired: 'Deploy customer portal, configure secure custom integration pathways, and run system validations.',
       color: 'cyan',
       textColor: 'text-cyan-600',
       bgColor: 'bg-cyan-50',
@@ -210,12 +210,12 @@ export function EnterprisePipeline() {
       await setDoc(userRef, { role: targetRole }, { merge: true });
       success(`Workspace role shifted to ${targetRole.toUpperCase()}!`);
     } catch (err: any) {
-      error(err.message || 'Failed to switch simulation role.');
+      error('Failed to switch simulation role.');
     }
   };
 
   return (
-    <div className="glass-card bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm overflow-auto resize-y min-h-[400px]">
+    <div className="glass-card bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm overflow-auto resize-y min-h-[400px]">
       {/* Title block */}
       <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-100 gap-4">
         <div>
@@ -229,7 +229,7 @@ export function EnterprisePipeline() {
         
         <div className="flex items-center space-x-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100 shrink-0">
           <span className="text-xs font-semibold text-slate-500 pl-2">Current Workspace Role:</span>
-          <span className="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-2xl border border-indigo-100 uppercase tracking-wide">
+          <span className="px-2.5 py-1 text-xs font-bold bg-indigo-50 text-indigo-700 rounded-full border border-indigo-100 uppercase tracking-wide">
             {role || 'Customer'}
           </span>
         </div>
@@ -257,7 +257,7 @@ export function EnterprisePipeline() {
                 >
                   {/* Active User Role Marker badge */}
                   {isActiveUserRole && (
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-slate-900 text-[10px] text-white px-1.5 py-0.2 rounded-2xl font-bold uppercase tracking-widest border border-white">
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-slate-900 text-[10px] text-white px-1.5 py-0.2 rounded-full font-bold uppercase tracking-widest border border-white">
                       You
                     </div>
                   )}
@@ -346,7 +346,7 @@ export function EnterprisePipeline() {
       <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-2">
         <span className="flex items-center gap-1">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          Real-time collaborative sandbox synced with Cloud Firestore rules
+          Real-time collaborative workspace secured with enterprise-grade data protection
         </span>
         <span className="font-mono text-[10px]">
           10-Tier Closed Operational Cycle: Customer ➔ Finance ➔ Customer Loop

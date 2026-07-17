@@ -89,27 +89,11 @@ export function DiscoveryForm() {
     preferredMarket: '',
   });
 
-  // Load draft from localStorage on mount
-  useEffect(() => {
-    const draft = localStorage.getItem('biznxt_discovery_draft');
-    if (draft) {
-      try {
-        const parsed = JSON.parse(draft);
-        setFormData(parsed);
-        // Toast message to inform user they can resume
-        success('Loaded draft business research form!');
-      } catch (err) {
-        console.error('Error parsing draft:', err);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Auto-save draft on form change
   const handleChange = (field: keyof typeof formData, value: string) => {
     const updated = { ...formData, [field]: value };
     setFormData(updated);
-    localStorage.setItem('biznxt_discovery_draft', JSON.stringify(updated));
+    
 
     // Clear field-specific error
     if (errors[field]) {
@@ -121,10 +105,8 @@ export function DiscoveryForm() {
     }
   };
 
-  // Clear current draft
   const handleReset = () => {
-    if (window.confirm('Are you sure you want to discard your draft?')) {
-      localStorage.removeItem('biznxt_discovery_draft');
+    if (window.confirm('Are you sure you want to reset the form?')) {
       setFormData({
         fullName: '',
         mobileNumber: '',
@@ -286,14 +268,11 @@ export function DiscoveryForm() {
       const insights = await res.json();
       setAiData({ ...insights, requestId: uniqueId });
       
-      // Clear localStorage draft upon successful submission
-      localStorage.removeItem('biznxt_discovery_draft');
+      
       success('AI Executive Feasibility Report Generated Successfully!');
     } catch (err) {
       console.error(err);
-      const errMsg = err instanceof Error ? err.message : 'Failed to generate insights';
-      toastError(errMsg);
-      toastError(`Failed to generate insights. Please try again. ${errMsg}`);
+      toastError('Our analytical engines are temporarily occupied. Please wait a moment and try again.');
     } finally {
       setLoading(false);
     }
@@ -359,7 +338,7 @@ export function DiscoveryForm() {
 
       {/* Interactive AI loading monitor */}
       {loading ? (
-        <div className="text-center py-12 space-y-6 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+        <div className="text-center py-12 space-y-6 bg-slate-50/50 rounded-full border border-dashed border-slate-200">
           <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto" />
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-slate-900">Assembling Feasibility Ledger</h3>
@@ -368,13 +347,13 @@ export function DiscoveryForm() {
             </p>
           </div>
           <div className="max-w-xs mx-auto text-left font-mono text-[10px] text-indigo-600 space-y-1">
-            <p className="animate-pulse">[INFO] Establishing Firestore transaction...</p>
+            <p className="animate-pulse">[INFO] Establishing secure ledger transaction...</p>
             <p className="animate-pulse delay-100">[INFO] Submitting Request ID BZNXT-F-XXXXX...</p>
             <p className="animate-pulse delay-200">[INFO] Executing Gemini 3.5 Analytical Briefing...</p>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm relative">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative">
           
           {/* STEP 1: Personal Information */}
           {currentStep === 1 && (
@@ -819,7 +798,7 @@ export function DiscoveryForm() {
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-xs font-bold px-3 py-2 rounded-2xl border border-slate-200 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-xs font-bold px-3 py-2 rounded-full border border-slate-200 hover:bg-slate-50 transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Previous</span>
@@ -831,7 +810,7 @@ export function DiscoveryForm() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="flex items-center gap-1 text-red-500 hover:text-red-700 hover:bg-red-50 text-xs font-bold px-3 py-2 rounded-2xl transition-colors"
+                className="flex items-center gap-1 text-red-500 hover:text-red-700 hover:bg-red-50 text-xs font-bold px-3 py-2 rounded-full transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Discard Draft</span>
@@ -841,7 +820,7 @@ export function DiscoveryForm() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="flex items-center gap-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-2xl transition-colors"
+                  className="flex items-center gap-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 rounded-full transition-colors"
                 >
                   <span>Continue</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -849,7 +828,7 @@ export function DiscoveryForm() {
               ) : (
                 <button
                   type="submit"
-                  className="flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-bold px-5 py-2.5 rounded-2xl transition-colors shadow-sm"
+                  className="flex items-center gap-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-bold px-5 py-2.5 rounded-full transition-colors shadow-sm"
                 >
                   <Sparkles className="w-4 h-4 text-emerald-300" />
                   <span>Generate AI Overview</span>

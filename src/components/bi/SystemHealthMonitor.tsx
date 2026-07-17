@@ -16,20 +16,20 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({ status }:
   };
 
   const systems = [
-    { name: 'Firebase', key: 'firebase', icon: Server },
-    { name: 'Firestore', key: 'firestore', icon: Database },
-    { name: 'Storage', key: 'storage', icon: Globe },
-    { name: 'Auth', key: 'auth', icon: ShieldCheck },
-    { name: 'Payments', key: 'paymentGateway', icon: CreditCard },
-    { name: 'Email', key: 'emailService', icon: Mail },
-    { name: 'WhatsApp', key: 'whatsappService', icon: MessageSquare },
+    { name: 'Cloud Infrastructure', key: 'firebase', icon: Server },
+    { name: 'Secure Database', key: 'firestore', icon: Database },
+    { name: 'Asset Storage', key: 'storage', icon: Globe },
+    { name: 'Identity Control', key: 'auth', icon: ShieldCheck },
+    { name: 'Payments Gateway', key: 'paymentGateway', icon: CreditCard },
+    { name: 'Notification Delivery', key: 'emailService', icon: Mail },
+    { name: 'Communications', key: 'whatsappService', icon: MessageSquare },
   ];
 
   return (
     <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm h-full">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">System Infrastructure</h3>
-        <span className="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-2xl">
+        <span className="flex items-center gap-1 text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
           <div className="w-1.5 h-1.5 rounded-2xl bg-emerald-500 animate-pulse" />
           Live
         </span>

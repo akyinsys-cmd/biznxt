@@ -42,7 +42,7 @@ export function Documents({ project }: { project: Project }) {
         </div>
         <button 
           onClick={() => setShowUpload(true)}
-          className="px-6 py-2.5 bg-slate-900 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest flex items-center gap-2 hover:bg-slate-800"
+          className="px-6 py-2.5 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest flex items-center gap-2 hover:bg-slate-800"
         >
           <Upload size={16} /> Request Document
         </button>
@@ -52,7 +52,7 @@ export function Documents({ project }: { project: Project }) {
         {documents.map(doc => (
           <div key={doc.id} className="p-5 rounded-2xl border border-slate-200 hover:border-primary/50 transition-all flex flex-col group">
             <div className="flex items-start justify-between mb-4">
-              <div className="w-10 h-10 rounded-2xl bg-slate-50 text-slate-400 flex items-center justify-center group-hover:text-primary group-hover:bg-primary/5 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:text-primary group-hover:bg-primary/5 transition-colors">
                 <FileText size={20} />
               </div>
               <span className={`px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-widest ${
@@ -102,8 +102,8 @@ export function Documents({ project }: { project: Project }) {
                 </select>
               </div>
               <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={() => setShowUpload(false)} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-2xl hover:bg-slate-200">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-2xl hover:bg-slate-800">Request</button>
+                <button type="button" onClick={() => setShowUpload(false)} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-full hover:bg-slate-200">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-slate-900 text-white text-xs font-bold rounded-full hover:bg-slate-800">Request</button>
               </div>
             </form>
           </div>

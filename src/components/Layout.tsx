@@ -35,7 +35,9 @@ import { GlobalSearch } from './GlobalSearch';
 import FOMOPopup from './FOMOPopup';
 import { NotificationCenter } from './widgets/NotificationCenter';
 import { QuickActionFAB } from './widgets/QuickActionFAB';
+import { TourGuide } from './widgets/TourGuide';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { siteConfig } from '../config/site';
 
 interface NavItem {
@@ -46,18 +48,22 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: 'Home', path: '/', icon: Home },
-  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['client'] },
-  { name: 'Calendar', path: '/calendar', icon: Calendar },
-  { name: 'Projects', path: '/projects', icon: Briefcase, roles: ['client', 'admin', 'superadmin'] },
-  { name: 'Support', path: '/bsm', icon: ShieldAlert, roles: ['bsm', 'admin', 'superadmin'] },
-  { name: 'Control Panel', path: '/admin', icon: Settings, roles: ['admin', 'superadmin'] },
-  { name: 'Strategic View', path: '/command-center', icon: Activity, roles: ['admin', 'superadmin'] },
-  { name: 'Research', path: '/search', icon: SearchIcon },
-  { name: 'Discovery', path: '/discovery', icon: Lightbulb },
-  { name: 'Documents', path: '/documents', icon: FileText },
-  { name: 'Marketplace', path: '/marketplace', icon: Factory },
-  { name: 'Academy', path: '/academy', icon: Sparkles },
+  { name: 'Overview', path: '/', icon: Home },
+  
+  // Customer Routes
+  { name: 'Workspace OS', path: '/dashboard', icon: LayoutDashboard, roles: ['customer'] },
+  { name: 'Active Initiatives', path: '/projects', icon: Rocket, roles: ['customer'] },
+  { name: 'Strategic Intelligence', path: '/reports', icon: FileText, roles: ['customer'] },
+
+  // Manager Routes
+  { name: 'Client Success Hub', path: '/bsm', icon: Users, roles: ['manager'] },
+  { name: 'Initiative Portfolios', path: '/projects', icon: Rocket, roles: ['manager'] },
+  { name: 'Launch Schedule', path: '/calendar', icon: Calendar, roles: ['manager'] },
+
+  // Super Admin Routes
+  { name: 'Governance Center', path: '/admin', icon: ShieldAlert, roles: ['super_admin'] },
+  { name: 'Performance Analytics', path: '/analytics', icon: TrendingUp, roles: ['super_admin'] },
+  { name: 'Global Portfolios', path: '/projects', icon: Rocket, roles: ['super_admin'] },
 ];
 
 export function Layout() {
@@ -65,6 +71,7 @@ export function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, role, logout } = useAuth();
+  const { hapticsEnabled } = useTheme();
 
   const filteredNavItems = navItems.filter(item => {
     if (!item.roles) return true;
@@ -77,11 +84,11 @@ export function Layout() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="flex justify-between items-center h-20 gap-8">
             <div className="flex-shrink-0 flex items-center gap-4">
-              <button onClick={() => navigate(-1)} className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-2xl transition-colors">
+              <button onClick={() => navigate(-1)} className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-full transition-colors">
                 <ArrowLeft size={18} />
               </button>
-              <Link to="/" className="text-2xl font-display font-black text-slate-900 tracking-tighter flex items-center gap-2 group">
-                <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
+              <Link to="/" id="tour-header-brand" className="text-2xl font-display font-black text-slate-900 tracking-tighter flex items-center gap-2 group">
+                <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:rotate-6 transition-transform">
                   <Activity size={20} />
                 </div>
                 <div className="flex flex-col -space-y-1">
@@ -92,7 +99,7 @@ export function Layout() {
             </div>
             
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex space-x-2 bg-slate-50/50 p-1.5 rounded-2xl border border-white/50 overflow-x-auto max-w-[65%] no-scrollbar">
+            <nav id="tour-desktop-nav" className="hidden lg:flex space-x-2 bg-slate-50/50 p-1.5 rounded-full border border-white/50 overflow-x-auto max-w-[65%] no-scrollbar">
               {filteredNavItems.map((item) => {
                 const isActive = item.path === '/' 
                   ? location.pathname === '/' 
@@ -101,8 +108,9 @@ export function Layout() {
                   <Link
                     key={item.name}
                     to={item.path}
+                    onClick={() => { if (hapticsEnabled && typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(20); }}
                     className={cn(
-                      "px-4 py-2 rounded-2xl text-[10px] font-black tracking-widest uppercase transition-all duration-300 flex items-center space-x-2 whitespace-nowrap",
+                      "px-4 py-2 rounded-full text-[10px] font-black tracking-widest uppercase transition-all duration-300 flex items-center space-x-2 whitespace-nowrap",
                       isActive 
                         ? "bg-white text-primary shadow-sm border border-white/80 scale-[1.02]" 
                         : "text-slate-500 hover:text-slate-900 hover:bg-white/40"
@@ -115,14 +123,16 @@ export function Layout() {
               })}
             </nav>
 
-            <div className="flex-1 flex justify-end md:justify-center max-w-xs">
+            <div id="tour-search" className="flex-1 flex justify-end md:justify-center max-w-xs">
                <GlobalSearch />
             </div>
 
             <div className="hidden md:flex items-center space-x-3">
                {user ? (
                  <div className="flex items-center space-x-3">
-                    <NotificationCenter />
+                    <div id="tour-notification-center" className="inline-block">
+                      <NotificationCenter />
+                    </div>
                     <Link
                       to="/profile"
                       className={cn(
@@ -188,9 +198,9 @@ export function Layout() {
                     <Link
                       key={item.name}
                       to={item.path}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={(e) => { setIsMobileMenuOpen(false); if (hapticsEnabled && typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(20); }}
                       className={cn(
-                        "block px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center space-x-3 transition-colors",
+                        "block px-4 py-2.5 rounded-full text-sm font-semibold flex items-center space-x-3 transition-colors",
                         isActive 
                           ? "bg-white text-primary shadow-sm" 
                           : "text-slate-600 hover:bg-white/40 hover:text-slate-900"
@@ -207,7 +217,7 @@ export function Layout() {
                       <Link
                         to="/profile"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center space-x-3 text-slate-600 hover:bg-white/40"
+                        className="block px-4 py-2.5 rounded-full text-sm font-semibold flex items-center space-x-3 text-slate-600 hover:bg-white/40"
                       >
                          {user.photoURL ? (
                            <img src={user.photoURL} alt="Profile" className="w-4 h-4 rounded-full" />
@@ -248,10 +258,10 @@ export function Layout() {
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, scale: 0.98, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.02, y: -15 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="flex-1 flex flex-col"
           >
             <Outlet />
@@ -319,6 +329,7 @@ export function Layout() {
         </div>
       </footer>
       {user && <QuickActionFAB />}
+      <TourGuide />
       <FOMOPopup />
     </div>
   );

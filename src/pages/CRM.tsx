@@ -184,7 +184,7 @@ export default function CRM() {
     { id: 'rule-assign', name: 'Auto Lead Assignment SLA', description: 'Instantly allocate incoming leads to closest matching Success Manager based on industry match', active: true },
     { id: 'rule-welcome', name: 'Auto Welcome Email Trigger', description: 'Simulate dispatching custom brochure suite once new lead is validated', active: true },
     { id: 'rule-followup', name: 'Auto Escalation Follow-up', description: 'Escalate lead to Principal Director if priority is Hot and remains uncontacted for 2 hours', active: false },
-    { id: 'rule-quote', name: 'Auto Invoice Generation Sync', description: 'Automatically post accounting transactions on quote acceptance', active: true }
+    { id: 'rule-quote', name: 'Auto Invoice Generation Rule', description: 'Automatically post accounting transactions on quote acceptance', active: true }
   ]);
 
   // ============================================================================
@@ -406,7 +406,7 @@ export default function CRM() {
         <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
           <div>
             <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-12 bg-primary/10 rounded-2xl text-primary flex items-center justify-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-full text-primary flex items-center justify-center">
                 <Users size={24} />
               </div>
               <div>
@@ -438,7 +438,7 @@ export default function CRM() {
 
             <button 
               onClick={() => setShowAddLeadModal(true)}
-              className="px-8 py-4 bg-slate-900 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-slate-900/20 active:scale-95"
+              className="px-8 py-4 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest hover:bg-primary transition-all shadow-xl shadow-slate-900/20 active:scale-95"
             >
               Ingest New Account
             </button>
@@ -526,7 +526,7 @@ export default function CRM() {
                         <input 
                           type="text" 
                           placeholder="Search accounts..." 
-                          className="pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[11px] font-black uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64 shadow-inner"
+                          className="pl-12 pr-6 py-3 bg-slate-50 border border-slate-100 rounded-full text-[11px] font-black uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all w-64 shadow-inner"
                         />
                       </div>
                     </div>
@@ -562,11 +562,11 @@ export default function CRM() {
                               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Portfolio Value</p>
                               <p className="text-lg font-black text-slate-900 tracking-tighter">₹{Number(lead.budget || 0).toLocaleString()}</p>
                             </div>
-                            <div className="px-6 py-3 bg-slate-50 border border-slate-100 rounded-2xl">
+                            <div className="px-6 py-3 bg-slate-50 border border-slate-100 rounded-full">
                               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Status</p>
                               <p className="text-[11px] font-black text-primary uppercase tracking-widest">{lead.status || 'New Lead'}</p>
                             </div>
-                            <button className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-500 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                            <button className="w-12 h-12 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
                               <ChevronRight size={20} />
                             </button>
                           </div>
@@ -581,7 +581,7 @@ export default function CRM() {
                   <div className="absolute top-0 right-0 w-48 h-48 bg-primary/20 rounded-2xl blur-[100px] -mr-24 -mt-24" />
                   
                   <div className="flex items-center gap-4 mb-10 relative z-10">
-                    <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-xl shadow-primary/30">
+                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-xl shadow-primary/30">
                       <Zap size={24} />
                     </div>
                     <div>
@@ -592,10 +592,10 @@ export default function CRM() {
 
                   <div className="space-y-8 relative z-10">
                     {[
-                      { title: 'API Ingest: Success', desc: 'Enterprise account Vikram Singhania validated. Triggering auto-SLA.', time: '12m' },
-                      { title: 'Doc-OCR: Verified', desc: 'GSTIN integrity match on Nourish Organics Co. Clearing node.', time: '1h' },
-                      { title: 'SMTP: Despatched', desc: 'Custom Brand Identity schedule emailed to prospective lead.', time: '2h' },
-                      { title: 'SLA: Escalated', desc: 'Lead "Sophia Lin" remains uncontacted > 2h. Notifying Director.', time: '4h', alert: true }
+                      { title: 'Partner Intake: Success', desc: 'Enterprise account Vikram Singhania validated. Triggering auto-SLA.', time: '12m' },
+                      { title: 'Document Scan: Verified', desc: 'GSTIN integrity match on Nourish Organics Co. Clearing node.', time: '1h' },
+                      { title: 'Email Notification: Sent', desc: 'Custom Brand Identity schedule emailed to prospective lead.', time: '2h' },
+                      { title: 'Performance Target: Escalated', desc: 'Lead "Sophia Lin" remains uncontacted > 2h. Notifying Director.', time: '4h', alert: true }
                     ].map((evt, idx) => (
                       <motion.div 
                         key={idx}
@@ -737,7 +737,7 @@ export default function CRM() {
               </div>
               <button 
                 onClick={() => setShowAddLeadModal(false)}
-                className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-2xl text-slate-500 hover:text-primary transition-all shadow-sm active:scale-95"
+                className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-500 hover:text-primary transition-all shadow-sm active:scale-95"
               >
                 <X size={20} />
               </button>
@@ -809,13 +809,13 @@ export default function CRM() {
                 <button
                   type="button"
                   onClick={() => setShowAddLeadModal(false)}
-                  className="px-10 py-5 bg-white border border-slate-200 text-slate-500 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm"
+                  className="px-10 py-5 bg-white border border-slate-200 text-slate-500 font-black rounded-full text-[10px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm"
                 >
                   Abort Entry
                 </button>
                 <button
                   type="submit"
-                  className="px-12 py-5 bg-slate-900 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-2xl shadow-slate-900/20 active:scale-95"
+                  className="px-12 py-5 bg-slate-900 text-white font-black rounded-full text-[10px] uppercase tracking-widest hover:bg-primary transition-all shadow-2xl shadow-slate-900/20 active:scale-95"
                 >
                   Ingest Enterprise Account
                 </button>

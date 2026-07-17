@@ -11,7 +11,7 @@ export default function AdminDiscovery() {
     { id: 'categories', label: 'Manage Categories', icon: List },
     { id: 'industries', label: 'Manage Industries', icon: Database },
     { id: 'questions', label: 'Manage Questions', icon: FileText },
-    { id: 'templates', label: 'AI Templates', icon: Brain },
+    { id: 'ai_prompts', label: 'AI System Prompts', icon: Brain },
     { id: 'models', label: 'Business Models', icon: Split },
     { id: 'logic', label: 'Discovery Logic', icon: Sliders },
     { id: 'rules', label: 'Recommendation Rules', icon: Settings },
@@ -62,7 +62,7 @@ export default function AdminDiscovery() {
             </h2>
             <button 
               onClick={handleSave}
-              className="px-6 py-2 bg-emerald-500 text-white rounded-2xl font-bold text-sm hover:bg-emerald-600 transition-colors flex items-center"
+              className="px-6 py-2 bg-emerald-500 text-white rounded-full font-bold text-sm hover:bg-emerald-600 transition-colors flex items-center"
             >
               <Save className="w-4 h-4 mr-2" />
               Save Changes
@@ -95,7 +95,7 @@ export default function AdminDiscovery() {
             </div>
           )}
 
-          {activeTab === 'templates' && (
+          {activeTab === 'ai_prompts' && (
             <div className="space-y-6">
               <p className="text-slate-500 text-sm">Configure the Gemini AI system instructions and logic prompts.</p>
               <div className="space-y-4">

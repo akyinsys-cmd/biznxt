@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bell, X, Info, CheckCircle2, AlertTriangle, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { useNotifications } from '../../context/NotificationContext';
 
 export function NotificationCenter() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const dropdownRef = useRef<HTMLDivElement>(null);

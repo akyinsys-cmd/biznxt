@@ -26,7 +26,7 @@ export function BusinessHealthScore({ score, trend, delay = 0, className }: Busi
             <span className="text-lg text-slate-400 font-medium">/100</span>
           </h3>
         </div>
-        <div className="w-12 h-12 rounded-2xl bg-emerald-500/5 flex items-center justify-center text-emerald-500">
+        <div className="w-12 h-12 rounded-full bg-emerald-500/5 flex items-center justify-center text-emerald-500">
           <Activity size={24} />
         </div>
       </div>

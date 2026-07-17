@@ -36,7 +36,7 @@ export default function TradeDocs() {
           </h1>
           <p className="text-slate-500 mt-2">Manage all your international trade documentation centrally.</p>
         </div>
-        <button className="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark transition-colors shadow-lg">
+        <button className="px-6 py-3 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-colors shadow-lg">
           Upload Document
         </button>
       </div>
@@ -60,11 +60,11 @@ export default function TradeDocs() {
                 <td className="p-4 text-sm text-slate-500">{doc.date}</td>
                 <td className="p-4">
                   {doc.status === 'Approved' ? (
-                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
+                    <span className="inline-flex items-center text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
                       <CheckCircle2 className="w-3 h-3 mr-1" /> Approved
                     </span>
                   ) : (
-                    <span className="inline-flex items-center text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md">
+                    <span className="inline-flex items-center text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">
                       <AlertCircle className="w-3 h-3 mr-1" /> Pending
                     </span>
                   )}

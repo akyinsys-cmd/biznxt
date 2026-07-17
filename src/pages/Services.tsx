@@ -952,7 +952,7 @@ export default function Services() {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center space-x-2 px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-2xl text-blue-400 text-xs font-bold uppercase tracking-wider mb-4"
+                className="inline-flex items-center space-x-2 px-3 py-1 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-xs font-bold uppercase tracking-wider mb-4"
               >
                 <Rocket className="w-3.5 h-3.5" />
                 <span>Enterprise Execution Engine 3.0</span>
@@ -1045,7 +1045,7 @@ export default function Services() {
                         </div>
                         <button 
                           onClick={() => handleBookingPackage(pkg)}
-                          className="px-4 py-2 bg-slate-900 hover:bg-emerald-500 hover:text-slate-950 text-white text-xs font-bold rounded-2xl transition-all flex items-center space-x-1"
+                          className="px-4 py-2 bg-slate-900 hover:bg-emerald-500 hover:text-slate-950 text-white text-xs font-bold rounded-full transition-all flex items-center space-x-1"
                         >
                           <span>Buy Package</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -1106,7 +1106,7 @@ export default function Services() {
 
                       <div className="space-y-6">
                         <div>
-                          <span className="text-[10px] bg-slate-800 text-blue-400 font-bold px-3 py-1 rounded-2xl uppercase tracking-wider">
+                          <span className="text-[10px] bg-slate-800 text-blue-400 font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                             {service.subCategory || service.category}
                           </span>
                           <h3 className="text-xl font-bold text-white font-display mt-4 group-hover:text-blue-400 transition-colors">
@@ -1176,7 +1176,7 @@ export default function Services() {
                         <div className="grid grid-cols-2 gap-3">
                           <button 
                             onClick={() => window.location.href = '/contact'}
-                            className="py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-2xl transition-colors flex items-center justify-center gap-1.5"
+                            className="py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-full transition-colors flex items-center justify-center gap-1.5"
                           >
                             <Headset className="w-3.5 h-3.5" /> Talk to Expert
                           </button>
@@ -1187,7 +1187,7 @@ export default function Services() {
                               setCompareService(service);
                               setCompareModalOpen(true);
                             }}
-                            className="py-3 border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-white text-xs font-bold rounded-2xl transition-colors flex items-center justify-center gap-1.5"
+                            className="py-3 border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-white text-xs font-bold rounded-full transition-colors flex items-center justify-center gap-1.5"
                           >
                             <Shield className="w-3.5 h-3.5" /> Compare Plans
                           </button>
@@ -1212,7 +1212,7 @@ export default function Services() {
               className="space-y-8"
             >
               {userOrders.length === 0 ? (
-                <div className="text-center py-20 bg-slate-950 rounded-2xl border border-slate-800">
+                <div className="text-center py-20 bg-slate-950 rounded-full border border-slate-800">
                   <FolderOpen className="w-12 h-12 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-white">No Active Orders</h3>
                   <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
@@ -1220,7 +1220,7 @@ export default function Services() {
                   </p>
                   <button 
                     onClick={() => setActiveTab('explore')}
-                    className="mt-6 px-4 py-2 bg-primary hover:bg-primary-dark text-white text-xs font-semibold rounded-2xl"
+                    className="mt-6 px-4 py-2 bg-primary hover:bg-primary-dark text-white text-xs font-semibold rounded-full"
                   >
                     Browse Services Marketplace
                   </button>
@@ -1296,7 +1296,7 @@ export default function Services() {
                             <h2 className="text-xl font-bold font-display text-white">{selectedOrderDetails.serviceTitle}</h2>
                             <p className="text-xs text-slate-500 mt-1">Venture profile: {selectedOrderDetails.businessName} • {selectedOrderDetails.industry}</p>
                           </div>
-                          <span className="px-3.5 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl text-xs font-bold uppercase">
+                          <span className="px-3.5 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold uppercase">
                             {selectedOrderDetails.status || 'Active'}
                           </span>
                         </div>
@@ -1440,7 +1440,7 @@ export default function Services() {
                                 value={chatMessage}
                                 onChange={(e) => setChatMessage(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && sendBsmChatMessage(selectedOrderDetails)}
-                                className="flex-1 bg-slate-950 border border-slate-800 rounded-2xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="flex-1 bg-slate-950 border border-slate-800 rounded-full px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
                               />
                               <button 
                                 onClick={() => sendBsmChatMessage(selectedOrderDetails)}
@@ -1454,7 +1454,7 @@ export default function Services() {
 
                       </div>
                     ) : (
-                      <div className="text-center py-24 bg-slate-950 rounded-2xl border border-slate-800">
+                      <div className="text-center py-24 bg-slate-950 rounded-full border border-slate-800">
                         <Info className="w-10 h-10 text-slate-600 mx-auto mb-3" />
                         <h3 className="text-md font-bold text-slate-400">Select an active project board</h3>
                         <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Click on any corporate registration, Shopify storefront setup, or Dubai license filing on the left panel to access live compliance checklists, download final advisory reports, and message success managers.</p>
@@ -1633,7 +1633,7 @@ export default function Services() {
                 </div>
                 <button 
                   onClick={handleOpenCreateService}
-                  className="flex items-center space-x-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-md"
+                  className="flex items-center space-x-1.5 bg-primary hover:bg-primary-dark text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-md"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Create Service Item</span>
@@ -1806,13 +1806,13 @@ export default function Services() {
                       <button 
                         type="button" 
                         onClick={() => setAdminServiceForm(null)}
-                        className="px-4 py-2 bg-slate-900 text-slate-500 rounded-2xl"
+                        className="px-4 py-2 bg-slate-900 text-slate-500 rounded-full"
                       >
                         Cancel
                       </button>
                       <button 
                         type="submit" 
-                        className="px-6 py-2 bg-primary text-white rounded-2xl font-bold"
+                        className="px-6 py-2 bg-primary text-white rounded-full font-bold"
                       >
                         Save Dynamic Record
                       </button>
@@ -2138,7 +2138,7 @@ export default function Services() {
                   <div className="flex justify-end pt-3">
                     <button 
                       onClick={handleCreateOrder}
-                      className="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-bold rounded-2xl transition-all"
+                      className="px-6 py-3 bg-primary hover:bg-primary-dark text-white font-bold rounded-full transition-all"
                     >
                       Clear Checkout Payment
                     </button>
@@ -2148,7 +2148,7 @@ export default function Services() {
 
               {paymentStep === 'processing' && (
                 <div className="text-center py-12 space-y-4">
-                  <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-2xl animate-spin mx-auto" />
+                  <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
                   <div>
                     <h4 className="text-sm font-bold text-white">Filing Payment Transaction</h4>
                     <p className="text-xs text-slate-500 mt-1">Establishing secure blockchain ledger escrow entries...</p>
@@ -2158,7 +2158,7 @@ export default function Services() {
 
               {paymentStep === 'success' && (
                 <div className="text-center py-12 space-y-4">
-                  <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto">
+                  <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto">
                     <Check className="w-6 h-6" />
                   </div>
                   <div>
@@ -2170,7 +2170,7 @@ export default function Services() {
                       setBookingService(null);
                       setActiveTab('my-orders');
                     }}
-                    className="mt-6 px-6 py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 text-xs font-bold rounded-2xl"
+                    className="mt-6 px-6 py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 text-xs font-bold rounded-full"
                   >
                     Manage Project Board
                   </button>

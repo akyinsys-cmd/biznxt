@@ -86,7 +86,7 @@ export function BSMOverview() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <StatCard title="Assigned Customers" value={stats.assignedCustomers} icon={Briefcase} color="text-blue-500" bg="bg-blue-50" />
         <StatCard title="Projects In Progress" value={stats.projectsInProgress} icon={ArrowUpRight} color="text-emerald-500" bg="bg-emerald-50" />
         <StatCard title="Completed Projects" value={stats.completedProjects} icon={CheckCircle2} color="text-purple-500" bg="bg-purple-50" />
@@ -94,39 +94,43 @@ export function BSMOverview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm col-span-2">
-          <h3 className="text-xl font-black text-slate-900 tracking-tight mb-6">Action Required</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <ActionCard title="Pending Research" count={stats.pendingResearch} icon={FileText} color="text-indigo-500" />
-            <ActionCard title="Pending Quotations" count={stats.pendingQuotations} icon={DollarSign} color="text-emerald-500" />
-            <ActionCard title="Pending Documents" count={stats.pendingDocuments} icon={FileText} color="text-amber-500" />
-            <ActionCard title="Pending Tasks" count={todayTasks.length} icon={CheckCircle2} color="text-blue-500" />
+        <div className="clay-card p-6 col-span-2 flex flex-col justify-between">
+          <div>
+            <h3 className="text-xl font-black text-slate-900 tracking-tight mb-6">Action Required</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <ActionCard title="Pending Research" count={stats.pendingResearch} icon={FileText} color="text-indigo-500" />
+              <ActionCard title="Pending Quotations" count={stats.pendingQuotations} icon={DollarSign} color="text-emerald-500" />
+              <ActionCard title="Pending Documents" count={stats.pendingDocuments} icon={FileText} color="text-amber-500" />
+              <ActionCard title="Pending Tasks" count={todayTasks.length} icon={CheckCircle2} color="text-blue-500" />
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-black text-slate-900 tracking-tight">Today's Schedule</h3>
-            <Calendar className="text-slate-400" size={20} />
-          </div>
-          <div className="space-y-4">
-            {todayMeetings.length === 0 ? (
-              <p className="text-sm font-bold text-slate-500 text-center py-4">No meetings scheduled for today.</p>
-            ) : (
-              todayMeetings.map(m => (
-                <div key={m.id} className="flex gap-4 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                  <div className="flex-shrink-0 text-center">
-                    <p className="text-xs font-black text-primary uppercase">{format(new Date(m.dateTime), 'hh:mm a')}</p>
+        <div className="clay-card p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">Today's Schedule</h3>
+              <Calendar className="text-slate-400" size={20} />
+            </div>
+            <div className="space-y-4">
+              {todayMeetings.length === 0 ? (
+                <p className="text-sm font-bold text-slate-500 text-center py-4">No meetings scheduled for today.</p>
+              ) : (
+                todayMeetings.map(m => (
+                  <div key={m.id} className="flex gap-4 p-3 rounded-2xl bg-white/70 border border-slate-200/50 shadow-sm">
+                    <div className="flex-shrink-0 text-center">
+                      <p className="text-xs font-black text-primary uppercase">{format(new Date(m.dateTime), 'hh:mm a')}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-slate-900">{m.title}</h4>
+                      <p className="text-[10px] font-bold text-slate-500 flex items-center gap-1 mt-1">
+                        {m.platform}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-sm font-black text-slate-900">{m.title}</h4>
-                    <p className="text-[10px] font-bold text-slate-500 flex items-center gap-1 mt-1">
-                      {m.platform}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -136,8 +140,8 @@ export function BSMOverview() {
 
 function StatCard({ title, value, icon: Icon, color, bg }: any) {
   return (
-    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex flex-col group hover:border-primary/30 transition-all">
-      <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${bg} ${color} mb-4 group-hover:scale-110 transition-transform`}>
+    <div className="clay-card bg-white flex flex-col group hover:scale-[1.02] active:scale-95 transition-all duration-300">
+      <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${bg} ${color} mb-4 group-hover:scale-110 transition-transform shadow-sm`}>
         <Icon size={20} />
       </div>
       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{title}</p>
@@ -148,7 +152,7 @@ function StatCard({ title, value, icon: Icon, color, bg }: any) {
 
 function ActionCard({ title, count, icon: Icon, color }: any) {
   return (
-    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer group">
+    <div className="flex items-center justify-between p-4 bg-white/60 rounded-2xl border border-slate-200/50 shadow-sm hover:bg-white/90 hover:scale-[1.01] active:scale-95 transition-all cursor-pointer group">
       <div className="flex items-center gap-3">
         <Icon size={18} className={color} />
         <span className="text-sm font-bold text-slate-700">{title}</span>

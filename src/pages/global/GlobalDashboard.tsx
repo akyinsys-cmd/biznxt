@@ -73,15 +73,15 @@ export default function GlobalDashboard() {
 
       {/* Action Bar */}
       <div className="flex flex-wrap gap-4 mb-8">
-        <button onClick={() => navigate('/global/dubai-setup')} className="px-6 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-colors shadow-lg flex items-center">
+        <button onClick={() => navigate('/global/dubai-setup')} className="px-6 py-3 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-colors shadow-lg flex items-center">
           <Building2 className="w-4 h-4 mr-2" />
           Dubai Business Setup
         </button>
-        <button onClick={() => navigate('/global/import-export')} className="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-colors flex items-center">
+        <button onClick={() => navigate('/global/import-export')} className="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-full font-bold hover:bg-slate-50 transition-colors flex items-center">
           <Ship className="w-4 h-4 mr-2" />
           New Import/Export Project
         </button>
-        <button onClick={() => navigate('/global/trade-docs')} className="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-colors flex items-center">
+        <button onClick={() => navigate('/global/trade-docs')} className="px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-full font-bold hover:bg-slate-50 transition-colors flex items-center">
           <FileText className="w-4 h-4 mr-2" />
           Trade Documents
         </button>
@@ -90,7 +90,7 @@ export default function GlobalDashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, idx) => (
-          <div key={idx} className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-center">
+          <div key={idx} className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex items-center">
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mr-4 ${stat.bg} ${stat.color}`}>
               <stat.icon className="w-6 h-6" />
             </div>
@@ -126,7 +126,7 @@ export default function GlobalDashboard() {
                       </span>
                       <span className="font-bold text-slate-900">{ship.vessel}</span>
                     </div>
-                    <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-2xl">{ship.status}</span>
+                    <span className="text-sm font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">{ship.status}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm text-slate-500 mt-4">
                     <div className="flex items-center">
@@ -144,7 +144,7 @@ export default function GlobalDashboard() {
           </div>
 
           {/* Trade Documents & Compliance */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-bold text-slate-900 flex items-center">
                 <FileText className="w-5 h-5 mr-2 text-slate-500" />
@@ -177,7 +177,7 @@ export default function GlobalDashboard() {
         <div className="space-y-8">
           
           {/* Currency Monitor */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
               <DollarSign className="w-5 h-5 mr-2 text-emerald-500" />
               Live Currency Monitor
@@ -201,7 +201,7 @@ export default function GlobalDashboard() {
           </div>
 
           {/* Country Opportunities */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
               <Globe2 className="w-5 h-5 mr-2 text-blue-500" />
               Expansion Opportunities
@@ -228,7 +228,7 @@ export default function GlobalDashboard() {
           </div>
 
           {/* International Meetings */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
             <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center">
               <Calendar className="w-5 h-5 mr-2 text-purple-500" />
               Upcoming Meetings

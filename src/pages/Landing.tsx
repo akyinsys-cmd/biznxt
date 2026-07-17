@@ -626,7 +626,7 @@ export default function Landing() {
                         <div className="w-10 h-10 rounded-[2rem] bg-primary/10 text-primary flex items-center justify-center">
                           <IconComponent className="w-5 h-5" />
                         </div>
-                        <span className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest bg-slate-200/40 px-2 py-0.5 rounded-md">
+                        <span className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest bg-slate-200/40 px-2 py-0.5 rounded-full">
                           Verified sector
                         </span>
                       </div>
@@ -877,7 +877,7 @@ export default function Landing() {
               </div>
 
               {/* Card 2 (Popular Option) */}
-              <div className="neomorph-flat p-8 border-none flex flex-col justify-between min-h-[500px] relative bg-white ring-2 ring-primary/20">
+              <div className="neomorph-flat p-8 border-none flex flex-col justify-between min-h-[500px] relative bg-white shadow-xl shadow-slate-200/50 ring-2 ring-primary/20">
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-primary text-white text-[9px] font-extrabold uppercase tracking-[0.25em] px-4 py-1.5 rounded-3xl border border-primary/20">
                   Most Requested Scale Plan
                 </div>
@@ -947,7 +947,7 @@ export default function Landing() {
                       <Check className="w-3.5 h-3.5 text-primary shrink-0" /> Factory safety & labor statutory setups
                     </li>
                     <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-primary shrink-0" /> High-tier API access to compliance ledger
+                      <Check className="w-3.5 h-3.5 text-primary shrink-0" /> Premium real-time access to compliance ledger
                     </li>
                   </ul>
                 </div>
@@ -1220,7 +1220,7 @@ export default function Landing() {
                 
                 <div className="flex justify-between items-center bg-white p-3.5 rounded-3xl border border-white/60">
                   <span className="text-xs font-extrabold text-slate-950">Quick-Action Checklist for Setup</span>
-                  <span className="text-[10px] font-bold text-primary font-mono">Real-Time Sync Ready</span>
+                  <span className="text-[10px] font-bold text-primary font-mono">Instant Updates Active</span>
                 </div>
 
                 <div className="space-y-3">

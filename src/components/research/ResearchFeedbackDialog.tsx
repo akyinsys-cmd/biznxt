@@ -44,7 +44,7 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
     operationType,
     path
   };
-  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  console.warn('Unable to sync feedback at this time.');
   throw new Error(JSON.stringify(errInfo));
 }
 
@@ -277,14 +277,14 @@ export default function ResearchFeedbackDialog({
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-2xl text-xs font-semibold text-slate-600"
+              className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-full text-xs font-semibold text-slate-600"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-5 py-2 bg-pink-600 hover:bg-pink-700 disabled:bg-slate-300 text-white font-bold rounded-2xl text-xs flex items-center gap-1.5"
+              className="px-5 py-2 bg-pink-600 hover:bg-pink-700 disabled:bg-slate-300 text-white font-bold rounded-full text-xs flex items-center gap-1.5"
             >
               {isSubmitting ? (
                 <span>Submitting...</span>

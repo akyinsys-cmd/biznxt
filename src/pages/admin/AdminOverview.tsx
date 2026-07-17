@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { DollarSign, Users, Target, Activity, FileText, Briefcase, Zap, AlertCircle, UserPlus } from 'lucide-react';
+import { DollarSign, Users, Target, Activity, FileText, Briefcase, Zap, AlertCircle, UserPlus, FileSpreadsheet } from 'lucide-react';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { logAdminActivity } from '../../utils/adminLogger';
+import { useToast } from '../../context/ToastContext';
 
 export function AdminOverview() {
+  const { success, error } = useToast();
   const [stats, setStats] = useState({
     todayRevenue: 0,
     monthlyRevenue: 0,
@@ -47,6 +50,50 @@ export function AdminOverview() {
     };
   }, []);
 
+  const handleExportMetrics = () => {
+    try {
+      const csvData = [
+        ['Metric Category', 'Metric Name', 'Current Value'],
+        ['Financial', 'Today\'s Revenue (Projected)', `₹${stats.todayRevenue}`],
+        ['Financial', 'Monthly Revenue (Projected)', `₹${stats.monthlyRevenue}`],
+        ['Financial', 'Yearly Revenue (Projected)', `₹${stats.yearlyRevenue}`],
+        ['Financial', 'Payments Completed', stats.payments],
+        ['Financial', 'Refunds Initiated', stats.refunds],
+        ['Customers', 'Active Customers', stats.activeCustomers],
+        ['Customers', 'New Customers (Today)', stats.newCustomers],
+        ['Customers', 'Website Visitors', stats.websiteVisitors],
+        ['Operations', 'Pending Document Orders', stats.pendingOrders],
+        ['Operations', 'Completed Document Orders', stats.completedOrders],
+        ['Operations', 'Pending Research Dossiers', stats.pendingResearch],
+        ['Operations', 'Completed Research Dossiers', stats.completedResearch],
+        ['Operations', 'Active Launch Projects', stats.businessProjects],
+        ['Operations', 'Open Support Tickets', stats.supportTickets],
+        ['Operations', 'Career Applications', stats.careerApps]
+      ];
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + csvData.map(e => e.join(',')).join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `biznxt_dashboard_metrics_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      logAdminActivity(
+        'akyinsys@gmail.com',
+        'super_admin',
+        'Exported Dashboard Metrics',
+        `Exported ${csvData.length - 1} system metrics and financial KPI records to CSV for external reporting.`,
+        'Operations'
+      );
+      success('Dashboard metrics successfully exported to CSV');
+    } catch (err: any) {
+      error('Failed to export metrics data');
+      console.error('Failed to export metrics:', err);
+    }
+  };
+
   const chartData = [
     { name: 'Jan', revenue: 400000, visitors: 2400 },
     { name: 'Feb', revenue: 300000, visitors: 1398 },
@@ -58,7 +105,20 @@ export function AdminOverview() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-left">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+        <div>
+          <h3 className="text-xl font-black text-slate-900 tracking-tight">Enterprise KPI Dashboard</h3>
+          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Real-time performance metrics & high-level reporting</p>
+        </div>
+        <button
+          onClick={handleExportMetrics}
+          className="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-sm self-start sm:self-center"
+        >
+          <FileSpreadsheet className="w-4 h-4" />
+          Export All Metrics (CSV)
+        </button>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Today's Revenue (Projected)" value={`₹${stats.todayRevenue.toLocaleString()}`} icon={DollarSign} color="text-emerald-600" bg="bg-emerald-50" />
@@ -80,7 +140,7 @@ export function AdminOverview() {
               <h3 className="text-xl font-black text-slate-900 tracking-tight">Revenue Analytics</h3>
               <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Financial Performance</p>
             </div>
-            <select className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2 text-xs font-bold text-slate-700 outline-none">
+            <select className="bg-slate-50 border border-slate-200 rounded-full px-4 py-2 text-xs font-bold text-slate-700 outline-none">
               <option>Last 7 Months</option>
               <option>This Year</option>
               <option>All Time</option>

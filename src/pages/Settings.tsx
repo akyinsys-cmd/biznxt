@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { UserBadges } from '../components/widgets/UserBadges';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useTheme } from '../context/ThemeContext';
@@ -22,7 +23,7 @@ import { doc, setDoc } from 'firebase/firestore';
 export default function Settings() {
   const { user, role, logout } = useAuth();
   const { success, error } = useToast();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, hapticsEnabled, setHapticsEnabled, preset, setPreset } = useTheme();
   
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -35,6 +36,11 @@ export default function Settings() {
     mfa: false
   });
 
+  const [previewColors, setPreviewColors] = useState({
+    primary: '#2563eb',
+    accent: '#10b981'
+  });
+
   const handleSave = async () => {
     try {
       if (user) {
@@ -45,9 +51,10 @@ export default function Settings() {
           language: settings.language,
         }, { merge: true });
         success('Settings saved successfully!');
+        
       }
     } catch (err: any) {
-      error(err.message || 'Failed to update preferences.');
+      error('Failed to update preferences.');
     }
   };
 
@@ -61,7 +68,7 @@ export default function Settings() {
       await setDoc(userRef, { role: newRole }, { merge: true });
       success(`Successfully shifted workspace role to: ${newRole.toUpperCase()}`);
     } catch (err: any) {
-      error(err.message || 'Failed to update user role.');
+      error('Failed to update user role.');
     }
   };
 
@@ -183,7 +190,7 @@ export default function Settings() {
           </div>
 
           {/* Content */}
-          <div className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8 min-h-[500px]">
+          <div className="flex-1 bg-white rounded-3xl shadow-sm border border-slate-100 p-6 sm:p-8 min-h-[500px]">
             <motion.div
               key={activeTab}
               initial={{ opacity: 0, y: 10 }}
@@ -191,6 +198,8 @@ export default function Settings() {
               transition={{ duration: 0.2 }}
             >
               {activeTab === 'profile' && (
+                  <>
+                    <UserBadges />
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-xl font-bold text-slate-900">Personal Information</h2>
@@ -217,6 +226,7 @@ export default function Settings() {
                     </div>
                   </div>
                 </div>
+                  </>
               )}
 
               {activeTab === 'preferences' && (
@@ -240,8 +250,8 @@ export default function Settings() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Theme</label>
-                      <div className="flex gap-4">
+                      <label className="block text-sm font-medium text-slate-700 mb-2">Theme Mode</label>
+                      <div className="flex gap-4 mb-6">
                         <button 
                           onClick={() => setTheme('light')}
                           className={`flex-1 p-4 rounded-2xl border-2 flex flex-col items-center gap-2 transition-all ${theme === 'light' ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-200'}`}
@@ -256,6 +266,52 @@ export default function Settings() {
                            <div className="w-8 h-8 rounded-2xl bg-slate-900 border border-slate-800"></div>
                            <span className="text-sm font-medium text-slate-700">Dark</span>
                         </button>
+                      </div>
+
+                      <div className="mb-6 grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Primary Color</label>
+                          <input 
+                            type="color" 
+                            value={previewColors.primary} 
+                            onChange={e => setPreviewColors(prev => ({...prev, primary: e.target.value}))} 
+                            className="w-full h-12 rounded-xl cursor-pointer border-0" 
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Accent Color</label>
+                          <input 
+                            type="color" 
+                            value={previewColors.accent} 
+                            onChange={e => setPreviewColors(prev => ({...prev, accent: e.target.value}))} 
+                            className="w-full h-12 rounded-xl cursor-pointer border-0" 
+                          />
+                        </div>
+                      </div>
+
+                      <div className="mt-8">
+                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Live Preview</label>
+                        <div className="p-6 rounded-3xl border border-slate-100 shadow-sm" style={{ backgroundColor: theme === 'dark' ? '#0f172a' : '#f8fafc' }}>
+                          <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden" style={{ backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff' }}>
+                            <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 blur-3xl" style={{ backgroundColor: previewColors.primary, transform: 'translate(30%, -30%)' }} />
+                            <div className="flex items-center gap-4 mb-6">
+                              <div className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: previewColors.primary }}>
+                                <Sparkles size={20} />
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-black" style={{ color: theme === 'dark' ? '#f8fafc' : '#0f172a' }}>Dashboard Overview</h4>
+                                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60" style={{ color: theme === 'dark' ? '#cbd5e1' : '#64748b' }}>Project Analytics</p>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="h-2 rounded-full w-full opacity-20" style={{ backgroundColor: previewColors.primary }} />
+                              <div className="h-2 rounded-full w-3/4 opacity-10" style={{ backgroundColor: previewColors.accent }} />
+                            </div>
+                            <button className="mt-6 w-full py-3 rounded-xl text-xs font-black uppercase tracking-widest text-white shadow-md transition-transform hover:scale-[1.02]" style={{ backgroundColor: previewColors.accent }}>
+                              Simulate Action
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -297,7 +353,9 @@ export default function Settings() {
                 </div>
               )}
 
-              {activeTab === 'security' && (
+
+
+                {activeTab === 'security' && (
                 <div className="space-y-6">
                   <div>
                     <h2 className="text-xl font-bold text-slate-900">Security</h2>
@@ -331,7 +389,7 @@ export default function Settings() {
                     <div>
                       <h4 className="text-sm font-semibold">Sandbox Role Shifter</h4>
                       <p className="text-xs text-amber-700 mt-1">
-                        biznxt.online operates on strict role-based presentation. Shifting your role here instantly writes to your Firestore user ledger profile, causing your workspace, sidebar tabs, and API boundaries to react and reshape dynamically.
+                        biznxt.online operates on strict role-based presentation. Shifting your role here instantly writes to your secure cloud profile, causing your workspace, sidebar tabs, and security boundaries to react and reshape dynamically.
                       </p>
                     </div>
                   </div>
@@ -355,7 +413,7 @@ export default function Settings() {
                                 {card.title}
                               </span>
                               {isActive && (
-                                <span className="inline-flex items-center space-x-1 px-2 py-0.5 bg-primary text-white rounded-2xl text-[10px] font-bold">
+                                <span className="inline-flex items-center space-x-1 px-2 py-0.5 bg-primary text-white rounded-full text-[10px] font-bold">
                                   <CheckCircle2 className="w-3 h-3" />
                                   <span>Active</span>
                                 </span>
@@ -380,7 +438,7 @@ export default function Settings() {
                 <div className="mt-8 pt-6 border-t border-slate-100">
                   <button 
                     onClick={handleSave}
-                    className="flex items-center px-6 py-2.5 bg-slate-900 text-white rounded-2xl font-medium hover:bg-slate-800 transition-colors"
+                    className="flex items-center px-6 py-2.5 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-colors"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save Changes

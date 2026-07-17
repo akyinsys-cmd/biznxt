@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Rocket, FileText, Briefcase } from 'lucide-react';
+import { Plus, Rocket, FileText, LifeBuoy, Briefcase, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 
 export function QuickActionFAB() {
+  const { hapticsEnabled } = useTheme();
+  const { role } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -17,14 +21,20 @@ export function QuickActionFAB() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const actions = [
-    { name: 'Launch Wizard', path: '/launch', icon: Rocket, color: 'text-primary', bg: 'bg-primary/5' },
-    { name: 'New Report', path: '/reports', icon: FileText, color: 'text-purple-500', bg: 'bg-purple-50' },
-    { name: 'Browse Services', path: '/services', icon: Briefcase, color: 'text-success', bg: 'bg-success/10' },
-  ];
+  const actions = role === 'customer' 
+    ? [
+        { name: 'View Projects', path: '/projects', icon: Rocket, color: 'text-emerald-500', bg: 'bg-emerald-50', id: 'qa-view-projects' },
+        { name: 'Browse Services', path: '/services', icon: Briefcase, color: 'text-blue-500', bg: 'bg-blue-50', id: 'qa-browse-services' },
+        { name: 'My Reports', path: '/reports', icon: FileText, color: 'text-indigo-500', bg: 'bg-indigo-50', id: 'qa-view-reports' },
+      ]
+    : [
+        { name: 'CRM Hub', path: '/crm', icon: Briefcase, color: 'text-emerald-500', bg: 'bg-emerald-50', id: 'qa-crm-hub' },
+        { name: 'Calendar', path: '/calendar', icon: Calendar, color: 'text-blue-500', bg: 'bg-blue-50', id: 'qa-calendar' },
+        { name: 'Support', path: '/support', icon: LifeBuoy, color: 'text-indigo-500', bg: 'bg-indigo-50', id: 'qa-support' },
+      ];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50" ref={containerRef}>
+    <div id="tour-quick-actions" className="fixed bottom-6 right-6 z-50" ref={containerRef}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -44,7 +54,8 @@ export function QuickActionFAB() {
               >
                 <Link
                   to={action.path}
-                  onClick={() => setIsOpen(false)}
+                  id={action.id}
+                  onClick={() => { if (hapticsEnabled && typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(20); setIsOpen(false); }}
                   className="flex items-center gap-3 p-3 bg-white border border-slate-200 rounded-2xl shadow-lg hover:bg-slate-50 transition-colors group"
                 >
                   <div className={`p-2 rounded-2xl ${action.bg} ${action.color}`}>
@@ -61,7 +72,8 @@ export function QuickActionFAB() {
       </AnimatePresence>
 
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        id="quick-actions-trigger"
+        onClick={() => { if (hapticsEnabled && typeof navigator !== 'undefined' && navigator.vibrate) navigator.vibrate(50); setIsOpen(!isOpen); }}
         className="w-14 h-14 bg-primary hover:bg-primary-dark text-white rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
       >
         <motion.div

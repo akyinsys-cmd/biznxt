@@ -55,7 +55,7 @@ export default function DubaiSetup() {
         </div>
         
         <div className="relative z-10 max-w-2xl space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
             <Plane className="w-4 h-4 text-emerald-400" />
             <span>Global Expansion</span>
           </div>
@@ -69,10 +69,10 @@ export default function DubaiSetup() {
           </p>
 
           <div className="pt-4 flex flex-wrap gap-4">
-            <button className="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-colors shadow-lg">
+            <button className="px-8 py-4 bg-emerald-500 text-white rounded-full font-bold hover:bg-emerald-600 transition-colors shadow-lg">
               Book Expert Consultation
             </button>
-            <button onClick={() => navigate('/global')} className="px-8 py-4 bg-white/10 text-white rounded-2xl font-bold hover:bg-white/20 transition-colors backdrop-blur-sm">
+            <button onClick={() => navigate('/global')} className="px-8 py-4 bg-white/10 text-white rounded-full font-bold hover:bg-white/20 transition-colors backdrop-blur-sm">
               Back to Dashboard
             </button>
           </div>
@@ -80,12 +80,12 @@ export default function DubaiSetup() {
         
         {/* Quick Stats */}
         <div className="relative z-10 hidden md:block space-y-4">
-           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 w-64 text-center">
+           <div className="bg-white shadow-xl shadow-slate-200/50/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 w-64 text-center">
              <div className="text-3xl font-black text-white mb-1">0%</div>
              <div className="text-xs font-bold text-emerald-300 uppercase tracking-wider">Corporate Tax*</div>
              <div className="text-[10px] text-slate-500 mt-1">*For Freezone qualifying income</div>
            </div>
-           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 w-64 text-center">
+           <div className="bg-white shadow-xl shadow-slate-200/50/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 w-64 text-center">
              <div className="text-3xl font-black text-white mb-1">100%</div>
              <div className="text-xs font-bold text-emerald-300 uppercase tracking-wider">Foreign Ownership</div>
            </div>
@@ -98,8 +98,8 @@ export default function DubaiSetup() {
           <h2 className="text-2xl font-bold text-slate-900 font-display">Setup Structures</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {services.map((service) => (
-              <div key={service.id} className="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-xl transition-all cursor-pointer group">
-                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center mb-6">
+              <div key={service.id} className="bg-white rounded-3xl border border-slate-200 p-6 hover:shadow-xl transition-all cursor-pointer group">
+                <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center mb-6">
                   <Building2 className="w-6 h-6 text-emerald-600" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">{service.title}</h3>
@@ -122,12 +122,12 @@ export default function DubaiSetup() {
           </div>
 
           <h2 className="text-2xl font-bold text-slate-900 font-display mt-12 mb-6">The Process</h2>
-          <div className="bg-white rounded-3xl border border-slate-200 p-8">
+          <div className="bg-white shadow-xl shadow-slate-200/50 rounded-3xl border border-slate-200 p-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
               <div className="hidden md:block absolute top-6 left-0 w-full h-0.5 bg-slate-100"></div>
               {steps.map((s, idx) => (
                 <div key={idx} className="relative z-10">
-                  <div className="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center font-bold text-lg mb-4 shadow-lg mx-auto md:mx-0">
+                  <div className="w-12 h-12 bg-slate-900 text-white rounded-full flex items-center justify-center font-bold text-lg mb-4 shadow-lg mx-auto md:mx-0">
                     {s.step}
                   </div>
                   <h4 className="font-bold text-slate-900 mb-2 text-center md:text-left">{s.title}</h4>

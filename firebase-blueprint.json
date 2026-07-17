@@ -121,9 +121,24 @@
         "createdAt": { "type": "string", "format": "date-time", "description": "Feedback timestamp" }
       },
       "required": ["ticketId", "ticketNumber", "qaLeadName", "revisionNotes", "changeRequests", "status"]
+    },
+    "SystemAudit": {
+      "title": "SystemAudit",
+      "description": "Administrative actions logged for regulatory compliance.",
+      "type": "object",
+      "properties": {
+        "actorId": { "type": "string", "description": "UID or Email of the administrative actor" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "ISO timestamp when action occurred" },
+        "actionDescription": { "type": "string", "description": "Full description of the action and details" }
+      },
+      "required": ["actorId", "timestamp", "actionDescription"]
     }
   },
   "firestore": {
+    "SystemAudits/{auditId}": {
+      "schema": "SystemAudit",
+      "description": "Compliance logs of admin activities"
+    },
     "research_orders/{orderId}": {
       "schema": "ResearchOrder",
       "description": "Purchase orders for premium business research"

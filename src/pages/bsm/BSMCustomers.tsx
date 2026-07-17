@@ -29,8 +29,8 @@ export function BSMCustomers({ onSelectCustomer }: { onSelectCustomer: (project:
   });
 
   return (
-    <div className="bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col min-h-[600px]">
-      <div className="p-6 border-b border-slate-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="clay-card flex flex-col min-h-[600px]">
+      <div className="p-6 border-b border-slate-200/50 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <h3 className="text-xl font-black text-slate-900 tracking-tight">Assigned Customers</h3>
           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Manage your portfolio</p>
@@ -44,13 +44,13 @@ export function BSMCustomers({ onSelectCustomer }: { onSelectCustomer: (project:
               placeholder="Search customers..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 focus:outline-none focus:border-primary transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/70 border border-slate-200/50 rounded-2xl text-sm font-bold text-slate-700 focus:outline-none focus:border-primary transition-colors shadow-inner"
             />
           </div>
           <select 
             value={stageFilter}
             onChange={(e) => setStageFilter(e.target.value)}
-            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 outline-none"
+            className="px-4 py-2.5 bg-white/70 border border-slate-200/50 rounded-full text-sm font-bold text-slate-700 outline-none shadow-sm cursor-pointer hover:bg-white"
           >
             {stages.map(s => <option key={s} value={s}>{s === 'All' ? 'All Stages' : s}</option>)}
           </select>
@@ -58,16 +58,16 @@ export function BSMCustomers({ onSelectCustomer }: { onSelectCustomer: (project:
       </div>
 
       <div className="flex-1 p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map(project => (
             <div 
               key={project.id} 
               onClick={() => onSelectCustomer(project)}
-              className="p-5 rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group bg-white"
+              className="clay-card bg-white hover:scale-[1.02] active:scale-95 cursor-pointer group"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500 font-black">
+                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-black shadow-inner">
                     {project.businessName.charAt(0)}
                   </div>
                   <div>
@@ -75,7 +75,7 @@ export function BSMCustomers({ onSelectCustomer }: { onSelectCustomer: (project:
                     <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{project.clientName}</p>
                   </div>
                 </div>
-                <button className="w-8 h-8 flex items-center justify-center bg-slate-50 text-slate-400 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all">
+                <button className="w-8 h-8 flex items-center justify-center bg-slate-50 text-slate-400 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
                   <ChevronRight size={16} />
                 </button>
               </div>
@@ -83,24 +83,24 @@ export function BSMCustomers({ onSelectCustomer }: { onSelectCustomer: (project:
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Stage</span>
-                  <span className="text-xs font-black text-slate-900 px-2 py-0.5 bg-slate-100 rounded-md">{project.currentTimelineStep}</span>
+                  <span className="text-xs font-black text-slate-900 px-2.5 py-0.5 bg-slate-50 rounded-full border border-slate-100">{project.currentTimelineStep}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</span>
-                  <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-md ${
-                    project.status === 'Active' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-sm ${
+                    project.status === 'Active' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100/50' : 'bg-amber-50 text-amber-600 border border-amber-100/50'
                   }`}>
                     {project.status}
                   </span>
                 </div>
                 
                 <div className="pt-2">
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="flex justify-between items-center mb-1.5">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
                     <span className="text-[10px] font-black text-primary">{project.progress}%</span>
                   </div>
-                  <div className="h-1.5 w-full bg-slate-100 rounded-2xl overflow-hidden">
-                    <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-200/20">
+                    <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: `${project.progress}%` }} />
                   </div>
                 </div>
               </div>

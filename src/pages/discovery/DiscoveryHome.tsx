@@ -41,7 +41,7 @@ export default function DiscoveryHome() {
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
         
         <div className="relative z-10 max-w-3xl mx-auto space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-2xl bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
             <Bot className="w-4 h-4 text-primary-light" />
             <span>AI + Human Intelligence</span>
           </div>
@@ -118,7 +118,7 @@ export default function DiscoveryHome() {
       
       {/* Mini Dashboard / Saved Ideas preview */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-slate-900 flex items-center">
               <Lightbulb className="w-5 h-5 mr-2 text-amber-500" />
@@ -131,25 +131,25 @@ export default function DiscoveryHome() {
               View All
             </button>
           </div>
-          <div className="text-center py-8 text-slate-500 text-sm bg-slate-50 rounded-2xl border border-slate-100">
+          <div className="text-center py-8 text-slate-500 text-sm bg-slate-50 rounded-full border border-slate-100">
             <p>You haven't run any business discoveries yet.</p>
             <button 
               onClick={() => navigate('/discovery/wizard')}
-              className="mt-4 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold text-xs hover:border-primary hover:text-primary transition-colors"
+              className="mt-4 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-full font-bold text-xs hover:border-primary hover:text-primary transition-colors"
             >
               Run your first discovery
             </button>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-slate-900 flex items-center">
               <TrendingUp className="w-5 h-5 mr-2 text-emerald-500" />
               Your Business Score
             </h3>
           </div>
-          <div className="flex items-center justify-center py-6 bg-slate-50 rounded-2xl border border-slate-100">
+          <div className="flex items-center justify-center py-6 bg-slate-50 rounded-full border border-slate-100">
              <div className="text-center">
                 <div className="text-4xl font-display font-black text-slate-400 mb-1">--</div>
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Readiness Score</div>

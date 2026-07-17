@@ -273,7 +273,7 @@ export default function Onboarding() {
             <span className="text-2xl font-display font-black text-slate-900 tracking-tight">
               biznxt<span className="text-primary">.online</span>
             </span>
-            <span className="text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-2xl border border-primary/20">
+            <span className="text-[10px] px-2 py-0.5 font-bold uppercase tracking-wider text-primary bg-primary/10 rounded-full border border-primary/20">
               V3 OS ENGINE
             </span>
           </div>
@@ -520,7 +520,7 @@ export default function Onboarding() {
                       >
                         <div className="flex justify-between items-start">
                           <span className="text-sm font-bold text-slate-950">{opt.label}</span>
-                          <span className="text-xs font-mono font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-2xl">{opt.amount}</span>
+                          <span className="text-xs font-mono font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-full">{opt.amount}</span>
                         </div>
                         <p className="text-xs text-slate-500 mt-1 leading-relaxed">{opt.desc}</p>
                       </button>
@@ -848,7 +848,7 @@ export default function Onboarding() {
                   type="button"
                   disabled={currentStep === 1 || currentStep === 10}
                   onClick={handlePrev}
-                  className="flex items-center px-4 py-2.5 bg-[#EDF1F7] border border-white/50 text-slate-600 rounded-2xl font-bold text-xs hover:bg-slate-200 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  className="flex items-center px-4 py-2.5 bg-[#EDF1F7] border border-white/50 text-slate-600 rounded-full font-bold text-xs hover:bg-slate-200 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4 mr-1 shrink-0" />
                   <span>Previous</span>
@@ -859,7 +859,7 @@ export default function Onboarding() {
                     type="button"
                     onClick={handleNext}
                     disabled={currentStep === 5 && selectedSectors.length === 0}
-                    className="flex items-center px-5 py-2.5 bg-slate-900 text-white rounded-2xl font-bold text-xs hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="flex items-center px-5 py-2.5 bg-slate-900 text-white rounded-full font-bold text-xs hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <span>Continue</span>
                     <ChevronRight className="w-4 h-4 ml-1 shrink-0" />
@@ -869,7 +869,7 @@ export default function Onboarding() {
                     type="button"
                     disabled={loading || synthesisStage < 4}
                     onClick={handleCompleteOnboarding}
-                    className="flex items-center px-6 py-2.5 bg-primary text-white rounded-2xl font-bold text-xs hover:bg-primary-dark transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center px-6 py-2.5 bg-primary text-white rounded-full font-bold text-xs hover:bg-primary-dark transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {loading ? 'Synthesizing Profile...' : 'Complete Onboarding & Enter OS'}
                     <ArrowRight className="w-4 h-4 ml-1.5 shrink-0 animate-pulse" />

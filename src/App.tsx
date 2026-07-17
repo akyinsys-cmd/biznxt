@@ -2,20 +2,21 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense } from 'react';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
+import { PageLoader } from './components/PageLoader';
 import { Layout } from './components/Layout';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Onboarding from './pages/Onboarding';
-import Dashboard from './pages/business-os/index';
-import Reports from './pages/Reports';
-import LaunchWizard from './pages/LaunchWizard';
-import Services from './pages/Services';
-import PremiumResearch from './pages/PremiumResearch';
-import SmartCalendar from './pages/SmartCalendar';
-import ResearchExecutiveDashboard from './pages/ResearchExecutiveDashboard';
-import Partners from './pages/Partners';
+
+const Landing = React.lazy(() => import('./pages/Landing'));
+const Login = React.lazy(() => import('./pages/Login'));
+const Onboarding = React.lazy(() => import('./pages/Onboarding'));
+const Dashboard = React.lazy(() => import('./pages/business-os/index'));
+const Reports = React.lazy(() => import('./pages/Reports'));
+const Services = React.lazy(() => import('./pages/Services'));
+const SmartCalendar = React.lazy(() => import('./pages/SmartCalendar'));
+const Partners = React.lazy(() => import('./pages/Partners'));
+
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -23,70 +24,58 @@ import { UserActivityProvider } from './context/UserActivityContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { CommandPalette } from './components/CommandPalette';
 import { FirstLoginWizard } from './components/widgets/FirstLoginWizard';
-import Settings from './pages/Settings';
-import CRM from './pages/CRM';
-import KnowledgeHub from './pages/KnowledgeHub';
-import InvestmentMarketplace from './pages/InvestmentMarketplace';
-import CEOCommandCenter from './pages/CEOCommandCenter';
-import MarketIntelligence from './pages/MarketIntelligence';
-import AnalyticsPlatform from './pages/AnalyticsPlatform';
-import CommunicationHub from './pages/CommunicationHub';
-import SupportCenter from './pages/SupportCenter';
-import ProjectList from './pages/ProjectList';
-import ProjectDashboard from './pages/ProjectDashboard';
-import BSMDashboard from './pages/BSMDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminLogin from './pages/AdminLogin';
 
-import DiscoveryHome from './pages/discovery/DiscoveryHome';
-import DiscoveryWizard from './pages/discovery/DiscoveryWizard';
-import DiscoveryResult from './pages/discovery/DiscoveryResult';
-import SavedIdeas from './pages/discovery/SavedIdeas';
-import CompareIdeas from './pages/discovery/CompareIdeas';
-import AdminDiscovery from './pages/discovery/AdminDiscovery';
-
-import MarketplaceHome from './pages/marketplace/MarketplaceHome';
-import ManufacturerRegistration from './pages/marketplace/ManufacturerRegistration';
-import ManufacturerDetails from './pages/marketplace/ManufacturerDetails';
-
-import GlobalDashboard from './pages/global/GlobalDashboard';
-import DubaiSetup from './pages/global/DubaiSetup';
-import TradeDocs from './pages/global/TradeDocs';
-import ImportExportProjects from './pages/global/ImportExportProjects';
+const Settings = React.lazy(() => import('./pages/Settings'));
+const CRM = React.lazy(() => import('./pages/CRM'));
+const CEOCommandCenter = React.lazy(() => import('./pages/CEOCommandCenter'));
+const MarketIntelligence = React.lazy(() => import('./pages/MarketIntelligence'));
+const AnalyticsPlatform = React.lazy(() => import('./pages/AnalyticsPlatform'));
+const CommunicationHub = React.lazy(() => import('./pages/CommunicationHub'));
+const SupportCenter = React.lazy(() => import('./pages/SupportCenter'));
+const ProjectList = React.lazy(() => import('./pages/ProjectList'));
+const ProjectDashboard = React.lazy(() => import('./pages/ProjectDashboard'));
+const BSMDashboard = React.lazy(() => import('./pages/BSMDashboard'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
+const AdminLogin = React.lazy(() => import('./pages/AdminLogin'));
 
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { NetworkStatus } from './components/NetworkStatus';
+import { GlobalErrorView } from './components/GlobalErrorView';
 
-import AboutUs from './pages/AboutUs';
-import DocumentCenter from './pages/documents/DocumentCenter';
-import DocumentBuilder from './pages/documents/DocumentBuilder';
-import AdminDocumentCenter from './pages/documents/AdminDocumentCenter';
-import ContactUs from './pages/ContactUs';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import Careers from './pages/Careers';
+const AboutUs = React.lazy(() => import('./pages/AboutUs'));
+const ContactUs = React.lazy(() => import('./pages/ContactUs'));
+const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = React.lazy(() => import('./pages/TermsOfService'));
+const Careers = React.lazy(() => import('./pages/Careers'));
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <ErrorBoundary>
+      <HelmetProvider>
+      <Helmet>
+        <title>BizNxt - Business Operating System</title>
+        <meta name="description" content="The unified platform to manage and grow your business." />
+      </Helmet>
+      <BrowserRouter>
+        <AuthProvider>
         <ThemeProvider>
-          <UserActivityProvider>
-            <ToastProvider>
+          <ToastProvider>
+            <UserActivityProvider>
               <NotificationProvider>
+                <NetworkStatus />
                 <CommandPalette />
                 <FirstLoginWizard />
+                <Suspense fallback={<PageLoader />}>
                 <Routes>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Landing />} />
-                  <Route path="documents" element={<ProtectedRoute><DocumentCenter /></ProtectedRoute>} />
-                  <Route path="documents/build/:templateId" element={<ProtectedRoute><DocumentBuilder /></ProtectedRoute>} />
-                  <Route path="documents/edit/:documentId" element={<ProtectedRoute><DocumentBuilder /></ProtectedRoute>} />
-                  <Route path="documents/admin" element={<ProtectedRoute allowedRoles={['super_admin', 'manager']}><AdminDocumentCenter /></ProtectedRoute>} />
                   <Route path="about" element={<AboutUs />} />
                   <Route path="contact" element={<ContactUs />} />
                   <Route path="privacy" element={<PrivacyPolicy />} />
                   <Route path="terms" element={<TermsOfService />} />
                   <Route path="careers" element={<Careers />} />
+                  
                   <Route path="command-center" element={
                     <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <CEOCommandCenter />
@@ -103,121 +92,91 @@ export default function App() {
                     </ProtectedRoute>
                   } />
                   <Route path="communication" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <CommunicationHub />
                     </ProtectedRoute>
                   } />
                   <Route path="support" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <SupportCenter />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="projects" element={<ProtectedRoute allowedRoles={['customer', 'manager', 'super_admin']} />}>
                     <Route index element={<ProjectList />} />
                     <Route path=":id" element={<ProjectDashboard />} />
                   </Route>
+                  
                   <Route path="bsm" element={
                     <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <BSMDashboard />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="admin" element={
                     <ProtectedRoute allowedRoles={['super_admin']}>
                       <AdminDashboard />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="dashboard" element={
                     <ProtectedRoute allowedRoles={['customer']}>
                       <Dashboard />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="calendar" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <SmartCalendar />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="crm" element={
                     <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
                       <CRM />
                     </ProtectedRoute>
                   } />
-                  {/* Placeholders for future pages */}
-                  <Route path="search" element={
-                    <ProtectedRoute>
-                      <PremiumResearch />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="premium-research" element={
-                    <ProtectedRoute>
-                      <PremiumResearch />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="premium-research-executive" element={
-                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
-                      <ResearchExecutiveDashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="discovery">
-                    <Route index element={<DiscoveryHome />} />
-                    <Route path="wizard" element={<DiscoveryWizard />} />
-                    <Route path="results/:id" element={<DiscoveryResult />} />
-                    <Route path="saved" element={<SavedIdeas />} />
-                    <Route path="compare" element={<CompareIdeas />} />
-                    <Route path="admin" element={
-                      <ProtectedRoute allowedRoles={['super_admin']}>
-                        <AdminDiscovery />
-                      </ProtectedRoute>
-                    } />
-                  </Route>
-                  <Route path="launch" element={
-                    <ProtectedRoute>
-                      <LaunchWizard />
-                    </ProtectedRoute>
-                  } />
+                  
                   <Route path="services" element={<Services />} />
+                  
                   <Route path="reports" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['customer', 'super_admin', 'manager']}>
                       <Reports />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="partners" element={<Partners />} />
-                  <Route path="academy" element={<KnowledgeHub />} />
-                  <Route path="investment" element={<InvestmentMarketplace />} />
-                  <Route path="marketplace">
-                    <Route index element={<MarketplaceHome />} />
-                    <Route path="register" element={<ManufacturerRegistration />} />
-                    <Route path="manufacturer/:id" element={<ManufacturerDetails />} />
-                  </Route>
-                  <Route path="global" element={
-                    <ProtectedRoute allowedRoles={['super_admin', 'manager']}>
-                      <GlobalDashboard />
-                    </ProtectedRoute>
-                  }>
-                    <Route index element={<GlobalDashboard />} />
-                    <Route path="dubai-setup" element={<DubaiSetup />} />
-                    <Route path="trade-docs" element={<TradeDocs />} />
-                    <Route path="import-export" element={<ImportExportProjects />} />
-                  </Route>
+                  
                   <Route path="profile" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['customer', 'super_admin', 'manager']}>
                       <Settings />
                     </ProtectedRoute>
                   } />
+                  
                   <Route path="settings" element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['customer', 'super_admin', 'manager']}>
                       <Settings />
                     </ProtectedRoute>
                   } />
                 </Route>
+                
                 <Route path="/login" element={<Login />} />
                 <Route path="/admin-login" element={<AdminLogin />} />
                 <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="*" element={
+                  <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+                    <GlobalErrorView />
+                  </div>
+                } />
               </Routes>
-            </NotificationProvider>
+                </Suspense>
+              </NotificationProvider>
+            </UserActivityProvider>
           </ToastProvider>
-        </UserActivityProvider>
         </ThemeProvider>
-      </AuthProvider>
-    </BrowserRouter>
+        </AuthProvider>
+      </BrowserRouter>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }

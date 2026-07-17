@@ -21,7 +21,7 @@ export function ProfileCompletion({ onActionClick }: { onActionClick?: (action: 
   const percentage = Math.round((completedCount / CHECKLIST_ITEMS.length) * 100);
 
   return (
-    <div className="glass-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+    <div className="glass-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="font-bold text-slate-900 text-base">Profile Completion Ledger</h3>
@@ -29,7 +29,7 @@ export function ProfileCompletion({ onActionClick }: { onActionClick?: (action: 
         </div>
         
         {/* Progress Badge */}
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-2xl bg-indigo-50 border border-indigo-100 text-primary font-bold text-xs">
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-primary font-bold text-xs">
           <Sparkles className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
           <span>{percentage}% Complete</span>
         </div>

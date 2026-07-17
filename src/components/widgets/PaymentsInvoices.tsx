@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { CreditCard, FileText, Download, CheckCircle, Clock, MessageCircle } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 interface Invoice {
   id: string;
@@ -31,8 +32,9 @@ const INVOICES: Invoice[] = [
 ];
 
 export function PaymentsInvoices({ onPayInvoice }: { onPayInvoice?: (id: string) => void }) {
+  const { success } = useToast();
   return (
-    <div className="glass-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+    <div className="glass-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
       <div className="flex justify-between items-center">
         <div>
           <h3 className="font-bold text-slate-900 text-base">Payments & Invoices</h3>
@@ -80,7 +82,7 @@ export function PaymentsInvoices({ onPayInvoice }: { onPayInvoice?: (id: string)
                 <span className="text-sm font-extrabold text-slate-900 font-mono">{inv.amount}</span>
                 {isPaid ? (
                   <button 
-                    onClick={() => alert(`Downloading PDF receipt for invoice ${inv.invoiceNo}...`)}
+                    onClick={() => success(`Downloading PDF receipt for invoice ${inv.invoiceNo}...`)}
                     className="p-1.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors flex items-center gap-1 text-[11px] font-bold"
                   >
                     <Download className="w-3.5 h-3.5" />
@@ -89,7 +91,7 @@ export function PaymentsInvoices({ onPayInvoice }: { onPayInvoice?: (id: string)
                 ) : (
                   <button 
                     onClick={() => onPayInvoice?.(inv.id)}
-                    className="px-3 py-1.5 rounded-2xl bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1"
+                    className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-dark text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1"
                   >
                     <span>Settle Invoice</span>
                   </button>

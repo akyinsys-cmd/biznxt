@@ -60,7 +60,7 @@ export function KPIDashboard() {
         <div className="glass-card p-8 rounded-3xl">
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Growth Projection</h3>
-            <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-2xl">Real-time</span>
+            <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Real-time</span>
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -81,7 +81,7 @@ export function KPIDashboard() {
         <div className="glass-card p-8 rounded-3xl">
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Unit Acquisition</h3>
-            <span className="text-[10px] font-bold text-success bg-success/10 px-2 py-0.5 rounded-2xl">Live Feed</span>
+            <span className="text-[10px] font-bold text-success bg-success/10 px-2 py-0.5 rounded-full">Live Feed</span>
           </div>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">

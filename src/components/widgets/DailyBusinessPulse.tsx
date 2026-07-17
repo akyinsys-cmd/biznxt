@@ -107,7 +107,7 @@ export function DailyBusinessPulse() {
         
         <div className="flex-shrink-0">
           <button 
-            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-colors"
             style={{ backgroundColor: '#f7b538', color: '#780116' }}
             onClick={() => window.location.href = '/command-center'}
           >

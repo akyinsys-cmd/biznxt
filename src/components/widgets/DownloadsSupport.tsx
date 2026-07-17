@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Download, ArrowUpRight, HelpCircle, FileCheck, ShieldAlert, LifeBuoy } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 interface FileDownload {
   id: string;
@@ -12,29 +13,30 @@ interface FileDownload {
 const DOWNLOADABLE_FILES: FileDownload[] = [
   {
     id: 'f1',
-    name: 'Incorporation Draft Certificate (LLC)',
-    type: 'PDF Document',
+    name: 'Incorporation Certificate Draft (LLC)',
+    type: 'Official Document',
     size: '1.4 MB'
   },
   {
     id: 'f2',
     name: 'Venture CapEx Financial Projection Model',
-    type: 'Excel Sheet template',
+    type: 'Financial Spreadsheet',
     size: '4.2 MB'
   },
   {
     id: 'f3',
-    name: 'Trademark Legal Verification Brief',
-    type: 'PDF Document',
+    name: 'Trademark Verification Brief',
+    type: 'Legal Brief',
     size: '850 KB'
   }
 ];
 
 export function DownloadsSupport({ onSupportOpen }: { onSupportOpen?: () => void }) {
+  const { success } = useToast();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Downloads list */}
-      <div className="glass-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+      <div className="glass-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
         <div>
           <h3 className="font-bold text-slate-900 text-base">My Downloads</h3>
           <p className="text-xs text-slate-500 mt-0.5">Access filed compliance forms, models, and signed deeds.</p>
@@ -61,7 +63,7 @@ export function DownloadsSupport({ onSupportOpen }: { onSupportOpen?: () => void
               </div>
 
               <button 
-                onClick={() => alert(`Initiating download for ${file.name}...`)}
+                onClick={() => success(`Initiating download for ${file.name}...`)}
                 className="p-2 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-slate-700 transition-colors"
               >
                 <Download className="w-4 h-4" />
@@ -72,7 +74,7 @@ export function DownloadsSupport({ onSupportOpen }: { onSupportOpen?: () => void
       </div>
 
       {/* Support desk card */}
-      <div className="glass-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+      <div className="glass-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between">
         <div>
           <div className="flex justify-between items-start mb-2">
             <div>
@@ -90,15 +92,15 @@ export function DownloadsSupport({ onSupportOpen }: { onSupportOpen?: () => void
         <div className="pt-4 flex gap-3">
           <button 
             onClick={onSupportOpen}
-            className="flex-1 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
+            className="flex-1 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5"
           >
             <span>Raise Urgent Ticket</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
           
           <button 
-            onClick={() => alert('Initiating secure support messenger call...')}
-            className="flex-1 py-2.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors"
+            onClick={() => success('Initiating secure support consultation...')}
+            className="flex-1 py-2.5 rounded-full border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-colors"
           >
             Call Consultant
           </button>

@@ -333,7 +333,7 @@ export default function CRMLeadDetails({
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="px-8 py-4 bg-white border border-slate-200 text-slate-900 text-[10px] font-black rounded-2xl uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95">
+            <button className="px-8 py-4 bg-white border border-slate-200 text-slate-900 text-[10px] font-black rounded-full uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm active:scale-95">
               Edit Ledger
             </button>
             <button 
@@ -448,7 +448,7 @@ export default function CRMLeadDetails({
                             </div>
                           ) : (
                             (lead.logs || []).slice().reverse().map((log: any, idx: number) => (
-                              <div key={idx} className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm relative pl-10 overflow-hidden">
+                              <div key={idx} className="bg-white border border-slate-100 p-6 rounded-3xl shadow-sm relative pl-10 overflow-hidden">
                                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-slate-100" />
                                 <div className="flex justify-between items-start gap-4">
                                   <p className="text-[11px] font-medium text-slate-600 leading-relaxed">{log.text}</p>
@@ -509,7 +509,7 @@ export default function CRMLeadDetails({
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Next Sync Window</label>
+                          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Next Consultation Window</label>
                           <input
                             type="date"
                             value={nextFollowupDate}
@@ -563,12 +563,12 @@ export default function CRMLeadDetails({
                           >
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
                                   <Phone size={18} />
                                 </div>
                                 <h4 className="text-sm font-black text-slate-900 uppercase tracking-wider">{f.type}</h4>
                               </div>
-                              <span className="px-4 py-1.5 bg-slate-100 text-slate-500 text-[9px] font-black rounded-2xl uppercase tracking-widest">
+                              <span className="px-4 py-1.5 bg-slate-100 text-slate-500 text-[9px] font-black rounded-full uppercase tracking-widest">
                                 {f.outcome}
                               </span>
                             </div>
@@ -717,7 +717,7 @@ export default function CRMLeadDetails({
                           >
                             <div className="space-y-4">
                               <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-black text-slate-500 font-mono px-3 py-1 bg-slate-50 rounded-2xl">{q.id}</span>
+                                <span className="text-[10px] font-black text-slate-500 font-mono px-3 py-1 bg-slate-50 rounded-full">{q.id}</span>
                                 <h4 className="text-lg font-black text-slate-900 tracking-tight">{q.serviceTitle}</h4>
                               </div>
                               <div className="flex items-center gap-6 text-[10px] font-black text-slate-500 uppercase tracking-widest">
@@ -877,7 +877,7 @@ export default function CRMLeadDetails({
                                 </div>
                                 <button
                                   onClick={() => handleSignProposal(p.id)}
-                                  className="px-10 py-4 bg-emerald-600 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg active:scale-95 self-end"
+                                  className="px-10 py-4 bg-emerald-600 text-white text-[10px] font-black rounded-full uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg active:scale-95 self-end"
                                 >
                                   Execute Agreement
                                 </button>
@@ -1049,7 +1049,7 @@ export default function CRMLeadDetails({
                           onClick={handleAddMeeting}
                           className="w-full py-5 bg-slate-900 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest hover:bg-primary transition-all shadow-2xl shadow-slate-900/20 active:scale-95"
                         >
-                          Sync Neural Calendar
+                          Schedule Strategy Consultation
                         </button>
                       </div>
                     </div>
@@ -1058,7 +1058,7 @@ export default function CRMLeadDetails({
                   <div className="col-span-8 space-y-8">
                     <h3 className="text-xl font-black text-slate-900 tracking-tighter flex items-center gap-3">
                       <Globe size={20} className="text-primary" />
-                      Synchronized Events
+                      Scheduled Consultations
                     </h3>
                     <div className="space-y-6">
                       {(!lead.meetings || lead.meetings.length === 0) ? (
@@ -1081,7 +1081,7 @@ export default function CRMLeadDetails({
                                 </div>
                                 <div>
                                   <h4 className="text-xl font-black text-slate-900 tracking-tighter">{m.agenda}</h4>
-                                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mt-1">Virtual Sync Scheduled</p>
+                                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mt-1">Virtual Consultation Scheduled</p>
                                 </div>
                               </div>
                               <div className="text-right">

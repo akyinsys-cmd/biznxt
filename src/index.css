@@ -58,6 +58,20 @@
     @apply relative bg-background border border-white rounded-full transition-all duration-500 shadow-[8px_8px_20px_rgba(15,23,42,0.03),-8px_-8px_20px_rgba(255,255,255,0.9)] hover:shadow-[12px_12px_30px_rgba(15,23,42,0.06),-12px_-12px_30px_rgba(255,255,255,1)] active:scale-95;
   }
 
+  /* Premium Claymorphism */
+  .clay-card {
+    @apply bg-slate-100 rounded-3xl p-8 shadow-[8px_8px_16px_#c3cad5,-8px_-8px_16px_#ffffff,inset_2px_2px_4px_rgba(255,255,255,0.5),inset_-2px_-2px_4px_rgba(0,0,0,0.05)] border border-white/50;
+    transition: all 0.3s ease;
+  }
+  
+  .clay-button {
+    @apply px-6 py-3 rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 bg-slate-100 text-slate-800 shadow-[6px_6px_12px_#c3cad5,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_8px_#c3cad5,-4px_-4px_8px_#ffffff];
+  }
+
+  .clay-button-primary {
+    @apply px-6 py-3 rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2 bg-slate-900 text-white shadow-[8px_8px_16px_rgba(0,0,0,0.2),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:bg-slate-800;
+  }
+
   .neo-inset {
     @apply bg-background shadow-[inset_4px_4px_8px_rgba(0,0,0,0.05),inset_-4px_-4px_8px_rgba(255,255,255,0.8)] border-none;
   }
@@ -111,3 +125,18 @@
   @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
 }
 
+
+@layer base {
+  .theme-corporate {
+    --color-primary: #C1121F;
+    --color-primary-dark: #9B0D18;
+  }
+  .theme-creative {
+    --color-primary: #8338EC;
+    --color-primary-dark: #5A189A;
+  }
+  .theme-minimalist {
+    --color-primary: #111827;
+    --color-primary-dark: #000000;
+  }
+}

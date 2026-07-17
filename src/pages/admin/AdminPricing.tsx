@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { DollarSign, Save, Plus, Trash2, Edit2, Zap } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
+import { logAdminActivity } from '../../utils/adminLogger';
 
 export function AdminPricing() {
   const { success } = useToast();
@@ -11,6 +12,13 @@ export function AdminPricing() {
   ]);
 
   const handleSave = () => {
+    logAdminActivity(
+      'akyinsys@gmail.com',
+      'super_admin',
+      'Updated Pricing Plan',
+      'Published updates to the global pricing structures and plan lists.',
+      'Billing'
+    );
     success('Pricing structure updated successfully');
   };
 
@@ -24,7 +32,7 @@ export function AdminPricing() {
           </div>
           <button 
             onClick={handleSave}
-            className="bg-emerald-600 text-white px-6 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
+            className="bg-emerald-600 text-white px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200"
           >
             <Save size={16} />
             Publish Changes
@@ -41,7 +49,7 @@ export function AdminPricing() {
                   </button>
                 </div>
                 
-                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-4 shadow-sm">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm">
                   <Zap size={20} className="text-amber-500" />
                 </div>
                 

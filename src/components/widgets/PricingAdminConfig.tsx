@@ -39,7 +39,7 @@ export function PricingAdminConfig() {
   if (loading || !config) return <div className="p-4 text-slate-500">Loading pricing config...</div>;
 
   return (
-    <div className="bg-white border border-slate-200 rounded-[2.5rem] p-8 space-y-6">
+    <div className="bg-white shadow-xl shadow-slate-200/50 border border-slate-200 rounded-[2.5rem] p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-xl font-bold text-slate-900">Premium Pricing Engine</h3>

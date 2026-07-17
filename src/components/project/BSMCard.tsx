@@ -71,7 +71,7 @@ export default function BSMCard({ bsm, project, onScheduleMeeting }: BSMCardProp
       <div className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 relative z-10">
         <div className="flex items-center justify-between mb-4">
           <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Current Launch Stage</span>
-          <span className="text-[10px] font-black text-primary px-2 py-0.5 bg-primary/10 rounded-2xl">{project.currentTimelineStep}</span>
+          <span className="text-[10px] font-black text-primary px-2 py-0.5 bg-primary/10 rounded-full">{project.currentTimelineStep}</span>
         </div>
         <div className="flex items-center gap-4 mb-2">
           <div className="flex-1 h-3 bg-white rounded-2xl overflow-hidden shadow-inner border border-slate-100">

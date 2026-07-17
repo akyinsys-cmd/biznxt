@@ -26,7 +26,7 @@ export function ServiceCard({ title, description, icon: Icon, path, delay = 0, c
       )}
     >
       <div>
-        <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-500 mb-4 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+        <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 mb-4 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
           <Icon className="w-5 h-5" />
         </div>
         <h4 className="text-lg font-bold text-slate-900 mb-2">{title}</h4>

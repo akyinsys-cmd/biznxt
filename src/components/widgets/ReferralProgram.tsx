@@ -16,7 +16,7 @@ export function ReferralProgram() {
   };
 
   return (
-    <div className="glass-card bg-white p-6 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+    <div className="glass-card bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[220px]">
       <div className="absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r from-emerald-500 via-indigo-500 to-primary" />
       
       <div className="space-y-2">

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, FolderPlus, FileText, ArrowRight, Settings, LayoutDashboard } from 'lucide-react';
+import { Search, FolderPlus, FileText, ArrowRight, Settings, LayoutDashboard, Briefcase, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 interface Action {
   id: string;
@@ -16,14 +18,45 @@ export function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [query, setQuery] = useState('');
+  const [projects, setProjects] = useState<any[]>([]);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [crmLeads, setCrmLeads] = useState<any[]>([]);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, role } = useAuth();
+
+  useEffect(() => {
+    let unsubs: Array<() => void> = [];
+    if (isOpen) {
+      const unsubProjects = onSnapshot(collection(db, 'client_projects'), (snap) => {
+        setProjects(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+      const unsubDocs = onSnapshot(collection(db, 'document_orders'), (snap) => {
+        setDocuments(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+      const unsubLeads = onSnapshot(collection(db, 'crm_leads'), (snap) => {
+        setCrmLeads(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      });
+      unsubs = [unsubProjects, unsubDocs, unsubLeads];
+    }
+    return () => unsubs.forEach(u => u());
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setIsOpen((open) => !open);
+      }
+      if (e.altKey && e.key.toLowerCase() === 'd') {
+        e.preventDefault();
+        if (role === 'super_admin') {
+          navigate('/admin');
+        } else if (role === 'manager') {
+          navigate('/bsm');
+        } else {
+          navigate('/dashboard');
+        }
+        setIsOpen(false);
       }
       if (e.key === '?') {
         // e.preventDefault(); // Don't prevent default, user might be typing '?' in an input. Check if input is focused.
@@ -78,9 +111,55 @@ export function CommandPalette() {
     }
   ];
 
+  const fuzzyMatch = (text: string, q: string) => {
+    if (!text) return false;
+    const t = text.toLowerCase();
+    const queryLower = q.toLowerCase();
+    if (t.includes(queryLower)) return true;
+    let qIdx = 0;
+    for (let i = 0; i < t.length; i++) {
+      if (t[i] === queryLower[qIdx]) qIdx++;
+      if (qIdx === queryLower.length) return true;
+    }
+    return false;
+  };
+
+  const dynamicActions: Action[] = [];
+  if (query.trim()) {
+    projects.filter(p => fuzzyMatch(p.title || p.projectName || '', query)).slice(0, 3).forEach(p => {
+      dynamicActions.push({
+        id: `proj-${p.id}`,
+        name: `Project: ${p.title || p.projectName}`,
+        icon: <Briefcase className="w-4 h-4" />,
+        perform: () => navigate(`/projects/${p.id}`),
+        section: 'Projects'
+      });
+    });
+    documents.filter(d => fuzzyMatch(d.title || d.packageName || '', query)).slice(0, 3).forEach(d => {
+      dynamicActions.push({
+        id: `doc-${d.id}`,
+        name: `Doc: ${d.title || d.packageName}`,
+        icon: <FileText className="w-4 h-4" />,
+        perform: () => navigate(`/documents/edit/${d.id}`),
+        section: 'Documents'
+      });
+    });
+    crmLeads.filter(l => fuzzyMatch(l.name || l.email || l.company || '', query)).slice(0, 3).forEach(l => {
+      dynamicActions.push({
+        id: `lead-${l.id}`,
+        name: `Lead: ${l.name} (${l.company || 'Individual'})`,
+        icon: <UserCheck className="w-4 h-4" />,
+        perform: () => navigate('/crm'), // or specific lead modal
+        section: 'CRM Records'
+      });
+    });
+  }
+
+  const allActions = [...actions, ...dynamicActions];
+
   const filteredActions = query === '' 
     ? actions 
-    : actions.filter(action => action.name.toLowerCase().includes(query.toLowerCase()));
+    : allActions.filter(action => action.name.toLowerCase().includes(query.toLowerCase()) || action.section.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <>
@@ -166,6 +245,14 @@ export function CommandPalette() {
                     <kbd className="px-2 py-1 text-xs font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-slate-600 dark:text-slate-300">Cmd/Ctrl</kbd>
                     <span className="text-slate-400">+</span>
                     <kbd className="px-2 py-1 text-xs font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-slate-600 dark:text-slate-300">K</kbd>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 dark:text-slate-400">Quick Dashboard</span>
+                  <div className="flex items-center space-x-1">
+                    <kbd className="px-2 py-1 text-xs font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-slate-600 dark:text-slate-300">Alt</kbd>
+                    <span className="text-slate-400">+</span>
+                    <kbd className="px-2 py-1 text-xs font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded text-slate-600 dark:text-slate-300">D</kbd>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">

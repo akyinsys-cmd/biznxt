@@ -54,7 +54,7 @@ export default function ContactUs() {
     <div className="min-h-screen bg-slate-50 text-slate-900 pt-32 pb-24 px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeIn} className="text-center mb-16">
-          <span className="inline-block py-2 px-6 rounded-2xl bg-white shadow-[inset_2px_2px_4px_rgba(255,255,255,1),inset_-2px_-2px_4px_rgba(0,0,0,0.05),4px_4px_8px_rgba(0,0,0,0.05)] text-sm font-bold tracking-widest uppercase text-slate-500 mb-6">
+          <span className="inline-block py-2 px-6 rounded-full bg-white shadow-[inset_2px_2px_4px_rgba(255,255,255,1),inset_-2px_-2px_4px_rgba(0,0,0,0.05),4px_4px_8px_rgba(0,0,0,0.05)] text-sm font-bold tracking-widest uppercase text-slate-500 mb-6">
             Get in Touch
           </span>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-slate-900">

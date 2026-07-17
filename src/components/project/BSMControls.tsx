@@ -177,12 +177,12 @@ export default function BSMControls({ project, onUpdate, onAdvanceStage }: BSMCo
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-2xl font-black text-slate-900 tracking-tighter uppercase">
                   {activeModal === 'task' && 'Initialize Execution Task'}
-                  {activeModal === 'meeting' && 'Sync Strategic Session'}
+                  {activeModal === 'meeting' && 'Schedule Strategic Session'}
                   {activeModal === 'document' && 'Request Asset Vault Upload'}
                   {activeModal === 'note' && 'Internal Record Entry'}
                   {activeModal === 'stage' && 'Advance Project Stage'}
                 </h3>
-                <button onClick={() => setActiveModal(null)} className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-2xl text-slate-400 hover:text-primary transition-all">
+                <button onClick={() => setActiveModal(null)} className="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-full text-slate-400 hover:text-primary transition-all">
                   <XCircle size={20} />
                 </button>
               </div>
@@ -191,7 +191,7 @@ export default function BSMControls({ project, onUpdate, onAdvanceStage }: BSMCo
                 <div className="space-y-8">
                   <div className="p-8 bg-slate-50 rounded-[2rem] border border-slate-100">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-slate-400 shadow-sm">
+                      <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm">
                         <Zap size={22} />
                       </div>
                       <div>

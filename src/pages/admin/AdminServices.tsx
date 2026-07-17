@@ -3,6 +3,7 @@ import { Search, Plus, Edit2, Trash2, CheckCircle, XCircle } from 'lucide-react'
 import { collection, onSnapshot, query, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
+import { logAdminActivity } from '../../utils/adminLogger';
 
 export function AdminServices() {
   const [services, setServices] = useState<any[]>([]);
@@ -47,34 +48,64 @@ export function AdminServices() {
     try {
       if (editingService) {
         await updateDoc(doc(db, 'service_catalog', editingService.id), serviceData);
+        logAdminActivity(
+          'akyinsys@gmail.com',
+          'super_admin',
+          'Updated Service Catalog',
+          `Modified service details for "${serviceData.name}" under category "${serviceData.category}"`,
+          'Operations'
+        );
         success('Service updated successfully');
       } else {
         await addDoc(collection(db, 'service_catalog'), serviceData);
+        logAdminActivity(
+          'akyinsys@gmail.com',
+          'super_admin',
+          'Created Service Catalog',
+          `Created a new service "${serviceData.name}" under category "${serviceData.category}"`,
+          'Operations'
+        );
         success('Service created successfully');
       }
       setShowModal(false);
       setEditingService(null);
     } catch (err: any) {
-      error(err.message || 'Failed to save service');
+      error('Failed to save service');
     }
   };
 
   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
     try {
+      const sObj = services.find(s => s.id === id);
       await updateDoc(doc(db, 'service_catalog', id), { isActive: !currentStatus });
+      logAdminActivity(
+        'akyinsys@gmail.com',
+        'super_admin',
+        'Toggled Service Status',
+        `Toggled status of service "${sObj?.name || id}" to ${!currentStatus ? 'Active' : 'Inactive'}`,
+        'Operations'
+      );
       success(`Service ${!currentStatus ? 'enabled' : 'disabled'}`);
     } catch (err: any) {
-      error(err.message || 'Failed to update status');
+      error('Failed to update status');
     }
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
+        const sObj = services.find(s => s.id === id);
         await deleteDoc(doc(db, 'service_catalog', id));
+        logAdminActivity(
+          'akyinsys@gmail.com',
+          'super_admin',
+          'Deleted Service',
+          `Permanently deleted service "${sObj?.name || id}" from the catalog`,
+          'Operations'
+        );
         success('Service deleted');
       } catch (err: any) {
-        error(err.message || 'Failed to delete service');
+        error('Failed to delete service');
       }
     }
   };
@@ -112,7 +143,7 @@ export function AdminServices() {
 
           <button 
             onClick={() => { setEditingService(null); setShowModal(true); }}
-            className="px-6 py-2.5 bg-primary text-white text-[10px] font-black rounded-2xl uppercase tracking-widest flex items-center gap-2"
+            className="px-6 py-2.5 bg-primary text-white text-[10px] font-black rounded-full uppercase tracking-widest flex items-center gap-2"
           >
             <Plus size={16} /> New Service
           </button>
@@ -138,7 +169,7 @@ export function AdminServices() {
                   <p className="text-[10px] font-bold text-slate-500 line-clamp-1 max-w-[250px]">{service.description}</p>
                 </td>
                 <td className="px-8 py-5">
-                  <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md text-[10px] font-black uppercase tracking-widest">
+                  <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-black uppercase tracking-widest">
                     {service.category}
                   </span>
                 </td>
@@ -222,8 +253,8 @@ export function AdminServices() {
               </div>
               
               <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-2xl hover:bg-slate-200">Cancel</button>
-                <button type="submit" className="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-2xl hover:bg-primary/90">Save Service</button>
+                <button type="button" onClick={() => setShowModal(false)} className="px-6 py-2.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-full hover:bg-slate-200">Cancel</button>
+                <button type="submit" className="px-6 py-2.5 bg-primary text-white text-xs font-bold rounded-full hover:bg-primary/90">Save Service</button>
               </div>
             </form>
           </div>

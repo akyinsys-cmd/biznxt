@@ -54,7 +54,7 @@ export function ResearchStatus({ status, title, ticketId, updatedAt, className }
         <div>
           <div className="flex items-center gap-3 mb-2">
             <h3 className="text-xl font-black text-slate-900 tracking-tight">{title}</h3>
-            <span className="text-[10px] font-black text-slate-500 bg-slate-50 px-2.5 py-1 rounded-2xl border border-slate-100 tracking-widest uppercase">ID: {ticketId}</span>
+            <span className="text-[10px] font-black text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100 tracking-widest uppercase">ID: {ticketId}</span>
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{updatedAt}</p>
         </div>

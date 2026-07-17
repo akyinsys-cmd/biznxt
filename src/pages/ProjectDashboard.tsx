@@ -1,5 +1,7 @@
+import { EmptyFolderIllustration } from '../components/EmptyStates';
 import { useState, useEffect, useMemo, memo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ProjectAIInsights } from '../components/project/ProjectAIInsights';
 import { 
   ArrowLeft, 
   Clock, 
@@ -29,12 +31,24 @@ import confetti from 'canvas-confetti';
 import { Project, ProjectTask, ProjectMilestone, ProjectRisk, ProjectActivity, CustomerDocument } from '../types/project';
 import { db } from '../lib/firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
-import { PremiumDashboardSkeleton, SkeletonComponent } from '../components/SkeletonComponent';
+import { ProjectDashboardSkeleton, SkeletonComponent } from '../components/SkeletonComponent';
 import QuotationView from '../components/project/QuotationView';
+import { ProjectGanttChart } from '../components/project/ProjectGanttChart';
+import { ResourceAllocationWidget } from '../components/project/ResourceAllocationWidget';
+import { FinancialForecastingWidget } from '../components/project/FinancialForecastingWidget';
+import { ProjectActivityTimelineWidget } from '../components/project/ProjectActivityTimelineWidget';
+import { MilestoneBadgesWidget } from '../components/project/MilestoneBadgesWidget';
+import { TeamCapacityWidget } from '../components/project/TeamCapacityWidget';
+import { ProjectRiskMonitorWidget } from '../components/project/ProjectRiskMonitorWidget';
+import { ProjectHealthScoreWidget } from '../components/project/ProjectHealthScoreWidget';
 import BSMControls from '../components/project/BSMControls';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useNotifications } from '../context/NotificationContext';
+import { useUserActivity } from '../context/UserActivityContext';
 import { format } from 'date-fns';
+import jsPDF from 'jspdf';
+import { Download } from 'lucide-react';
 
 // ============================================================================
 // MEMOIZED SUB-COMPONENTS FOR PREVENTING REDUNDANT RE-RENDERS
@@ -61,13 +75,13 @@ const OverviewStatsSection = memo(({ progress, risksCount, activeTasksCount, bud
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
-          className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group"
+          className="clay-card relative overflow-hidden group hover:scale-[1.02] active:scale-95 transition-all duration-300"
         >
-          <div className={`absolute top-0 right-0 w-24 h-24 ${stat.bg} rounded-2xl blur-3xl -mr-12 -mt-12 opacity-50 group-hover:opacity-100 transition-opacity`} />
+          <div className={`absolute top-0 right-0 w-24 h-24 ${stat.bg} rounded-3xl blur-3xl -mr-12 -mt-12 opacity-50 group-hover:opacity-100 transition-opacity`} />
           <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em] mb-4 relative z-10">{stat.label}</p>
           <div className="flex items-end justify-between relative z-10">
              <h3 className="text-3xl font-black text-slate-900 tracking-tight">{stat.value}</h3>
-             <div className={`w-10 h-10 rounded-2xl ${stat.bg} flex items-center justify-center ${stat.color}`}>
+             <div className={`w-10 h-10 rounded-3xl ${stat.bg} flex items-center justify-center ${stat.color}`}>
                 <stat.icon size={20} />
              </div>
           </div>
@@ -89,13 +103,13 @@ const TasksListSection = memo(({ tasks, isBSM, onUpdateStatus }: { tasks: Projec
   return (
     <div className="space-y-6">
       {tasks.map(task => (
-        <div key={task.id} className="p-8 bg-white border border-slate-100 rounded-[2rem] hover:border-primary/20 transition-all group shadow-sm hover:shadow-xl hover:shadow-primary/5">
+        <div key={task.id} className="clay-card hover:border-primary/20 transition-all group">
           <div className="flex items-start justify-between mb-6">
             <div className="flex gap-6">
               <button 
                 onClick={() => isBSM && onUpdateStatus(task.id, task.status === 'Completed' ? 'Pending' : 'Completed')}
                 disabled={!isBSM}
-                className={`mt-1 w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${
+                className={`mt-1 w-12 h-12 rounded-3xl flex items-center justify-center transition-all ${
                   task.status === 'Completed' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'bg-slate-50 text-slate-600 border border-slate-100 hover:border-emerald-500'
                 }`}
               >
@@ -107,7 +121,7 @@ const TasksListSection = memo(({ tasks, isBSM, onUpdateStatus }: { tasks: Projec
               </div>
             </div>
             <div className="text-right">
-              <span className={`px-3 py-1 rounded-2xl text-[9px] font-black uppercase tracking-[0.15em] mb-3 inline-block shadow-sm ${
+              <span className={`px-3 py-1 rounded-3xl text-[9px] font-black uppercase tracking-[0.15em] mb-3 inline-block shadow-sm ${
                 task.priority === 'High' || task.priority === 'Critical' ? 'bg-primary text-white shadow-primary/20' : 'bg-slate-800 text-white shadow-slate-800/10'
               }`}>
                 {task.priority} Priority
@@ -121,13 +135,13 @@ const TasksListSection = memo(({ tasks, isBSM, onUpdateStatus }: { tasks: Projec
           <div className="flex items-center justify-between pt-6 border-t border-slate-100">
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-slate-900 rounded-2xl flex items-center justify-center text-[10px] font-black text-white shadow-lg shadow-slate-900/20">
+                <div className="w-8 h-8 bg-slate-900 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg shadow-slate-900/20">
                   {task.assignedTo?.charAt(0)}
                 </div>
                 <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{task.assignedTo}</span>
               </div>
               <div className="flex items-center gap-4 w-48">
-                <div className="flex-1 h-2 bg-slate-100 rounded-2xl overflow-hidden">
+                <div className="flex-1 h-2 bg-slate-100 rounded-3xl overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${task.status === 'Completed' ? 100 : task.completionPercentage}%` }}
@@ -141,11 +155,11 @@ const TasksListSection = memo(({ tasks, isBSM, onUpdateStatus }: { tasks: Projec
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => onUpdateStatus(task.id, 'Blocked')}
-                  className="px-3 py-1 bg-rose-50 text-rose-600 rounded-2xl text-[9px] font-black uppercase hover:bg-rose-100"
+                  className="px-3 py-1 bg-rose-50 text-rose-600 rounded-3xl text-[9px] font-black uppercase hover:bg-rose-100"
                 >
                   Block
                 </button>
-                <button className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-primary hover:bg-primary/5 rounded-2xl transition-all">
+                <button className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-primary hover:bg-primary/5 rounded-full transition-all">
                   <MoreVertical size={20} />
                 </button>
               </div>
@@ -157,7 +171,13 @@ const TasksListSection = memo(({ tasks, isBSM, onUpdateStatus }: { tasks: Projec
   );
 });
 
-const MilestonesListSection = memo(({ milestones }: { milestones: ProjectMilestone[] }) => {
+
+const MilestonesListSection = memo(({ milestones, projectId }: { milestones: ProjectMilestone[], projectId: string }) => {
+  const [batchMode, setBatchMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const { addLocalNotification } = useNotifications();
+  const { auditLog } = useUserActivity();
+
   if (milestones.length === 0) {
     return (
       <div className="text-center py-24 bg-slate-50/50 rounded-[2rem] border border-dashed border-slate-200">
@@ -166,12 +186,80 @@ const MilestonesListSection = memo(({ milestones }: { milestones: ProjectMilesto
     );
   }
 
+  const pendingMilestones = milestones.filter(m => m.status === 'Pending');
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const handleBatchApprove = async () => {
+    if (selectedIds.length === 0) return;
+    try {
+      const { writeBatch, doc } = await import('firebase/firestore');
+      const { db } = await import('../lib/firebase');
+      const batch = writeBatch(db);
+      
+      for (const id of selectedIds) {
+        batch.update(doc(db, 'project_milestones', id), {
+          status: 'Completed',
+          completedAt: new Date().toISOString()
+        });
+        
+        // Find the milestone for notification
+        const m = milestones.find(x => x.id === id);
+        if (m) {
+          addLocalNotification({
+            type: 'success',
+            title: 'Milestone Approved',
+            message: `Milestone "${m.title}" was approved.`,
+            link: `/projects/${projectId}`
+          });
+        }
+      }
+      
+      await batch.commit();
+      auditLog('Batch Approved Milestones', 'Business Decision', { count: selectedIds.length });
+      setBatchMode(false);
+      setSelectedIds([]);
+    } catch (err) {
+      console.error('Failed to batch approve', err);
+    }
+  };
+
   return (
-    <div className="space-y-10 py-4">
+    <div className="space-y-10 py-4 relative">
+      {pendingMilestones.length > 0 && (
+        <div className="flex justify-end mb-4 gap-4">
+          {batchMode ? (
+            <>
+              <button 
+                onClick={() => { setBatchMode(false); setSelectedIds([]); }}
+                className="px-6 py-2 bg-slate-100 text-slate-600 text-[10px] font-black rounded-full uppercase tracking-widest hover:bg-slate-200 transition-all"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleBatchApprove}
+                disabled={selectedIds.length === 0}
+                className="px-6 py-2 bg-emerald-500 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
+              >
+                Approve Selected ({selectedIds.length})
+              </button>
+            </>
+          ) : (
+            <button 
+              onClick={() => setBatchMode(true)}
+              className="px-6 py-2 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg shadow-slate-900/20 hover:scale-105 transition-all"
+            >
+              Batch Approval Mode
+            </button>
+          )}
+        </div>
+      )}
       {milestones.map((milestone, idx) => (
         <div key={milestone.id} className="relative pl-16">
           {idx !== milestones.length - 1 && (
-            <div className="absolute left-[23px] top-10 bottom-[-40px] w-1 bg-slate-100 rounded-2xl" />
+            <div className="absolute left-[23px] top-10 bottom-[-40px] w-1 bg-slate-100 rounded-3xl" />
           )}
           <div className={`absolute left-0 top-0 w-12 h-12 rounded-[1.25rem] border-4 border-white shadow-xl flex items-center justify-center z-10 ${
             milestone.status === 'Completed' ? 'bg-emerald-500 text-white' : 'bg-slate-300 text-white'
@@ -181,13 +269,16 @@ const MilestonesListSection = memo(({ milestones }: { milestones: ProjectMilesto
           
           <motion.div 
             whileHover={{ y: -5 }}
-            className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.03)] flex items-center justify-between group hover:border-primary/20 transition-all"
+            className={`clay-card flex items-center justify-between group transition-all ${batchMode && milestone.status === 'Pending' ? (selectedIds.includes(milestone.id) ? 'border-emerald-500 ring-2 ring-emerald-100 cursor-pointer' : 'border-slate-200 cursor-pointer hover:border-emerald-300') : 'border-slate-100 hover:border-primary/20'}`}
+            onClick={() => {
+              if (batchMode && milestone.status === 'Pending') handleToggleSelect(milestone.id);
+            }}
           >
             <div>
               <div className="flex items-center gap-4 mb-2">
                 <h4 className="text-lg font-black text-slate-900 tracking-tight">{milestone.title}</h4>
                 {milestone.isPaymentMilestone && (
-                  <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-black rounded-2xl uppercase tracking-widest shadow-lg shadow-amber-500/20">Financial Target</span>
+                  <span className="px-3 py-1 bg-amber-500 text-white text-[9px] font-black rounded-3xl uppercase tracking-widest shadow-lg shadow-amber-500/20">Financial Target</span>
                 )}
               </div>
               <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">
@@ -196,11 +287,20 @@ const MilestonesListSection = memo(({ milestones }: { milestones: ProjectMilesto
             </div>
             <div className="flex items-center gap-6">
               {milestone.status === 'Completed' ? (
-                <div className="flex items-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-700 rounded-2xl text-[10px] font-black uppercase tracking-widest">
+                <div className="flex items-center gap-2 px-6 py-3 bg-emerald-50 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-widest">
                   <CheckCircle2 size={16} /> Verified
                 </div>
+              ) : batchMode ? (
+                <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center ${selectedIds.includes(milestone.id) ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300'}`}>
+                  {selectedIds.includes(milestone.id) && <CheckCircle2 size={14} />}
+                </div>
               ) : (
-                <button className="px-8 py-3 bg-slate-900 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest shadow-xl shadow-slate-900/20 hover:scale-105 transition-all">Authenticate Milestone</button>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handleToggleSelect(milestone.id); setBatchMode(true); }}
+                  className="px-8 py-3 bg-slate-900 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-xl shadow-slate-900/20 hover:scale-105 transition-all"
+                >
+                  Authenticate Milestone
+                </button>
               )}
             </div>
           </motion.div>
@@ -214,6 +314,7 @@ const DocumentsListSection = memo(({ documents, isBSM, onUpdateStatus }: { docum
   if (documents.length === 0) {
     return (
       <div className="grid grid-cols-1 text-center py-24 bg-slate-50/50 rounded-[2rem] border border-dashed border-slate-200">
+        <EmptyFolderIllustration className="w-32 h-32 mx-auto mb-4" />
         <p className="text-sm font-black text-slate-600 uppercase tracking-widest">Vault is currently empty</p>
       </div>
     );
@@ -222,9 +323,9 @@ const DocumentsListSection = memo(({ documents, isBSM, onUpdateStatus }: { docum
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {documents.map(doc => (
-        <div key={doc.id} className="p-6 bg-white border border-slate-100 rounded-[2rem] flex flex-col gap-5 hover:border-primary/20 transition-all cursor-pointer group shadow-sm hover:shadow-xl hover:shadow-primary/5">
+        <div key={doc.id} className="clay-card flex flex-col gap-5 hover:border-primary/20 transition-all cursor-pointer group">
           <div className="flex items-center gap-5">
-            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-600 group-hover:text-primary group-hover:bg-primary/5 transition-all">
+            <div className="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-600 group-hover:text-primary group-hover:bg-primary/5 transition-all">
               <FileText size={32} />
             </div>
             <div className="flex-1 min-w-0">
@@ -241,7 +342,7 @@ const DocumentsListSection = memo(({ documents, isBSM, onUpdateStatus }: { docum
             </div>
             <button 
               onClick={() => doc.url && window.open(doc.url)}
-              className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-2xl transition-all"
+              className="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-all"
             >
               <ArrowUpRight size={20} />
             </button>
@@ -251,13 +352,13 @@ const DocumentsListSection = memo(({ documents, isBSM, onUpdateStatus }: { docum
             <div className="flex items-center gap-3 pt-4 border-t border-slate-50">
               <button 
                 onClick={() => onUpdateStatus(doc.id, 'Approved')}
-                className="flex-1 py-3 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
               >
                 <CheckCircle2 size={14} /> Approve
               </button>
               <button 
                 onClick={() => onUpdateStatus(doc.id, 'Rejected')}
-                className="flex-1 py-3 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
               >
                 <XCircle size={14} /> Reject
               </button>
@@ -285,7 +386,7 @@ const ActivityLogSection = memo(({ activities }: { activities: ProjectActivity[]
           {i !== activities.length - 1 && (
             <div className="absolute left-6 top-12 bottom-[-32px] w-0.5 bg-slate-100" />
           )}
-          <div className="w-12 h-12 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 shadow-sm relative z-10">
+          <div className="w-12 h-12 bg-white border border-slate-100 rounded-3xl flex items-center justify-center text-slate-400 shadow-sm relative z-10">
             {activity.type === 'Task' && <CheckCircle2 size={18} className="text-emerald-500" />}
             {activity.type === 'Meeting' && <Calendar size={18} className="text-blue-500" />}
             {activity.type === 'Document' && <FileText size={18} className="text-primary" />}
@@ -310,7 +411,7 @@ const RisksListSection = memo(({ risks }: { risks: ProjectRisk[] }) => {
   if (risks.length === 0) {
     return (
       <div className="text-center py-24 bg-emerald-50/30 rounded-[2rem] border border-dashed border-emerald-200">
-        <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-emerald-500 shadow-xl shadow-emerald-500/10">
+        <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mx-auto mb-6 text-emerald-500 shadow-xl shadow-emerald-500/10">
           <ShieldCheck size={32} />
         </div>
         <p className="text-sm font-black text-emerald-700 uppercase tracking-widest">Structural Integrity Optimal • Zero Risks Detected</p>
@@ -323,7 +424,7 @@ const RisksListSection = memo(({ risks }: { risks: ProjectRisk[] }) => {
       {risks.map(risk => (
         <div key={risk.id} className="p-8 bg-rose-50/50 border border-primary/20 rounded-[2.5rem] flex items-center justify-between group transition-all hover:bg-rose-50">
           <div className="flex gap-6">
-            <div className="w-14 h-14 bg-white text-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/10 border border-primary/20">
+            <div className="w-14 h-14 bg-white text-primary rounded-3xl flex items-center justify-center shadow-lg shadow-primary/10 border border-primary/20">
               <AlertCircle size={28} />
             </div>
             <div>
@@ -332,7 +433,7 @@ const RisksListSection = memo(({ risks }: { risks: ProjectRisk[] }) => {
             </div>
           </div>
           <div className="text-right">
-             <span className={`px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg ${
+             <span className={`px-5 py-2 rounded-3xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg ${
                 risk.level === 'High' ? 'bg-primary text-white shadow-primary/30' : 'bg-rose-100 text-[#111827] shadow-rose-100/30'
              }`}>
                 {risk.level} Criticality
@@ -351,15 +452,15 @@ const TeamListSection = memo(({ team }: { team: Project['team'] }) => {
         <div key={member.id} className="flex items-center justify-between group cursor-pointer">
           <div className="flex items-center gap-4">
             <div className="relative">
-              <img src={member.avatar} alt="" className="w-12 h-12 rounded-2xl object-cover shadow-md group-hover:scale-105 transition-transform animate-in fade-in" referrerPolicy="no-referrer" />
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-4 border-white rounded-2xl" />
+              <img src={member.avatar} alt="" className="w-12 h-12 rounded-3xl object-cover shadow-md group-hover:scale-105 transition-transform animate-in fade-in" referrerPolicy="no-referrer" />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-4 border-white rounded-full" />
             </div>
             <div>
               <h4 className="text-sm font-black text-slate-900 group-hover:text-primary transition-colors tracking-tight">{member.name}</h4>
               <p className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{member.role}</p>
             </div>
           </div>
-          <button className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 rounded-2xl hover:text-primary hover:bg-primary/5 transition-all border border-slate-100">
+          <button className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-600 rounded-full hover:text-primary hover:bg-primary/5 transition-all border border-slate-100">
             <MessageSquare size={18} />
           </button>
         </div>
@@ -376,6 +477,34 @@ export default function ProjectDashboard() {
   const { id } = useParams();
   const { user } = useAuth();
   const { showToast } = useToast();
+  
+  const handleExportPDF = () => {
+    if (!project) return;
+    const doc = new jsPDF();
+    doc.setFontSize(20);
+    doc.text(`Project Report: ${project.title}`, 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Status: ${project.status}`, 20, 30);
+    doc.text(`Progress: ${project.progress}%`, 20, 40);
+    doc.text(`Generated on: ${format(new Date(), 'PPp')}`, 20, 50);
+    doc.save(`${project.title}-report.pdf`);
+    showToast('Project report exported as PDF', 'success');
+  };
+
+  const handleExportCSV = () => {
+    if (!project) return;
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + "Title,Status,Progress,Client Email\n"
+      + `"${project.title}","${project.status}",${project.progress},"${project.clientEmail}"`;
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `${project.title}-data.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Project data exported as CSV', 'success');
+  };
   const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
   const [tasks, setTasks] = useState<ProjectTask[]>([]);
@@ -387,7 +516,7 @@ export default function ProjectDashboard() {
   const [loading, setLoading] = useState(true);
   const [timeoutError, setTimeoutError] = useState(false);
 
-  const isBSM = user?.role === 'bsm' || user?.role === 'admin' || user?.role === 'superadmin';
+  const isBSM = (user as any)?.role === 'bsm' || (user as any)?.role === 'admin' || (user as any)?.role === 'superadmin';
 
   const logActivity = async (type: ProjectActivity['type'], description: string) => {
     if (!id || !user) return;
@@ -536,19 +665,19 @@ export default function ProjectDashboard() {
   const activeTasksCount = useMemo(() => tasks.filter(t => t.status !== 'Completed').length, [tasks]);
   const risksCount = useMemo(() => risks.length, [risks]);
   const velocityProgress = useMemo(() => project?.progress ?? 0, [project]);
-  const allocatedCapital = useMemo(() => project?.budget ?? 0, [project]);
+  const allocatedCapital = useMemo(() => project?.investmentAmount ? parseFloat(project.investmentAmount) : 0, [project]);
 
   if (loading) return (
     <div className="min-h-screen bg-[#F1F5F9] pb-12">
       <div className="bg-white border-b border-slate-200 px-8 py-4 sticky top-0 z-20">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <SkeletonComponent className="w-48 h-8 rounded-2xl" />
+            <SkeletonComponent className="w-48 h-8 rounded-3xl" />
           </div>
         </div>
       </div>
       <div className="max-w-[1600px] mx-auto px-8 py-6">
-        <PremiumDashboardSkeleton />
+        <ProjectDashboardSkeleton />
       </div>
     </div>
   );
@@ -556,7 +685,7 @@ export default function ProjectDashboard() {
   if (timeoutError) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#F1F5F9]">
-        <div className="w-16 h-16 bg-rose-100 text-rose-500 rounded-2xl flex items-center justify-center mb-6">
+        <div className="w-16 h-16 bg-rose-100 text-rose-500 rounded-3xl flex items-center justify-center mb-6">
           <AlertCircle size={32} />
         </div>
         <h2 className="text-2xl font-black text-slate-900 mb-2">Connection Timeout</h2>
@@ -565,7 +694,7 @@ export default function ProjectDashboard() {
         </p>
         <button 
           onClick={() => window.location.reload()}
-          className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20"
+          className="px-8 py-4 bg-slate-900 text-white rounded-full font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20"
         >
           Retry Connection
         </button>
@@ -580,7 +709,7 @@ export default function ProjectDashboard() {
       <p className="text-sm text-slate-700 mb-6 font-medium">The requested project identifier does not match any active enterprise records.</p>
       <button 
         onClick={() => navigate('/projects')}
-        className="px-6 py-3 bg-slate-900 text-white font-bold rounded-2xl text-xs uppercase tracking-widest"
+        className="px-6 py-3 bg-slate-900 text-white font-bold rounded-3xl text-xs uppercase tracking-widest"
       >
         Return to Project Hub
       </button>
@@ -595,14 +724,14 @@ export default function ProjectDashboard() {
           <div className="flex items-center gap-8">
             <button 
               onClick={() => navigate('/projects')}
-              className="w-12 h-12 flex items-center justify-center bg-slate-50 text-slate-600 hover:text-slate-900 rounded-2xl transition-all border border-slate-100"
+              className="w-12 h-12 flex items-center justify-center bg-slate-50 text-slate-600 hover:text-slate-900 rounded-full transition-all border border-slate-100"
             >
               <ArrowLeft size={22} />
             </button>
             <div>
               <div className="flex items-center gap-4">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tighter">{project.title || project.businessName || 'Untitled Project'}</h1>
-                <span className={`px-3 py-1 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm ${
+                <span className={`px-3 py-1 rounded-3xl text-[10px] font-black uppercase tracking-[0.2em] shadow-sm ${
                   project.status === 'Active' ? 'bg-emerald-500 text-white shadow-emerald-500/20' : 
                   project.status === 'Quotation Pending' ? 'bg-amber-500 text-white shadow-amber-500/20' :
                   'bg-slate-100 text-slate-700'
@@ -611,17 +740,26 @@ export default function ProjectDashboard() {
                 </span>
               </div>
               <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.3em] mt-1">
-                EXECUTION NODE: {project.id} • {project.type || 'Business Launch'}
+                EXECUTION NODE: {project.id} • {(project as any).type || 'Business Launch'}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="h-12 px-8 bg-primary text-white text-[10px] font-black rounded-2xl shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 uppercase tracking-widest">
+            <button className="h-12 px-8 bg-primary text-white text-[10px] font-black rounded-full shadow-xl shadow-primary/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 uppercase tracking-widest">
               <Plus size={18} />
               Initialize Task
             </button>
-            <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-2xl text-slate-600 hover:text-slate-900 transition-all shadow-sm">
+            <div className="relative group">
+    <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-600 hover:text-slate-900 transition-all shadow-sm">
+      <Download size={20} />
+    </button>
+    <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-3xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+      <button onClick={handleExportPDF} className="w-full text-left px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">Export PDF Report</button>
+      <button onClick={handleExportCSV} className="w-full text-left px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors border-t border-slate-100">Export CSV Data</button>
+    </div>
+  </div>
+  <button className="w-12 h-12 flex items-center justify-center bg-white border border-slate-200 rounded-full text-slate-600 hover:text-slate-900 transition-all shadow-sm">
               <MoreVertical size={20} />
             </button>
           </div>
@@ -642,8 +780,12 @@ export default function ProjectDashboard() {
               budget={allocatedCapital}
             />
 
+            <div className="h-[400px] mb-10">
+              <ProjectGanttChart projectId={id || ''} />
+            </div>
+
             {/* Main Project Board */}
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden">
+            <div className="clay-card overflow-hidden">
               <div className="px-10 py-8 border-b border-slate-100 flex items-center gap-10 bg-slate-50/30 overflow-x-auto whitespace-nowrap scrollbar-hide">
                 {[
                   { id: 'tasks', label: 'Execution Board', icon: CheckCircle2 },
@@ -696,7 +838,7 @@ export default function ProjectDashboard() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >
-                      <MilestonesListSection milestones={milestones} />
+                      <MilestonesListSection milestones={milestones} projectId={id || ""} />
                     </motion.div>
                   )}
 
@@ -741,10 +883,35 @@ export default function ProjectDashboard() {
               />
             )}
 
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+              <div className="lg:col-span-2 h-[350px]">
+                <ResourceAllocationWidget projectId={id || ''} />
+              </div>
+              <div className="lg:col-span-1 h-[350px]">
+                <FinancialForecastingWidget projectId={id || ''} />
+              </div>
+            </div>
+            
+            <div className="mb-10">
+              <MilestoneBadgesWidget projectId={id || ''} />
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+              <div className="lg:col-span-1 h-[350px]">
+                <ProjectActivityTimelineWidget projectId={id || ''} />
+              </div>
+              <div className="lg:col-span-1 h-[350px]">
+                <TeamCapacityWidget projectId={id || ''} />
+              </div>
+              <div className="lg:col-span-1 h-[350px]">
+                <ProjectRiskMonitorWidget projectId={id || ''} />
+              </div>
+            </div>
+
             {/* AI Insights Card */}
             <div className="bg-slate-900 rounded-3xl p-10 text-white relative overflow-hidden shadow-2xl shadow-slate-900/40">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/30 rounded-2xl blur-[100px] -mr-24 -mt-24" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/20 rounded-2xl blur-[80px] -ml-16 -mb-16" />
+              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/30 rounded-3xl blur-[100px] -mr-24 -mt-24" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/20 rounded-3xl blur-[80px] -ml-16 -mb-16" />
               
               <div className="flex items-center gap-4 mb-10 relative z-10">
                 <div className="w-12 h-12 bg-primary rounded-[1.25rem] flex items-center justify-center shadow-xl shadow-primary/40">
@@ -760,7 +927,7 @@ export default function ProjectDashboard() {
                 <motion.div 
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors"
+                  className="p-6 bg-white shadow-xl shadow-slate-200/50/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors"
                 >
                   <h4 className="text-[10px] font-black text-primary uppercase mb-3 tracking-[0.2em]">Strategy Insight</h4>
                   <p className="text-sm text-slate-300 leading-relaxed font-medium">
@@ -771,7 +938,7 @@ export default function ProjectDashboard() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors"
+                  className="p-6 bg-white shadow-xl shadow-slate-200/50/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors"
                 >
                   <h4 className="text-[10px] font-black text-emerald-400 uppercase mb-3 tracking-[0.2em]">Efficiency Protocol</h4>
                   <p className="text-sm text-slate-300 leading-relaxed font-medium">
@@ -780,16 +947,16 @@ export default function ProjectDashboard() {
                 </motion.div>
               </div>
 
-              <button className="w-full mt-10 py-5 bg-primary text-white font-black rounded-2xl text-[10px] uppercase tracking-widest transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]">
+              <button className="w-full mt-10 py-5 bg-primary text-white font-black rounded-3xl text-[10px] uppercase tracking-widest transition-all shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98]">
                 Generate Strategic Overview
               </button>
             </div>
 
             {/* Project Team */}
-            <div className="bg-white rounded-3xl border border-slate-100 p-10 shadow-sm">
+            <div className="clay-card">
               <div className="flex items-center justify-between mb-10">
                 <h3 className="text-sm font-black text-slate-900 uppercase tracking-[0.2em]">Project Node Network</h3>
-                <span className="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-600 border border-slate-100">
+                <span className="w-10 h-10 bg-slate-50 rounded-3xl flex items-center justify-center text-slate-600 border border-slate-100">
                   <Users size={18} />
                 </span>
               </div>

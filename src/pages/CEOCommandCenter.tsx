@@ -28,6 +28,8 @@ import {
   Database
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { fetchSystemAudits, SystemAuditLog } from '../utils/adminLogger';
+import { X } from 'lucide-react';
 import { 
   LineChart, 
   Line, 
@@ -190,7 +192,7 @@ const AlertCenterSection = memo(() => {
     <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">Active Alerts</h3>
-        <span className="px-2 py-0.5 bg-rose-50 text-slate-900 text-[10px] font-black rounded-2xl">3 New</span>
+        <span className="px-2 py-0.5 bg-rose-50 text-slate-900 text-[10px] font-black rounded-full">3 New</span>
       </div>
       <div className="space-y-4">
         {ALERTS.map((alert) => (
@@ -251,6 +253,14 @@ const FinancialSnapshotSection = memo(() => {
 });
 
 export default function CEOCommandCenter() {
+  const [showAuditLogs, setShowAuditLogs] = useState(false);
+  const [auditLogs, setAuditLogs] = useState<SystemAuditLog[]>([]);
+  
+  useEffect(() => {
+    if (showAuditLogs) {
+      fetchSystemAudits().then(setAuditLogs).catch(console.error);
+    }
+  }, [showAuditLogs]);
   const [timeRange, setTimeRange] = useState('7d');
   const [loading, setLoading] = useState(true);
 
@@ -320,7 +330,7 @@ export default function CEOCommandCenter() {
               <input 
                 type="text" 
                 placeholder="Search metrics..." 
-                className="bg-slate-50 border border-slate-100 pl-9 pr-4 py-2 rounded-2xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 w-64 text-slate-900 placeholder-slate-500"
+                className="bg-slate-50 border border-slate-100 pl-9 pr-4 py-2 rounded-full text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 w-64 text-slate-900 placeholder-slate-500"
               />
             </div>
             <button className="p-2 text-slate-700 hover:text-slate-900 relative">
@@ -328,7 +338,7 @@ export default function CEOCommandCenter() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-2xl border-2 border-white" />
             </button>
             <div className="h-8 w-px bg-slate-200 mx-2" />
-            <button className="flex items-center gap-2 pl-2 pr-1 py-1 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all">
+            <button className="flex items-center gap-2 pl-2 pr-1 py-1 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-all">
               <div className="w-7 h-7 bg-primary rounded-2xl flex items-center justify-center text-white text-[10px] font-black">CEO</div>
               <ChevronRight size={14} className="text-slate-700" />
             </button>
@@ -438,7 +448,11 @@ export default function CEOCommandCenter() {
           { label: 'Team', icon: Users2 },
           { label: 'Settings', icon: Settings2 },
         ].map((action, i) => (
-          <button key={i} className="flex flex-col items-center gap-1 group">
+          <button 
+            key={i} 
+            className="flex flex-col items-center gap-1 group"
+            onClick={() => action.label === 'Audit Log' ? setShowAuditLogs(true) : null}
+          >
             <div className="p-2 text-slate-400 group-hover:text-white group-hover:bg-white/10 rounded-2xl transition-all">
               <action.icon size={18} />
             </div>
@@ -446,11 +460,66 @@ export default function CEOCommandCenter() {
           </button>
         ))}
         <div className="h-8 w-px bg-white/10 mx-2" />
-        <button className="px-5 py-2 bg-primary text-white text-[10px] font-black rounded-2xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
+        <button className="px-5 py-2 bg-primary text-white text-[10px] font-black rounded-full hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
           <Calendar size={14} />
           Schedule Review
         </button>
       </motion.div>
+      <AnimatePresence>
+        {showAuditLogs && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[80vh]"
+            >
+              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+                    <ShieldCheck className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">System Audit Logs</h3>
+                </div>
+                <button onClick={() => setShowAuditLogs(false)} className="text-slate-400 hover:text-slate-600">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="p-6 overflow-y-auto flex-1">
+                {auditLogs.length === 0 ? (
+                  <p className="text-slate-500 text-center py-8">No audit logs found.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {auditLogs.map(log => (
+                      
+                      <div key={log.id} className="flex gap-4 p-4 border border-slate-100 rounded-2xl hover:border-slate-200 bg-slate-50 relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-slate-200 group-hover:bg-primary transition-colors" />
+                        <div className="flex-1 pl-2">
+                          <p className="text-sm font-black text-slate-900 mb-1">{log.action || log.actionDescription}</p>
+                          {log.category && (
+                            <span className="inline-block px-2 py-0.5 bg-white border border-slate-200 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">
+                              {log.category}
+                            </span>
+                          )}
+                          {log.details && (
+                            <div className="mb-2 p-2 bg-white rounded-lg border border-slate-100 text-[10px] text-slate-600 font-medium">
+                              {typeof log.details === 'string' ? log.details : JSON.stringify(log.details)}
+                            </div>
+                          )}
+                          <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            <span className="flex items-center gap-1"><Users2 className="w-3 h-3 text-slate-400"/> {log.actorId}</span>
+                            <span className="flex items-center gap-1"><Clock className="w-3 h-3 text-slate-400"/> {new Date(log.timestamp).toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

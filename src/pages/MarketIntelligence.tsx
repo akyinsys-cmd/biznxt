@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { 
   BarChart3, 
   Globe, 
@@ -44,7 +45,8 @@ type IntelTab = 'industry' | 'location' | 'opportunity' | 'trends' | 'manufactur
 export default function MarketIntelligence() {
   const { success } = useToast();
   const [activeTab, setActiveTab] = useState<IntelTab>('industry');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   
   const [industryIntel, setIndustryIntel] = useState<IndustryProfile[]>([]);
   const [locationIntel, setLocationIntel] = useState<LocationProfile[]>([]);
@@ -130,7 +132,7 @@ export default function MarketIntelligence() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-[#F1F5F9]">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-2xl animate-spin" />
+        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
         <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Accessing Intelligence Network...</p>
       </div>
     </div>
@@ -144,7 +146,7 @@ export default function MarketIntelligence() {
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl text-primary mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary mb-6">
                 <Database size={16} />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">Intelligence Ledger</span>
               </div>
@@ -157,11 +159,11 @@ export default function MarketIntelligence() {
             </div>
             
             <div className="flex gap-4">
-              <button className="neo-button bg-primary text-white px-8 py-4 rounded-2xl font-black text-[10px] tracking-widest uppercase transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+              <button className="neo-button bg-primary text-white px-8 py-4 rounded-full font-black text-[10px] tracking-widest uppercase transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
                 <Filter size={18} />
                 Strategic Filter
               </button>
-              <button className="neo-button bg-white text-slate-900 px-8 py-4 rounded-2xl font-black text-[10px] tracking-widest uppercase transition-all border border-slate-200">
+              <button className="neo-button bg-white text-slate-900 px-8 py-4 rounded-full font-black text-[10px] tracking-widest uppercase transition-all border border-slate-200">
                 Export Data
               </button>
             </div>
@@ -291,7 +293,7 @@ export default function MarketIntelligence() {
                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{loc.type} Portfolio</p>
                       </div>
                     </div>
-                    <span className="px-4 py-1.5 bg-primary/5 text-primary text-[10px] font-black rounded-2xl uppercase tracking-widest border border-primary/10">
+                    <span className="px-4 py-1.5 bg-primary/5 text-primary text-[10px] font-black rounded-full uppercase tracking-widest border border-primary/10">
                       Optimized
                     </span>
                   </div>
@@ -301,7 +303,7 @@ export default function MarketIntelligence() {
                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Sector Density</p>
                       <div className="flex flex-wrap gap-2.5">
                         {loc.relevantIndustries.map(ind => (
-                          <span key={ind} className="px-4 py-2 bg-slate-50 text-slate-600 text-[10px] font-black rounded-2xl border border-slate-100">{ind}</span>
+                          <span key={ind} className="px-4 py-2 bg-slate-50 text-slate-600 text-[10px] font-black rounded-full border border-slate-100">{ind}</span>
                         ))}
                       </div>
                     </div>
@@ -309,7 +311,7 @@ export default function MarketIntelligence() {
                       <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Strategic Clusters</p>
                       <div className="flex flex-wrap gap-2.5">
                         {loc.businessClusters.map(cl => (
-                          <span key={cl} className="px-4 py-2 bg-indigo-50 text-indigo-600 text-[10px] font-black rounded-2xl border border-indigo-100">{cl}</span>
+                          <span key={cl} className="px-4 py-2 bg-indigo-50 text-indigo-600 text-[10px] font-black rounded-full border border-indigo-100">{cl}</span>
                         ))}
                       </div>
                     </div>
@@ -339,7 +341,7 @@ export default function MarketIntelligence() {
                     <div className="flex justify-between items-start mb-10">
                       <h3 className="text-3xl font-black text-slate-900 pr-16 leading-tight tracking-tighter">{opp.title}</h3>
                       {opp.verified && (
-                        <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
+                        <div className="w-12 h-12 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500">
                           <ShieldCheck size={28} />
                         </div>
                       )}
@@ -418,8 +420,8 @@ export default function MarketIntelligence() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-4 mb-3">
-                      <span className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-black rounded-2xl uppercase tracking-widest">{trend.category}</span>
-                      <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/5 px-3 py-1 rounded-2xl border border-emerald-500/10">+{trend.growthPercentage}% Velocity</span>
+                      <span className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-black rounded-full uppercase tracking-widest">{trend.category}</span>
+                      <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/5 px-3 py-1 rounded-full border border-emerald-500/10">+{trend.growthPercentage}% Velocity</span>
                     </div>
                     <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">{trend.title}</h3>
                     <p className="text-slate-500 font-medium leading-relaxed max-w-3xl">{trend.description}</p>
@@ -455,7 +457,7 @@ export default function MarketIntelligence() {
                       <Factory size={28} />
                     </div>
                     {mfg.verificationStatus === 'Verified' && (
-                      <div className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 text-[10px] font-black rounded-2xl flex items-center gap-2 border border-emerald-500/20">
+                      <div className="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 text-[10px] font-black rounded-full flex items-center gap-2 border border-emerald-500/20">
                         <ShieldCheck size={14} /> Verified
                       </div>
                     )}
@@ -524,7 +526,7 @@ export default function MarketIntelligence() {
                   
                   <div className="space-y-6">
                     {RECOMMENDATIONS.map(rec => (
-                      <div key={rec.id} className="bg-white/5 border border-white/10 p-10 rounded-[2.5rem] hover:bg-white/[0.08] hover:border-white/20 transition-all group cursor-pointer active:scale-[0.99]">
+                      <div key={rec.id} className="bg-white shadow-xl shadow-slate-200/50/5 border border-white/10 p-10 rounded-[2.5rem] hover:bg-white/[0.08] hover:border-white/20 transition-all group cursor-pointer active:scale-[0.99]">
                         <div className="flex items-start gap-8">
                           <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
                             <Lightbulb size={28} />
@@ -532,7 +534,7 @@ export default function MarketIntelligence() {
                           <div className="flex-1">
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                               <h3 className="text-2xl font-black group-hover:text-primary transition-colors tracking-tight">{rec.title}</h3>
-                              <span className="inline-flex px-4 py-1.5 bg-primary/20 text-primary text-[10px] font-black rounded-2xl uppercase tracking-widest border border-primary/20 backdrop-blur-sm">
+                              <span className="inline-flex px-4 py-1.5 bg-primary/20 text-primary text-[10px] font-black rounded-full uppercase tracking-widest border border-primary/20 backdrop-blur-sm">
                                 {Math.round(rec.confidence * 100)}% Accuracy Index
                               </span>
                             </div>

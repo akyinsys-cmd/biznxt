@@ -82,7 +82,7 @@ export default function CompareIdeas() {
           <p className="text-slate-500 mb-6">You need at least two saved ideas to use the comparison tool.</p>
           <button 
             onClick={() => navigate('/discovery/wizard')}
-            className="px-6 py-3 bg-primary text-white rounded-2xl font-bold hover:bg-primary-dark transition-colors"
+            className="px-6 py-3 bg-primary text-white rounded-full font-bold hover:bg-primary-dark transition-colors"
           >
             Find more ideas
           </button>
@@ -90,7 +90,7 @@ export default function CompareIdeas() {
       ) : (
         <div className="space-y-8">
           {/* Selector */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
             <h3 className="text-sm font-bold text-slate-900 mb-4 uppercase tracking-wider">Select up to 3 ideas to compare:</h3>
             <div className="flex flex-wrap gap-3">
               {savedIdeas.map((saved) => {
@@ -126,7 +126,7 @@ export default function CompareIdeas() {
                       {selectedIdeas.map((idea, idx) => (
                         <th key={idx} className="p-6 border-b border-slate-200 bg-slate-50 min-w-[300px]">
                           <h3 className="text-xl font-bold text-slate-900 mb-2">{idea.title}</h3>
-                          <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 rounded-2xl text-xs font-bold border border-emerald-100">
+                          <span className="inline-block px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-100">
                             Score: {idea.opportunityScore}
                           </span>
                         </th>

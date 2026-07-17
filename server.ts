@@ -246,7 +246,7 @@ async function startServer() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-3.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -267,52 +267,7 @@ async function startServer() {
     }
   });
 
-  // AI Research Assistant Draft Generator API
-  app.post("/api/research/draft", async (req, res) => {
-    try {
-      const parseResult = researchDraftSchema.safeParse(req.body);
-      if (!parseResult.success) {
-        return res.status(400).json({ 
-          error: "Invalid input format.",
-          details: parseResult.error.issues 
-        });
-      }
-      const { businessCategory, businessType, investment, location, draftType, specialRequirements } = parseResult.data;
-
-      if (!process.env.GEMINI_API_KEY) {
-        console.error("Internal Server Error: GEMINI_API_KEY is missing.");
-        return res.status(500).json({ error: "An internal error occurred." });
-      }
-
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-
-      const prompts: { [key: string]: string } = {
-        market_overview: `Draft an exhaustive Market Overview for a proposed ${businessCategory || "Business"} (${businessType || "Standard Model"}) located in ${location || "India"}. Include regional demand trends, YoY growth parameters, and primary target consumer demographic insights. ${specialRequirements ? "Special requirements: " + specialRequirements : ""}`,
-        industry_overview: `Draft a high-level Industry Overview for ${businessCategory || "Business"} in ${location || "India"}. Highlight sectoral policies, manufacturing hubs, wholesale sourcing networks, and crucial regulatory frameworks.`,
-        competitor: `Draft a Competitive Landscape and Competitor Analysis report for ${businessCategory || "Business"} in ${location || "India"}. Detail key direct/indirect competitor dynamics, common market-entry barriers, and unique selling proposition (USP) recommendations.`,
-        swot: `Draft an exhaustive SWOT Analysis (Strengths, Weaknesses, Opportunities, Threats) for a proposed ${businessCategory || "Business"} venture in ${location || "India"} with an investment scale of ${investment || "Medium"}. Provide distinct, actionable bullet points for each quadrant.`,
-        risks: `Draft a comprehensive Business Risks and Mitigation Matrix for a proposed ${businessCategory || "Business"} venture in ${location || "India"}. Detail supply-chain, regulatory, operational, and capital risks with concrete solutions.`,
-        investment: `Draft a Detailed Capital Investment, CapEx, and Cost Structure model for starting a ${businessCategory || "Business"} business in ${location || "India"} with a budget size of ${investment || "Medium"}. Estimate initial equipment, license procurement, retail rentals, working capital reserves, and typical monthly overhead costs.`,
-        marketing: `Draft an omnichannel Marketing Strategy for a ${businessCategory || "Business"} business in ${location || "India"}. Outline digital customer acquisition, local offline activations, and customer retention programs.`,
-        sales: `Draft a tactical Sales and Distribution Guide for ${businessCategory || "Business"} (${businessType || "B2B/B2C"}). Define ideal partner margins, wholesale credit terms, sales target quotas, and customer checkout incentive designs.`,
-        business_opportunity: `Draft a high-potential Business Opportunities report for ${businessCategory || "Business"} in ${location || "India"}. Spot emerging micro-niches, high-margin premium variations, and value-add options for rapid scalability.`,
-        action_plan: `Draft a 90-Day Launch Action Plan (Phase 1: Week 1-4, Phase 2: Week 5-8, Phase 3: Week 9-12) for a proposed ${businessCategory || "Business"} in ${location || "India"} within the investment level of ${investment || "Medium"}.`,
-        executive_summary: `Draft an elegant, professional Executive Summary for a premium corporate research dossier on starting a ${businessCategory || "Business"} in ${location || "India"} with an investment scale of ${investment || "Medium"}.`
-      };
-
-      const prompt = prompts[draftType] || `Draft a comprehensive, professional research briefing segment focusing on ${draftType} for starting a ${businessCategory || "Business"} business in ${location || "India"}.`;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
-        contents: prompt,
-      });
-
-      res.json({ draft: response.text });
-    } catch (error) {
-      console.error("AI Research Draft Generation Error:", error);
-      res.status(500).json({ error: "Failed to generate research segment draft due to an internal error." });
-    }
-  });
+  
 
   // AI Business Discovery Engine API
   app.post("/api/ai/business-discovery", async (req, res) => {
@@ -383,7 +338,7 @@ async function startServer() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-3.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -485,7 +440,7 @@ async function startServer() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-3.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -575,7 +530,7 @@ async function startServer() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-3.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -639,7 +594,7 @@ async function startServer() {
       `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-3.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -654,10 +609,181 @@ async function startServer() {
     }
   });
 
+  
+  // AI Project Insights Endpoint
+  app.post("/api/project/insights", async (req, res) => {
+    try {
+      const { projectData } = req.body;
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "GEMINI_API_KEY is missing." });
+      }
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const prompt = `
+        Analyze the following project data and provide a concise summary of project status, risks, and next steps.
+        Project Data: ${JSON.stringify(projectData)}
+        
+        Respond in this exact JSON schema:
+        {
+          "statusSummary": "Short paragraph summarizing the overall status",
+          "risks": ["Risk 1", "Risk 2"],
+          "nextSteps": ["Next step 1", "Next step 2"]
+        }
+      `;
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+        config: { responseMimeType: "application/json" }
+      });
+      res.json(JSON.parse(response.text || "{}"));
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal error." });
+    }
+  });
+
+  // AI Onboarding Coach Endpoint
+  app.post("/api/onboarding/coach", async (req, res) => {
+    try {
+      const { progressData } = req.body;
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "GEMINI_API_KEY is missing." });
+      }
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const prompt = `
+        Based on the user's business progress data, suggest three immediate actions to take.
+        Progress Data: ${JSON.stringify(progressData)}
+        
+        Provide quick links to relevant tools.
+        Respond in this exact JSON schema:
+        {
+          "actions": [
+            {
+              "title": "Action title",
+              "description": "Short explanation",
+              "link": "e.g. /projects, /documents, /services, /discovery, /crm",
+              "buttonText": "Button label"
+            }
+          ]
+        }
+      `;
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+        config: { responseMimeType: "application/json" }
+      });
+      res.json(JSON.parse(response.text || '{"actions": []}'));
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal error." });
+    }
+  });
+
   // 6. File upload safety (Placeholder/documentation for future routes)
   // Upload endpoints should validate mime types (e.g. using 'file-type'), 
   // enforce size limits via multer, and store files outside web root (e.g. S3/GCS).
 
+  
+  // AI Document Scanning Endpoint (Image to Text)
+  app.post("/api/documents/scan", express.json({limit: '10mb'}), async (req, res) => {
+    try {
+      const { image, mimeType } = req.body;
+      if (!image) return res.status(400).json({ error: "Image data is required" });
+      
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "GEMINI_API_KEY is missing." });
+      }
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: {
+          parts: [
+            { text: "Extract the text from this document. Preserve the structure and formatting as much as possible." },
+            { inlineData: { data: image.replace(/^data:image\/\w+;base64,/, ''), mimeType: mimeType || 'image/jpeg' } }
+          ]
+        }
+      });
+      
+      res.json({ text: response.text });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal error during document scanning." });
+    }
+  });
+
+  // AI Meeting Summarizer Endpoint
+  app.post("/api/meetings/summarize", async (req, res) => {
+    try {
+      const { transcript } = req.body;
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "GEMINI_API_KEY is missing." });
+      }
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      const prompt = `
+        Format this raw meeting transcript into structured meeting minutes.
+        Extract the key discussion points, decisions made, and actionable tasks.
+        
+        Transcript: ${transcript}
+        
+        Respond in this exact JSON schema:
+        {
+          "summary": "Overall summary paragraph",
+          "points": ["Key point 1", "Key point 2"],
+          "decisions": ["Decision 1", "Decision 2"],
+          "tasks": [
+            { "task": "Task description", "assignee": "Name if mentioned, or Unassigned" }
+          ]
+        }
+      `;
+      
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+        config: { responseMimeType: "application/json" }
+      });
+      
+      res.json(JSON.parse(response.text || "{}"));
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal error during meeting summarization." });
+    }
+  });
+
+  // AI Document Summarizer Endpoint
+  app.post("/api/documents/summarize", express.json({limit: '5mb'}), async (req, res) => {
+    try {
+      const { content } = req.body;
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "GEMINI_API_KEY is missing." });
+      }
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
+      const prompt = `
+        Extract key takeaways and action items from this business document.
+        
+        Document Content:
+        ${content.substring(0, 30000)}
+        
+        Respond in this exact JSON schema:
+        {
+          "takeaways": ["Takeaway 1", "Takeaway 2"],
+          "actionItems": ["Action item 1", "Action item 2"]
+        }
+      `;
+      
+      const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents: prompt,
+        config: { responseMimeType: "application/json" }
+      });
+      
+      res.json(JSON.parse(response.text || "{}"));
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal error during document summarization." });
+    }
+  });
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },

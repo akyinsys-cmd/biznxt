@@ -6,7 +6,7 @@ export default function TermsOfService() {
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-sm border border-slate-100 p-8 sm:p-12">
         <div className="flex items-center space-x-4 mb-8 border-b border-slate-100 pb-8">
-          <div className="w-12 h-12 bg-slate-100 text-slate-800 rounded-2xl flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 bg-slate-100 text-slate-800 rounded-full flex items-center justify-center shrink-0">
             <FileText className="w-6 h-6" />
           </div>
           <div>

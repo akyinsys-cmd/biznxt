@@ -87,7 +87,7 @@ export default function ManufacturerRegistration() {
              <h2 className="text-xl font-bold text-slate-900">Application Form</h2>
              <p className="text-sm text-slate-500 mt-1">Please provide accurate business details for verification.</p>
            </div>
-           <div className="mt-4 md:mt-0 flex items-center text-sm font-bold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-2xl border border-emerald-100">
+           <div className="mt-4 md:mt-0 flex items-center text-sm font-bold text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full border border-emerald-100">
              <CheckCircle2 className="w-4 h-4 mr-2" /> 100% Secure & Confidential
            </div>
         </div>
@@ -208,7 +208,7 @@ export default function ManufacturerRegistration() {
             <button 
               type="submit" 
               disabled={loading}
-              className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-colors shadow-lg disabled:opacity-70 flex items-center"
+              className="px-8 py-4 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-colors shadow-lg disabled:opacity-70 flex items-center"
             >
               {loading ? (
                 <>Processing...</>

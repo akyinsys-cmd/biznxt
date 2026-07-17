@@ -37,7 +37,7 @@ export function ValueComparisonModal({ isOpen, onClose, service }: ValueComparis
         >
           <div className="p-6 md:p-8 border-b border-slate-100 flex justify-between items-start bg-slate-50">
             <div>
-              <div className="inline-flex items-center space-x-2 bg-indigo-100 text-indigo-700 px-3 py-1 rounded-2xl text-xs font-bold mb-3">
+              <div className="inline-flex items-center space-x-2 bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold mb-3">
                 <Star className="w-3.5 h-3.5" />
                 <span>Value Analysis</span>
               </div>
@@ -109,7 +109,7 @@ export function ValueComparisonModal({ isOpen, onClose, service }: ValueComparis
           <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end">
             <button 
               onClick={onClose}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-8 rounded-2xl transition-all"
+              className="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-8 rounded-full transition-all"
             >
               Understood
             </button>

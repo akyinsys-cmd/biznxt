@@ -3,6 +3,7 @@ import { DollarSign, Save, AlertCircle } from 'lucide-react';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useToast } from '../../context/ToastContext';
+import { logAdminActivity } from '../../utils/adminLogger';
 
 export function AdminAds() {
   const { success, error } = useToast();
@@ -28,6 +29,13 @@ export function AdminAds() {
   const handleSave = async () => {
     try {
       await setDoc(doc(db, 'settings', 'ads'), adsSettings);
+      logAdminActivity(
+        'akyinsys@gmail.com',
+        'super_admin',
+        'Updated AdSense Settings',
+        `Updated Publisher ID to "${adsSettings.publisherId}" and set active status to ${adsSettings.enabled ? 'Enabled' : 'Disabled'}.`,
+        'System'
+      );
       success('AdSense settings updated successfully');
     } catch (e) {
       error('Failed to update settings');
@@ -76,7 +84,7 @@ export function AdminAds() {
 
       <button 
         onClick={handleSave}
-        className="bg-slate-900 text-white px-6 py-2.5 rounded-2xl text-sm font-bold flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-lg"
+        className="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-slate-800 transition-colors shadow-lg"
       >
         <Save size={16} />
         Save Settings

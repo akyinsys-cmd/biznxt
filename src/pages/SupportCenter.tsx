@@ -48,11 +48,11 @@ export default function SupportCenter() {
             </div>
             
             <div className="flex gap-3">
-              <button className="px-6 py-3 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2">
+              <button className="px-6 py-3 bg-primary text-white font-bold rounded-full shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2">
                 <Plus size={18} />
                 Create Ticket
               </button>
-              <button className="px-6 py-3 bg-white text-slate-700 font-bold rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all">
+              <button className="px-6 py-3 bg-white text-slate-700 font-bold rounded-full border border-slate-200 hover:bg-slate-50 transition-all">
                 Knowledge Hub
               </button>
             </div>
@@ -107,7 +107,7 @@ export default function SupportCenter() {
               {SUPPORT_TICKETS.map((ticket) => (
                 <div 
                   key={ticket.id} 
-                  className="bg-white rounded-[2rem] border border-slate-200 p-8 hover:border-primary transition-all group cursor-pointer"
+                  className="bg-white shadow-xl shadow-slate-200/50 rounded-[2rem] border border-slate-200 p-8 hover:border-primary transition-all group cursor-pointer"
                   onClick={() => setSelectedTicket(ticket)}
                 >
                   <div className="flex justify-between items-start mb-6">
@@ -172,7 +172,7 @@ export default function SupportCenter() {
               </button>
             </div>
 
-            <div className="bg-white rounded-[2.5rem] border border-slate-200 p-8">
+            <div className="bg-white shadow-xl shadow-slate-200/50 rounded-[2.5rem] border border-slate-200 p-8">
               <h3 className="text-lg font-black text-slate-900 mb-6 uppercase tracking-tight">Popular FAQs</h3>
               <div className="space-y-4">
                 {[
@@ -232,13 +232,13 @@ export default function SupportCenter() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 bg-rose-50 text-primary-dark text-[10px] font-black rounded-2xl uppercase tracking-widest">{selectedTicket.priority} Priority</span>
+                  <span className="px-3 py-1 bg-rose-50 text-primary-dark text-[10px] font-black rounded-full uppercase tracking-widest">{selectedTicket.priority} Priority</span>
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-12">
                 <div className="flex gap-6 mb-12">
-                  <div className="w-12 h-12 bg-slate-100 rounded-2xl flex-shrink-0" />
+                  <div className="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0" />
                   <div className="flex-1 bg-slate-50 p-6 rounded-[2rem] rounded-tl-none border border-slate-100">
                     <div className="flex justify-between mb-4">
                       <span className="text-xs font-black text-slate-900">{selectedTicket.customerName}</span>
@@ -249,7 +249,7 @@ export default function SupportCenter() {
                 </div>
 
                 <div className="flex flex-row-reverse gap-6 mb-12">
-                  <div className="w-12 h-12 bg-primary/10 rounded-2xl flex-shrink-0 flex items-center justify-center text-primary">
+                  <div className="w-12 h-12 bg-primary/10 rounded-full flex-shrink-0 flex items-center justify-center text-primary">
                     <ShieldAlert size={24} />
                   </div>
                   <div className="flex-1 bg-primary text-white p-6 rounded-[2rem] rounded-tr-none shadow-xl shadow-primary/20">
@@ -269,9 +269,9 @@ export default function SupportCenter() {
                   <input 
                     type="text" 
                     placeholder="Type your reply here..." 
-                    className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-full text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
-                  <button className="px-8 py-4 bg-slate-900 text-white font-black rounded-2xl hover:bg-slate-800 transition-all flex items-center gap-2">
+                  <button className="px-8 py-4 bg-slate-900 text-white font-black rounded-full hover:bg-slate-800 transition-all flex items-center gap-2">
                     Send Reply
                     <ChevronRight size={18} />
                   </button>

@@ -183,7 +183,7 @@ export function FirstLoginWizard() {
               {step > 0 && (
                 <button 
                   onClick={prevStep}
-                  className="px-6 py-3 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-2xl hover:bg-slate-50 transition-colors"
+                  className="px-6 py-3 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-colors"
                 >
                   Back
                 </button>
@@ -191,7 +191,7 @@ export function FirstLoginWizard() {
               {step < steps.length - 1 ? (
                 <button 
                   onClick={nextStep}
-                  className="px-6 py-3 flex items-center space-x-2 text-sm font-bold text-white bg-blue-600 rounded-2xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
+                  className="px-6 py-3 flex items-center space-x-2 text-sm font-bold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
                 >
                   <span>Continue</span>
                   <ArrowRight className="w-4 h-4" />
@@ -199,7 +199,7 @@ export function FirstLoginWizard() {
               ) : (
                 <button 
                   onClick={handleComplete}
-                  className="px-8 py-3 text-sm font-black text-white uppercase tracking-widest bg-slate-900 rounded-2xl hover:bg-slate-800 transition-colors shadow-xl shadow-slate-900/20"
+                  className="px-8 py-3 text-sm font-black text-white uppercase tracking-widest bg-slate-900 rounded-full hover:bg-slate-800 transition-colors shadow-xl shadow-slate-900/20"
                 >
                   Complete Setup
                 </button>
